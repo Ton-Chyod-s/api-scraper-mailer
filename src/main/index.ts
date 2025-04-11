@@ -6,18 +6,7 @@ const PORT = 3000;
 
 server.get('/', (req: Request, res: Response) => {
     return res.json({
-        "": "Welcome to the Web Assist API! Here are the available endpoints:",
-        "DOE": " /DOE/:id {nome do usuario}",
-        "DIOGRANDE": " /DIOGRANDE/:id {nome do usuario}",
-        'FAPEC': '/fapec',
-        'CONCURSO ESTADO': '/concursoEstado',
-        'EXERCITO': '/Exercito',
-        'UFMS': '/UFMS',
-        'SEGES': '/seges',
-        'FIEMS': '/fiems',
-        'PCI': '/PCI/:id {nome do estado}',
-        'UFMS Geral': '/ufmsGeral',
-        'SUPER ESTAGIOS': '/supEstagios'
+        "": "Welcome to the Web Assist API! Here are the available"
     });
 });
 
