@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Ton-Chyod-s/api-scraper-mailer#readme",
   "dependencies": {
+    "@prisma/client": "^6.6.0",
     "axios": "^1.8.4",
     "cheerio": "^1.0.0",
     "dotenv": "^16.5.0",
@@ -31,6 +32,7 @@
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.0",
     "@types/pg": "^8.11.11",
+    "prisma": "^6.6.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
