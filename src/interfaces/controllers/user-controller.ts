@@ -1,6 +1,6 @@
 // src/interfaces/controllers/UserController.ts
 import { Request, Response } from 'express';
-import { CreateUser } from '../../usecases/create-user';
+import { CreateUser } from '../../useCases/create-user';
 
 export class UserController {
   constructor(private createUser: CreateUser) {}

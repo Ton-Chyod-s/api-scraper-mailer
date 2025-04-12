@@ -1,5 +1,5 @@
 // src/infra/repositories/InMemoryUserRepository.ts
-import { UserRepository } from '../../usecases/create-user';
+import { UserRepository } from '../../useCases/create-user';
 import { User } from '../../domain/entities/User';
 
 export class InMemoryUserRepository implements UserRepository {
