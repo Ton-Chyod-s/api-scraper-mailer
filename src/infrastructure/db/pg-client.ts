@@ -1,16 +1,13 @@
-require('dotenv').config();
+require('dotenv').config({ path: '.env' });
 import { Pool } from 'pg';
 
-export let pgClient = process.env.NODE_ENV === 'production' 
-? new Pool({
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL não definida no ambiente!');
+};
+
+export let pgClient = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  }) 
-:  new Pool({
-    connectionString: process.env.DATABASE_URL_TESTING,
-    ssl: {
-      rejectUnauthorized: false,
-    },              
-});
+    ssl: process.env.NODE_ENV === 'production' ? { 
+      rejectUnauthorized: false 
+    } : false,
+  });
