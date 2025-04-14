@@ -7,7 +7,6 @@ export class UserController {
   async create(req: Request, res: Response) {
     const { name, email } = req.body;
 
-    
     try {
       await this.createUser.execute(name, email);
       res.status(201).send('Usuário criado com sucesso!');

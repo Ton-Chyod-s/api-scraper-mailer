@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-import { IMailProvider } from "../../interfaces/providers/IMailProvider";
+import { IMailProvider } from "../../domain/providers/mail-provider";
 
 require('dotenv').config({ path: '.env' });
 
