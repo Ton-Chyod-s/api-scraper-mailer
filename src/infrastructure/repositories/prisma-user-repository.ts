@@ -1,0 +1,27 @@
+import { PrismaClient } from '.prisma/client';
+import { UserRepository } from '../../usecases/create-user';
+import { User } from '../../domain/entities/user';
+
+const prisma = new PrismaClient();
+
+export class PrismaUserRepository implements UserRepository {
+  async findByEmail(email: string): Promise<User | null> {
+    
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+    
+    if (!user) return null;
+
+    return new User(user.name ?? '', user.email); 
+  }
+
+  async save(user: User): Promise<void> {
+    await prisma.user.create({
+      data: {
+        name: user.name,
+        email: user.email
+      }
+    });
+  }
+}

@@ -8,8 +8,8 @@ export class NodemailerProvider implements IMailProvider {
   
     constructor() {
       this.transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
+        host: process.env.HOST,
+        port: process.env.PORT,
         secure: true,
         auth: {
           user: process.env.USER,
