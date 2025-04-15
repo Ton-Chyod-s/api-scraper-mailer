@@ -7,8 +7,11 @@ export async function myTask() {
 
     let htmlBase = await readFile("./src/static/main.html", "utf-8");
     let header = await readFile("./src/static/emails/header.html", "utf-8");   
+    let exercito = await readFile("./src/static/emails/exercito.html", "utf-8");
+    exercito = exercito.replace(/\${ano}/g, ano);
 
-    const conteudo = header;
+    
+    const conteudo = header + exercito;
     const htmlFinal = htmlBase.replace("<main></main>", `<main>${conteudo}</main>`);
 
     const mailProvider = new NodemailerProvider();
@@ -16,7 +19,7 @@ export async function myTask() {
  
     await sendMail.execute({
         to: 'hix_x@hotmail.com',
-        subject: `Atualizações - UFMS, OTT, DOE, DIOGrande MS ${ano}`,
+        subject: `Atualizações - ${ano}`,
         html: htmlFinal,
     }).then(() => {
         console.log("Email sent successfully!");
