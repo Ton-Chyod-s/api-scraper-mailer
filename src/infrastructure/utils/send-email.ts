@@ -1,13 +1,23 @@
 import { SendEmailUseCase } from "../../usecases/send-email-use-case";
 import { NodemailerProvider } from "../providers/nodemailer-provider";
+import { PrismaUserRepository } from "../repositories/prisma-user-repository";
 
 export async function enviarEmail(html: string, ano: string): Promise<void> {
   const mailProvider = new NodemailerProvider();
   const sendMail = new SendEmailUseCase(mailProvider);
+  const emails = await listarTodosEmails();
 
-  await sendMail.execute({
-    to: 'hix_x@hotmail.com',
-    subject: `Atualizações - ${ano}`,
-    html: html,
-  });
+  for (const email of emails) {
+    await sendMail.execute({
+      to: email,
+      subject: `Atualizações - ${ano}`,
+      html: html,
+    });
+  }
+}
+
+async function listarTodosEmails(): Promise<string[]> {
+    const userRepository = new PrismaUserRepository();
+    const emails = await userRepository.getAllEmails();
+    return emails;
 }
