@@ -11,7 +11,12 @@ export class ExercitoUseCase {
     const $ = load(html);
     const paragraphs = $('p').map((_, el) => $(el).text().trim()).get();
 
-    const anoAtual = '2024';
+    let anoAtual = new Date().getFullYear().toString();
+ 
+    if (!paragraphs.includes(anoAtual)) {
+      anoAtual = (new Date().getFullYear() - 1).toString();
+    }
+    
     const data: SiteData = { site: 'https://9rm.eb.mil.br/index.php/oficial-tecnico-temporario' };
 
     for (const paragrafo of paragraphs) {
