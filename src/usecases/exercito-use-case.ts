@@ -67,4 +67,5 @@ if (require.main === module) {
     const listaExercito = formatarLista(value);
     console.log(listaExercito);
   });
+  console.log(resultado);
 }
