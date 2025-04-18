@@ -1,6 +1,6 @@
 import { PrismaClient } from '.prisma/client';
 import { UserRepository } from '../../usecases/create-user';
-import { User } from '../../domain/entities/user';
+import { User } from '../../domain/entities/User';
 
 const prisma = new PrismaClient();
 

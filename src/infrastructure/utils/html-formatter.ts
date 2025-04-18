@@ -3,8 +3,12 @@ export function formatarLista(dados: (string | string[])[]): string {
   
     for (const item of dados) {
       if (Array.isArray(item) || typeof item === "object") {
-        for (const linha of item) {
-          html += `<p>${linha}</p>`;
+        for (const linha in item) {
+          if (item[linha].includes(' KB')) {
+            continue;
+          }
+
+          html += `<p>${item[linha]}</p>`;
         }
       } else if (typeof item === "string") {
         if (item.includes("Prepare-se e leia")) {
@@ -17,3 +21,4 @@ export function formatarLista(dados: (string | string[])[]): string {
   
     return html;
   }
+
