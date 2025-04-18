@@ -8,6 +8,7 @@ import { ExercitoUseCase } from '../usecases/exercito-use-case';
 import { DiarioOficialWeb } from '../infrastructure/web/diario-oficial-web';
 import { ConsultarDiarioOficialUseCase } from '../usecases/consultar-diario-oficial-estado';
 import { DiarioOficialController } from '../interfaces/controllers/diario-oficial-web-controller';
+import { enviarEmail } from '../interfaces/controllers/send-email-controller';
 
 export const router = Router();
 
@@ -21,6 +22,16 @@ router.post('/users', (req, res) => userController.create(req, res));
 
 const scraper = new ExercitoWebScraper();
 const exercitoUseCase = new ExercitoUseCase(scraper);
+
+router.post('/mail', async (req, res) => {
+  try {
+    const { email, html, ano } = req.body; 
+    await enviarEmail(email, html, ano);  
+    res.status(200).send('E-mails enviados com sucesso!');
+  } catch (error) {
+    res.status(500).send('Erro ao enviar e-mails');
+  }
+});
 
 router.get('/exercito', async (req, res) => {
   try {

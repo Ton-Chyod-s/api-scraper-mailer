@@ -2,7 +2,7 @@ import { ExercitoWebScraper } from "../infrastructure/web/exercito-web-scraper";
 import { ExercitoUseCase } from "../usecases/exercito-use-case";
 import { formatarLista } from "../infrastructure/utils/html-formatter";
 import { carregarArquivo } from "../infrastructure/utils/file";
-import { enviarEmail } from "../infrastructure/utils/send-email";
+import { enviarEmail } from "../interfaces/controllers/send-email-controller";
 import { DiarioOficialWeb } from "../infrastructure/web/diario-oficial-web";
 import { ConsultarDiarioOficialUseCase } from "../usecases/consultar-diario-oficial-estado";
 
@@ -23,7 +23,7 @@ export async function myTask() {
     const corpoCompleto = exercitoFinal + doeFinal;
     const htmlFinal = montarHtmlFinal(htmlBase, header, corpoCompleto);
 
-    await enviarEmail(htmlFinal, ano);
+    await enviarEmail('hix_x@hotmail.com', htmlFinal, ano);
     console.log("Email sent successfully!");
 }
 
