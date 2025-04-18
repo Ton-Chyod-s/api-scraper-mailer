@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { HomeController } from '../interfaces/controllers/home-controller';
 import { UserController } from '../interfaces/controllers/user-controller';
 import { CreateUser } from '../usecases/create-user';
-import { PrismaUserRepository } from '../infrastructure/repositories/prisma-user-repository';
+import { PrismaUserRepository } from '../infrastructure/repositories/user-repository';
 import { ExercitoWebScraper } from '../infrastructure/web/exercito-web-scraper';
 import { ExercitoUseCase } from '../usecases/exercito-use-case';
 import { DiarioOficialWeb } from '../infrastructure/web/diario-oficial-web';

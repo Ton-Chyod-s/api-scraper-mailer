@@ -1,6 +1,6 @@
 import { SendEmailUseCase } from "../../usecases/send-email-use-case";
 import { NodemailerProvider } from "../providers/nodemailer-provider";
-import { PrismaUserRepository } from "../repositories/prisma-user-repository";
+import { PrismaUserRepository } from "../repositories/user-repository";
 
 export async function enviarEmail(html: string, ano: string): Promise<void> {
   const mailProvider = new NodemailerProvider();
