@@ -1,10 +1,10 @@
 import { ExercitoWebScraper } from "../infrastructure/web/exercito-web-scraper";
-import { ExercitoUseCase } from "../usecases/exercito-use-case";
+import { ExercitoUseCase } from "../usecases/exércitoWork/exercito-use-case";
 import { formatarLista } from "../infrastructure/utils/html-formatter";
 import { carregarArquivo } from "../infrastructure/utils/file";
 import { enviarEmail } from "../interfaces/controllers/send-email-controller";
 import { DiarioOficialWeb } from "../infrastructure/web/diario-oficial-web";
-import { ConsultarDiarioOficialUseCase } from "../usecases/consultar-diario-oficial-estado";
+import { ConsultarDiarioOficialUseCase } from "../usecases/diárioOficial/consultar-diario-oficial-estado";
 
 export async function myTask() {
     const ano = new Date().getFullYear().toString();
