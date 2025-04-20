@@ -1,4 +1,4 @@
-import { UserRepository } from '../domain/repositories/user-repository';
+import { UserRepository } from '../../domain/repositories/user-repository';
 
 export class GetUserNameByEmail {
     constructor(private userRepository: UserRepository) {}

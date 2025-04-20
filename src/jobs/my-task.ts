@@ -5,27 +5,48 @@ import { carregarArquivo } from "../infrastructure/utils/file";
 import { enviarEmail } from "../interfaces/controllers/send-email-controller";
 import { DiarioOficialWeb } from "../infrastructure/web/diario-oficial-web";
 import { ConsultarDiarioOficialUseCase } from "../usecases/diárioOficial/consultar-diario-oficial-estado";
+import { GetEmails } from "../usecases/user/get-emails";
+import { GetUserNameByEmail } from "../usecases/user/get-user-name-by-email";
 
-export async function myTask() {
-    const ano = new Date().getFullYear().toString();
-  
-    const htmlBase = await carregarArquivo('./src/static/main.html');
-    const header = await carregarArquivo('./src/static/emails/header.html');
+export async function myTask(
+  getEmails: GetEmails, 
+  getUserNameByEmail: GetUserNameByEmail
+): Promise<void> {
+  const ano = new Date().getFullYear().toString();
+  const [emails, htmlBase, header, doeTemplate] = await Promise.all([
+    getEmails.execute(),
+    carregarArquivo('./src/static/main.html'),
+    carregarArquivo('./src/static/emails/header.html'),
+    carregarArquivo('./src/static/emails/doe.html')
+  ]);
 
-    const doeTemplate =  await carregarArquivo('./src/static/emails/doe.html');
-    const listaFormatadaDoe = await gerarListaFormatadaDoe();
-    const doeFinal = preencherTemplate(doeTemplate, 'listaDOE', listaFormatadaDoe);
+  const exercitoTemplate = await carregarTemplateExercito(ano);
+  const listaFormatadaExercito = await gerarListaFormatadaExercito();
+  const exercitoFinal = preencherTemplate(exercitoTemplate, 'listaExercito', listaFormatadaExercito);
 
-    const exercitoTemplate = await carregarTemplateExercito(ano);
-    const listaFormatada = await gerarListaFormatadaExercito();
-    const exercitoFinal = preencherTemplate(exercitoTemplate, 'listaExercito', listaFormatada);
+  for (const email of emails) {
+    try {
+      const userName = await getUserNameByEmail.execute(email);
 
-    const corpoCompleto = exercitoFinal + doeFinal;
-    const htmlFinal = montarHtmlFinal(htmlBase, header, corpoCompleto);
+      if (!userName) {
+        console.warn(`Usuário não encontrado para o e-mail: ${email}`);
+        continue;
+      }
 
-    await enviarEmail('hix_x@hotmail.com', htmlFinal, ano);
-    console.log("Email sent successfully!");
+      const listaDoe = await gerarListaFormatadaDoe(userName);
+      const doeFinal = preencherTemplate(doeTemplate, 'listaDOE', listaDoe);
+
+      const corpoCompleto = exercitoFinal + doeFinal;
+      const htmlFinal = montarHtmlFinal(htmlBase, header, corpoCompleto);
+
+      await enviarEmail(email, htmlFinal, ano);
+      console.log(`E-mail enviado para: ${email}`);
+    } catch (error) {
+      console.error(`Falha ao enviar e-mail para ${email}:`, error);
+    }
+  }
 }
+
 
 async function carregarTemplateExercito(ano: string): Promise<string> {
   let template = await carregarArquivo("./src/static/emails/exercito.html");
@@ -40,10 +61,10 @@ async function gerarListaFormatadaExercito(): Promise<string> {
   return listaExercito;
 }
 
-async function gerarListaFormatadaDoe(): Promise<string> {
+async function gerarListaFormatadaDoe(name: string): Promise<string> {
   const scraper = new DiarioOficialWeb();
   const useCase = new ConsultarDiarioOficialUseCase(scraper);
-  const resultado = await useCase.execute('Klayton Chrysthian Oliveira Dias', '01/01/2023', '15/11/2023');
+  const resultado = await useCase.execute(name, '01/01/2023', '15/11/2023');
   const listaDoe = formatarLista(Object.values(resultado));
   return listaDoe;
 }
