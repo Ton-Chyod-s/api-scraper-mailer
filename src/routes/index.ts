@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { HomeController } from '../interfaces/controllers/home-controller';
 import { UserController } from '../interfaces/controllers/user-controller';
-import { CreateUser } from '../usecases/create-user';
+import { CreateUser } from '../usecases/user/create-user';
 import { PrismaUserRepository } from '../infrastructure/repositories/user-repository';
 import { ExercitoWebScraper } from '../infrastructure/web/exercito-web-scraper';
-import { ExercitoUseCase } from '../usecases/exercito-use-case';
+import { ExercitoUseCase } from '../usecases/exércitoWork/exercito-use-case';
 import { DiarioOficialWeb } from '../infrastructure/web/diario-oficial-web';
-import { ConsultarDiarioOficialUseCase } from '../usecases/consultar-diario-oficial-estado';
+import { ConsultarDiarioOficialUseCase } from '../usecases/diárioOficial/consultar-diario-oficial-estado';
 import { DiarioOficialController } from '../interfaces/controllers/diario-oficial-web-controller';
 import { enviarEmail } from '../interfaces/controllers/send-email-controller';
 
