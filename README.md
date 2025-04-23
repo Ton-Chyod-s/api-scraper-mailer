@@ -17,7 +17,7 @@ Este projeto é uma API responsável por realizar scraping de dados de diferente
 - **PostgreSQL**
 - **Nodemailer** (para envio de e-mails)
 - **Node Cron** (para agendamento de tarefas)
-- **GitHub Actions** (para CI/CD) - **implementando**
+- **GitHub Actions** (para CI/CD)
 
 ## 🔧 Instalação
 
