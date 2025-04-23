@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-    "start": "node src/index.ts",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/main/web/index.ts",
+    "start": "ts-node src/main/web/index.ts",
     "build": "tsc",
     "test": "vitest"
   },
@@ -45,6 +45,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.2"
   }
 }

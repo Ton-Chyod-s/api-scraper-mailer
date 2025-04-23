@@ -1,6 +1,6 @@
-import { DiarioOficialProvider } from '../../domain/providers/diario-oficial-provider';
+import { DiarioOficialProvider } from '../../domain/providers/diario-oficial/diario-oficial-provider';
 
-export class ConsultarDiarioOficialUseCase {
+export class ConsultarDiarioOficialMunicipioUseCase {
   constructor(private readonly diarioOficialProvider: DiarioOficialProvider) {}
 
   async execute(nome: string, dataInicio: string, dataFim: string): Promise<any> {

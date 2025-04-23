@@ -1,4 +1,4 @@
-import { SendEmailUseCase } from "../../usecases/mail/send-email-use-case";
+import { SendEmailUseCase } from "../../usecases/email/send-email-use-case";
 import { NodemailerProvider } from "../../infrastructure/providers/nodemailer-provider";
 
 export async function enviarEmail(email: string, html: string, ano: string): Promise<void> {
