@@ -1,3 +1,4 @@
+import { PrismaUserRepository } from "../../infrastructure/repositories/user-repository";
 import { formatarData } from "../../infrastructure/utils/date/date-helper";
 import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "../../infrastructure/utils/email/email-helper";
 import { GetEmails } from "../user/get-emails";
@@ -54,4 +55,22 @@ export class EnviarEmailsCompletos {
           }
     }
   }
+}
+
+
+if (require.main === module) {
+  const userRepository = new PrismaUserRepository();
+  const getEmails = new GetEmails(userRepository);
+  const getUserNameByEmail = new GetUserNameByEmail(userRepository);
+  const enviarEmail = async (email: string, html: string, subject: string) => {};
+  
+  const enviarEmailsCompletos = new EnviarEmailsCompletos(
+    getEmails,
+    getUserNameByEmail,
+    enviarEmail
+  );
+  
+  enviarEmailsCompletos.execute().catch((error) => {
+    console.error("Erro ao executar a tarefa:", error);
+  });
 }
