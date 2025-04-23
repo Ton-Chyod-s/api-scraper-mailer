@@ -1,5 +1,5 @@
 import { load } from 'cheerio';
-import { ExercitoWebScraper } from '../../infrastructure/web/exercito-web-scraper';
+import { ExercitoWebScraper } from '../../infrastructure/web/exercito-work/exercito-web-scraper';
 import { SiteData } from '../../domain/entities/site-data';
 import { formatarLista } from '../../infrastructure/utils/html-formatter';
 

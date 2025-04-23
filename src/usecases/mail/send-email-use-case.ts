@@ -1,4 +1,4 @@
-import { IMailProvider } from "../../domain/providers/mail-provider";
+import { IMailProvider } from "../../domain/providers/mail/mail-provider";
 
 export class SendEmailUseCase {
   constructor(private mailProvider: IMailProvider) {}

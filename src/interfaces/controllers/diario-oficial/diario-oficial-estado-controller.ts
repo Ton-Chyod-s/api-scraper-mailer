@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { ConsultarDiarioOficialUseCase } from '../../usecases/diario-oficial/consultar-diario-oficial-estado';
+import { ConsultarDiarioOficialEstadoUseCase } from '../../../usecases/diario-oficial/consultar-diario-oficial-estado';
 
-export class DiarioOficialController {
-  constructor(private readonly consultarUseCase: ConsultarDiarioOficialUseCase) {}
+export class DiarioOficialEstadoController {
+  constructor(private readonly consultarUseCase: ConsultarDiarioOficialEstadoUseCase) {}
 
   consultar = async (req: Request, res: Response): Promise<void> => {
     try {

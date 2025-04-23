@@ -1,12 +1,12 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import { DiarioOficialProvider } from '../../domain/providers/diario-oficial-provider';
-import { SiteData } from '../../domain/entities/site-data';
+import { DiarioOficialProvider } from '../../../domain/providers/diario-oficial/diario-oficial-provider';
+import { SiteData } from '../../../domain/entities/site-data';
 
-export class DiarioOficialWeb implements DiarioOficialProvider {
+export class DiarioOficialEstadoWeb implements DiarioOficialProvider {
   private url = 'https://www.spdo.ms.gov.br/DiarioDOE/Index/Index/1';
 
-  async buscarPublicacoes(nome: string, dataInicio: string, dataFim: string): Promise<any> {
+  async buscarPublicacoes(nome: string, dataInicio: string, dataFim: string): Promise<SiteData> {
     const form = new FormData();
     form.append('Filter.DataInicial', dataInicio);
     form.append('Filter.DataFinal', dataFim);
@@ -20,8 +20,6 @@ export class DiarioOficialWeb implements DiarioOficialProvider {
     return DiarioOficialDeserializer.fromRawData(response.data['dataElastic']);
   }
 }
-
-const siteData: SiteData = { site: 'https://www.spdo.ms.gov.br/diariodoe' };
 
 class DiarioOficialDeserializer {
   static fromRawData(rawData: any[]): SiteData {
@@ -46,7 +44,7 @@ class DiarioOficialDeserializer {
 }
 
 if (require.main === module) {
-  const diarioOficialProvider = new DiarioOficialWeb();
+  const diarioOficialProvider = new DiarioOficialEstadoWeb();
   diarioOficialProvider.buscarPublicacoes('Klayton Chrysthian Oliveira Dias', '01/01/2023', '15/11/2023')
     .then(result => console.log(result))
     .catch(error => console.error(error));

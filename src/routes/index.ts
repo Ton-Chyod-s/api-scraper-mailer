@@ -3,12 +3,15 @@ import { HomeController } from '../interfaces/controllers/home-controller';
 import { UserController } from '../interfaces/controllers/user-controller';
 import { CreateUser } from '../usecases/user/create-user';
 import { PrismaUserRepository } from '../infrastructure/repositories/user-repository';
-import { ExercitoWebScraper } from '../infrastructure/web/exercito-web-scraper';
+import { ExercitoWebScraper } from '../infrastructure/web/exercito-work/exercito-web-scraper';
 import { ExercitoUseCase } from '../usecases/exercito-work/exercito-use-case';
-import { DiarioOficialWeb } from '../infrastructure/web/diario-oficial-web';
-import { ConsultarDiarioOficialUseCase } from '../usecases/diario-oficial/consultar-diario-oficial-estado';
-import { DiarioOficialController } from '../interfaces/controllers/diario-oficial-web-controller';
-import { enviarEmail } from '../interfaces/controllers/send-email-controller';
+import { DiarioOficialEstadoWeb } from '../infrastructure/web/diario-oficial/diario-oficial-estado-web';
+import { ConsultarDiarioOficialEstadoUseCase } from '../usecases/diario-oficial/consultar-diario-oficial-estado';
+import { DiarioOficialEstadoController } from '../interfaces/controllers/diario-oficial/diario-oficial-estado-controller';
+import { DiarioOficialMunicipioController } from '../interfaces/controllers/diario-oficial/diario-oficial-municipio-controller';
+import { enviarEmail } from '../interfaces/controllers/mail/send-email-controller';
+import { DiarioOficialMunicipioWeb } from '../infrastructure/web/diario-oficial/diario-oficial-municipio-web';
+import { ConsultarDiarioOficialMunicipioUseCase } from '../usecases/diario-oficial/consultar-diario-oficial-municipio';
 
 export const router = Router();
 
@@ -42,8 +45,14 @@ router.get('/exercito', async (req, res) => {
   }
 });
 
-const diarioOficialProvider = new DiarioOficialWeb();
-const consultarUseCase = new ConsultarDiarioOficialUseCase(diarioOficialProvider);
-const diarioController = new DiarioOficialController(consultarUseCase);
+const diarioOficialEstadoWeb = new DiarioOficialEstadoWeb();
+const consultarEstadoUseCase = new ConsultarDiarioOficialEstadoUseCase(diarioOficialEstadoWeb);
+const diarioEstadoController = new DiarioOficialEstadoController(consultarEstadoUseCase);
 
-router.post('/doe', (req, res) => diarioController.consultar(req, res)); 
+router.post('/doe', (req, res) => diarioEstadoController.consultar(req, res)); 
+
+const diarioOficialMunicipioWeb = new DiarioOficialMunicipioWeb();
+const consultarMunicipioUseCase = new ConsultarDiarioOficialMunicipioUseCase(diarioOficialMunicipioWeb);
+const diarioMunicipioController = new DiarioOficialMunicipioController(consultarMunicipioUseCase);
+
+router.post('/diogrande', (req, res) => diarioMunicipioController.consultar(req, res)); 
