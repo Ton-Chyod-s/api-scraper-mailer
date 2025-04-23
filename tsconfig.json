@@ -1,19 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "outDir": "dist",
     "module": "commonjs",
-    "rootDir": "./",  // Definindo o rootDir para o diretório raiz
-    "outDir": "./dist",  // A saída dos arquivos compilados
+    "target": "ES2020",
+    "rootDir": "src",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+    "strict": true
   },
-  "include": [
-    "src/**/*",         // Inclui a pasta src
-    "__test__/**/*"     // Inclui a pasta de testes
-  ],
-  "exclude": [
-    "node_modules"      // Exclui node_modules
-  ]
+  "include": ["src"]
 }
