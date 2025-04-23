@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Ton-Chyod-s/api-scraper-mailer#readme",
   "engines": {
-    "node": "22.x"
+    "node": "22.14.0"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
