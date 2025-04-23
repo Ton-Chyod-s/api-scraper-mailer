@@ -16,7 +16,11 @@ export async function myTask(
   getEmails: GetEmails, 
   getUserNameByEmail: GetUserNameByEmail
 ): Promise<void> {
-  const ano = new Date().getFullYear().toString();
+  const ano = new Date().getFullYear();
+
+  const dataInit = formatarData(new Date(ano, 0, 1));
+  const dataFinish = formatarData(new Date(ano, 11, 31));
+
   const [emails, htmlBase, header, doeTemplate, diograndeTemplate] = await Promise.all([
     getEmails.execute(),
     carregarArquivo('./src/static/main.html'),
@@ -25,14 +29,9 @@ export async function myTask(
     carregarArquivo('./src/static/emails/diogrande.html')
   ]);
 
-  const exercitoTemplate = await carregarTemplateExercito(ano);
+  const exercitoTemplate = await carregarTemplateExercito(ano.toString());
   const listaFormatadaExercito = await gerarListaFormatadaExercito();
   const exercitoFinal = preencherTemplate(exercitoTemplate, 'listaExercito', listaFormatadaExercito);
-
-  const anoAtual = new Date().getFullYear();
-
-  const dataInit = formatarData(new Date(anoAtual, 0, 1));
-  const dataFinish = formatarData(new Date(anoAtual, 11, 31));
 
   for (const email of emails) {
     try {
@@ -53,8 +52,8 @@ export async function myTask(
       
       const htmlFinal = montarHtmlFinal(htmlBase, header, corpoCompleto);
 
-      await enviarEmail(email, htmlFinal, ano);
-      console.log(`E-mail enviado para: ${email}`);
+      await enviarEmail(email, htmlFinal, ano.toString());
+      console.log(`E-mail enviado para: ${userName} email: ${email}`);
     } catch (error) {
       console.error(`Falha ao enviar e-mail para ${email}:`, error);
     }
@@ -96,7 +95,6 @@ async function gerarListaFormatadaDiogrande(name: string, dateInit: string, date
   const resultado = await useCase.execute(name, dateInit, dateFinish);
   return formatarLista(Object.values(resultado));
 }
-
 
 function preencherTemplate(template: string, marcador: string, valor: string): string {
   return template.replace(new RegExp(`\\\${${marcador}}`, 'g'), valor);
