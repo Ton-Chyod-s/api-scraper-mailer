@@ -1,5 +1,5 @@
 import express from 'express';
-import { router } from '../../routes';	
+import { router } from '../../main/web/routes';	
 import '../../infrastructure/node-cron/scheduler'; 
 
 const server = express();
