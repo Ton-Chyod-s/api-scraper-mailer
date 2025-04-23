@@ -1,6 +1,11 @@
 # API Scraper Mailer
 
 Este projeto é uma API responsável por realizar scraping de dados de diferentes fontes e enviar e-mails com as informações coletadas. Ele utiliza **Node.js** com **TypeScript** e **Prisma** para comunicação com o banco de dados.
+## 🔹 Deploy da aplicação
+
+```sh
+https://api-scraper-mailer-17f81144de8c.herokuapp.com/
+```
 
 ## Funcionalidades
 
