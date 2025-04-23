@@ -7,7 +7,12 @@ exports.ExercitoWebScraper = void 0;
 const axios_1 = __importDefault(require("axios"));
 class ExercitoWebScraper {
     async buscarConteudo() {
-        const { data } = await axios_1.default.get('https://9rm.eb.mil.br/index.php/oficial-tecnico-temporario');
+        const { data } = await axios_1.default.get('https://9rm.eb.mil.br/index.php/oficial-tecnico-temporario', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0'
+            },
+            timeout: 10000
+        });
         return data;
     }
     async buscarConteudoAno(ano) {
