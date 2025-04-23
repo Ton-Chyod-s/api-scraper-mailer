@@ -1,15 +1,15 @@
 import { Router } from 'express';
-import { HomeController } from '../interfaces/controllers/home-controller';
-import { UserController } from '../interfaces/controllers/user-controller';
+import { HomeController } from '../controllers/home-controller';
+import { UserController } from '../controllers/user-controller';
 import { CreateUser } from '../usecases/user/create-user';
 import { PrismaUserRepository } from '../infrastructure/repositories/user-repository';
 import { ExercitoWebScraper } from '../infrastructure/providers/gateways/exercito-work/exercito-web-scraper';
 import { ExercitoUseCase } from '../usecases/exercito-work/exercito-use-case';
 import { DiarioOficialEstadoWeb } from '../infrastructure/providers/gateways/diario-oficial/diario-oficial-estado-web';
 import { ConsultarDiarioOficialEstadoUseCase } from '../usecases/diario-oficial/consultar-diario-oficial-estado';
-import { DiarioOficialEstadoController } from '../interfaces/controllers/diario-oficial/diario-oficial-estado-controller';
-import { DiarioOficialMunicipioController } from '../interfaces/controllers/diario-oficial/diario-oficial-municipio-controller';
-import { enviarEmail } from '../interfaces/controllers/email/send-email-controller';
+import { DiarioOficialEstadoController } from '../controllers/diario-oficial/diario-oficial-estado-controller';
+import { DiarioOficialMunicipioController } from '../controllers/diario-oficial/diario-oficial-municipio-controller';
+import { enviarEmail } from '../controllers/email/send-email-controller';
 import { DiarioOficialMunicipioWeb } from '../infrastructure/providers/gateways/diario-oficial/diario-oficial-municipio-web';
 import { ConsultarDiarioOficialMunicipioUseCase } from '../usecases/diario-oficial/consultar-diario-oficial-municipio';
 

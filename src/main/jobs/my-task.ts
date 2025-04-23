@@ -2,7 +2,7 @@ import { PrismaUserRepository } from "../../infrastructure/repositories/user-rep
 import { GetEmails } from "../../usecases/user/get-emails";
 import { GetUserNameByEmail } from "../../usecases/user/get-user-name-by-email";
 import { EnviarEmailsCompletos } from "../../usecases/email/send-email-job-use-case";
-import { enviarEmail } from "../../interfaces/controllers/email/send-email-controller";
+import { enviarEmail } from "../../controllers/email/send-email-controller";
 
 export async function myTask(): Promise<void> {
   const userRepository = new PrismaUserRepository();
