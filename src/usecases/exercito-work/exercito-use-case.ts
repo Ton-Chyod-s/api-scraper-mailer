@@ -40,14 +40,12 @@ export class ExercitoUseCase {
           }
         });
 
-        const ultimasInfo: Record<string, string> = {};
-        const tamanho = Object.keys(conteudos).length;
-
-        for (let i in conteudos) {
-          if (Number(i) >= tamanho) {
-            ultimasInfo[i] = conteudos[i];
-          }
-        }
+        const ultimasInfo = Object.entries(conteudos)
+          .slice(-5)
+          .reduce((acc: Record<string, string>, [k, v]) => {
+            acc[k] = v;
+            return acc;
+          }, {});
 
         data.conteudos = ultimasInfo;
 
