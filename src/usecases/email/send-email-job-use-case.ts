@@ -1,5 +1,5 @@
-import { formatarData } from "../../infrastructure/utils/date-helper";
-import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "../../infrastructure/utils/email-helper";
+import { formatarData } from "../../infrastructure/utils/date/date-helper";
+import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "../../infrastructure/utils/email/email-helper";
 import { GetEmails } from "../user/get-emails";
 import { GetUserNameByEmail } from "../user/get-user-name-by-email";
 

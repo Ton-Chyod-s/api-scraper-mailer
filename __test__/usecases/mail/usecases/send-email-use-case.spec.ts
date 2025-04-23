@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SendEmailUseCase } from '../../../../src/usecases/mailer/send-email-use-case';
+import { SendEmailUseCase } from '../../../../src/usecases/email/send-email-use-case';
 import { mailProviderMock } from '../providers/mail-provider.mock';  // Importando o mock
 
 describe('SendEmailUseCase', () => {
