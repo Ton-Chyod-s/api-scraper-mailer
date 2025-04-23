@@ -21,6 +21,9 @@
     "url": "https://github.com/Ton-Chyod-s/api-scraper-mailer/issues"
   },
   "homepage": "https://github.com/Ton-Chyod-s/api-scraper-mailer#readme",
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "@prisma/client": "^6.6.0",
     "axios": "^1.8.4",
