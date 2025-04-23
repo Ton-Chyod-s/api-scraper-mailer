@@ -3,7 +3,7 @@ import { router } from '../../main/web/routes';
 import '../../infrastructure/node-cron/scheduler'; 
 
 const server = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 server.use(express.json());
 server.use(router);
