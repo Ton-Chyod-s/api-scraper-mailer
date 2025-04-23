@@ -1,7 +1,7 @@
 import { load } from 'cheerio';
-import { ExercitoWebScraper } from '../../infrastructure/web/exercito-work/exercito-web-scraper';
+import { ExercitoWebScraper } from '../../infrastructure/providers/scrapers/exercito-work/exercito-web-scraper';
 import { SiteData } from '../../domain/entities/site-data';
-import { formatarLista } from '../../infrastructure/utils/html-formatter';
+import { formatarLista } from '../../infrastructure/utils/html-formatter-helper';
 
 export class ExercitoUseCase {
   constructor(private scraper: ExercitoWebScraper) {}
