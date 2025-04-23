@@ -21,7 +21,7 @@ export function preencherTemplate(template: string, marcador: string, valor: str
   }
 
 export async function carregarTemplateExercito(ano: string): Promise<string> {
-    let template = await carregarArquivo("./src/static/emails/exercito.html");
+    let template = await carregarArquivo("./src/templates/emails/exercito.html");
     return template.replace(/\${ano}/g, ano);
   }
 

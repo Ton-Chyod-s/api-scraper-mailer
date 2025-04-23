@@ -1,3 +1,4 @@
+import { enviarEmail } from "../../controllers/email/send-email-controller";
 import { PrismaUserRepository } from "../../infrastructure/repositories/user-repository";
 import { formatarData } from "../../infrastructure/utils/date/date-helper";
 import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "../../infrastructure/utils/email/email-helper";
@@ -19,10 +20,10 @@ export class EnviarEmailsCompletos {
       
         const [emails, htmlBase, header, doeTemplate, diograndeTemplate] = await Promise.all([
           this.getEmails.execute(),
-          carregarArquivo('./src/static/main.html'),
-          carregarArquivo('./src/static/emails/header.html'),
-          carregarArquivo('./src/static/emails/doe.html'),
-          carregarArquivo('./src/static/emails/diogrande.html')
+          carregarArquivo('./src/templates/main.html'),
+          carregarArquivo('./src/templates/emails/header.html'),
+          carregarArquivo('./src/templates/emails/doe.html'),
+          carregarArquivo('./src/templates/emails/diogrande.html')
         ]);
       
         const exercitoTemplate = await carregarTemplateExercito(ano.toString());
@@ -59,18 +60,16 @@ export class EnviarEmailsCompletos {
 
 
 if (require.main === module) {
-  const userRepository = new PrismaUserRepository();
-  const getEmails = new GetEmails(userRepository);
-  const getUserNameByEmail = new GetUserNameByEmail(userRepository);
-  const enviarEmail = async (email: string, html: string, subject: string) => {};
-  
+  const userRepo = new PrismaUserRepository();
+
+  const getEmails = new GetEmails(userRepo);
+  const getUserNameByEmail = new GetUserNameByEmail(userRepo);
+
   const enviarEmailsCompletos = new EnviarEmailsCompletos(
     getEmails,
     getUserNameByEmail,
     enviarEmail
   );
-  
-  enviarEmailsCompletos.execute().catch((error) => {
-    console.error("Erro ao executar a tarefa:", error);
-  });
+
+  enviarEmailsCompletos.execute()
 }
