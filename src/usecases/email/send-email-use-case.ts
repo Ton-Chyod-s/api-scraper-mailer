@@ -1,4 +1,5 @@
 import { IMailProvider } from "../../domain/providers/mail/mail-provider";
+import { NodemailerProvider } from "../../infrastructure/providers/nodemailer-provider";
 
 export class SendEmailUseCase {
   constructor(private mailProvider: IMailProvider) {}
@@ -11,3 +12,13 @@ export class SendEmailUseCase {
     });
   }
 }
+
+if (require.main === module) {
+  const mailProvider = new NodemailerProvider();
+  const sendEmailUseCase = new SendEmailUseCase(mailProvider);
+  
+  sendEmailUseCase.execute({
+    to: "hix_x@hotmail.com",
+    subject: "Test Email",
+    html: "<h1>Hello World</h1>"  
+  })}
