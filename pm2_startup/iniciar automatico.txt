@@ -1,0 +1,21 @@
+Configuração de Inicialização Automática na BIOS/UEFI
+Se o seu computador suportar, você pode configurar a BIOS/UEFI para ligar automaticamente o PC em um horário determinado. Isso pode ser útil se você deseja ligar o computador automaticamente sem interagir com ele.
+
+Passos:
+Entrar na BIOS/UEFI:
+
+Reinicie o computador e pressione a tecla que leva à BIOS/UEFI (geralmente F2, DEL, ESC, ou outra dependendo do fabricante).
+
+Localizar a configuração de "Wake on RTC" ou "Wake on Alarm" (despertar pelo relógio):
+
+Dentro da BIOS/UEFI, procure por uma configuração chamada algo como Wake on RTC (Wake on Real-Time Clock) ou Wake on Alarm.
+
+Ative essa opção.
+
+Configurar o horário:
+
+Configure a hora em que você deseja que o computador ligue automaticamente.
+
+Salvar e sair:
+
+Salve as alterações e saia da BIOS/UEFI. O computador será capaz de ligar automaticamente no horário configurado.
