@@ -7,7 +7,8 @@ const express_1 = __importDefault(require("express"));
 const routes_1 = require("../../main/web/routes");
 require("../../infrastructure/node-cron/scheduler");
 const server = (0, express_1.default)();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT_SERVER || 3000
+    || 3000;
 server.use(express_1.default.json());
 server.use(routes_1.router);
 server.listen(PORT, () => {
