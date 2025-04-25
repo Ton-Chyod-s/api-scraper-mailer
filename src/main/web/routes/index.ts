@@ -12,6 +12,7 @@ import { DiarioOficialMunicipioController } from '../../../controllers/diario-of
 import { enviarEmail } from '../../../controllers/email/send-email-controller';
 import { DiarioOficialMunicipioWeb } from '../../../infrastructure/providers/gateways/diario-oficial/diario-oficial-municipio-web';
 import { ConsultarDiarioOficialMunicipioUseCase } from '../../../usecases/diario-oficial/consultar-diario-oficial-municipio';
+import { ExercitoController } from '../../../controllers/exercito/exercito-controller';
 
 export const router = Router();
 
@@ -23,8 +24,6 @@ const userController = new UserController(createUser);
 
 router.post('/users', (req, res) => userController.create(req, res));
 
-const scraper = new ExercitoWebScraper();
-const exercitoUseCase = new ExercitoUseCase(scraper);
 
 router.post('/mail', async (req, res) => {
   try {
@@ -36,14 +35,11 @@ router.post('/mail', async (req, res) => {
   }
 });
 
-router.get('/exercito', async (req, res) => {
-  try {
-    const content = await exercitoUseCase.execute();
-    res.send(content);
-  } catch (error) {
-    res.status(500).send('Error fetching content from Exercito website');
-  }
-});
+const exercitoWebScraper = new ExercitoWebScraper();
+const exercitoUseCase = new ExercitoUseCase(exercitoWebScraper);
+const exercitoController = new ExercitoController(exercitoUseCase);
+
+router.get('/exercito', (req, res) => exercitoController.consultar(req, res));
 
 const diarioOficialEstadoWeb = new DiarioOficialEstadoWeb();
 const consultarEstadoUseCase = new ConsultarDiarioOficialEstadoUseCase(diarioOficialEstadoWeb);
