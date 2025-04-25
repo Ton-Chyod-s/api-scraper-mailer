@@ -107,7 +107,7 @@ PORT_SERVER=1000
 ```
 ## 📚 Documentação
 
-Para mais detalhes sobre a arquitetura, API e outras configurações, consulte a documentação na pasta [documentacao](./docs).
+Para mais detalhes sobre a arquitetura, API e outras configurações, consulte a documentação na pasta [documentacao](./src/docs).
 
 
 ### Contribuindo
