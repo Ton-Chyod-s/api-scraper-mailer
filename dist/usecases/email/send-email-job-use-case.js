@@ -19,10 +19,10 @@ class EnviarEmailsCompletos {
         const dataFinish = (0, date_helper_1.formatarData)(new Date(ano, 11, 31));
         const [emails, htmlBase, header, doeTemplate, diograndeTemplate] = await Promise.all([
             this.getEmails.execute(),
-            (0, email_helper_1.carregarArquivo)('./src/templates/main.html'),
-            (0, email_helper_1.carregarArquivo)('./src/templates/emails/header.html'),
-            (0, email_helper_1.carregarArquivo)('./src/templates/emails/doe.html'),
-            (0, email_helper_1.carregarArquivo)('./src/templates/emails/diogrande.html')
+            (0, email_helper_1.carregarArquivo)('main.html'),
+            (0, email_helper_1.carregarArquivo)('emails/header.html'),
+            (0, email_helper_1.carregarArquivo)('emails/doe.html'),
+            (0, email_helper_1.carregarArquivo)('emails/diogrande.html')
         ]);
         const exercitoTemplate = await (0, email_helper_1.carregarTemplateExercito)(ano.toString());
         const listaFormatadaExercito = await (0, email_helper_1.gerarListaFormatadaExercito)();

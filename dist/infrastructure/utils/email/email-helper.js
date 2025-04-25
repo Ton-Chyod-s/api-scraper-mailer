@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.carregarArquivo = carregarArquivo;
 exports.montarHtmlFinal = montarHtmlFinal;
@@ -16,8 +19,10 @@ const diario_oficial_estado_web_1 = require("../../providers/gateways/diario-ofi
 const consultar_diario_oficial_estado_1 = require("../../../usecases/diario-oficial/consultar-diario-oficial-estado");
 const exercito_web_scraper_1 = require("../../providers/gateways/exercito-work/exercito-web-scraper");
 const exercito_use_case_1 = require("../../../usecases/exercito-work/exercito-use-case");
-async function carregarArquivo(path) {
-    return await (0, promises_1.readFile)(path, 'utf-8');
+const path_1 = __importDefault(require("path"));
+async function carregarArquivo(relativePath) {
+    const absolutePath = path_1.default.resolve(__dirname, '../../../main/web/templates', relativePath);
+    return await (0, promises_1.readFile)(absolutePath, 'utf-8');
 }
 function montarHtmlFinal(base, header, corpo) {
     const conteudo = header + corpo;
@@ -27,7 +32,7 @@ function preencherTemplate(template, marcador, valor) {
     return template.replace(new RegExp(`\\\${${marcador}}`, 'g'), valor);
 }
 async function carregarTemplateExercito(ano) {
-    let template = await carregarArquivo("./src/templates/emails/exercito.html");
+    let template = await carregarArquivo("emails/exercito.html");
     return template.replace(/\${ano}/g, ano);
 }
 async function montarCorpoEmail(userName, templates, datas) {

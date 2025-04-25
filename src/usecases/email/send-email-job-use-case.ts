@@ -20,10 +20,10 @@ export class EnviarEmailsCompletos {
       
         const [emails, htmlBase, header, doeTemplate, diograndeTemplate] = await Promise.all([
           this.getEmails.execute(),
-          carregarArquivo('./src/templates/main.html'),
-          carregarArquivo('./src/templates/emails/header.html'),
-          carregarArquivo('./src/templates/emails/doe.html'),
-          carregarArquivo('./src/templates/emails/diogrande.html')
+          carregarArquivo('main.html'),
+          carregarArquivo('emails/header.html'),
+          carregarArquivo('emails/doe.html'),
+          carregarArquivo('emails/diogrande.html')
         ]);
       
         const exercitoTemplate = await carregarTemplateExercito(ano.toString());

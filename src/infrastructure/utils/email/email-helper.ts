@@ -6,9 +6,11 @@ import { DiarioOficialEstadoWeb } from '../../providers/gateways/diario-oficial/
 import { ConsultarDiarioOficialEstadoUseCase } from '../../../usecases/diario-oficial/consultar-diario-oficial-estado';
 import { ExercitoWebScraper } from '../../providers/gateways/exercito-work/exercito-web-scraper';
 import { ExercitoUseCase } from '../../../usecases/exercito-work/exercito-use-case';
+import path from 'path';
 
-export async function carregarArquivo(path: string): Promise<string> {
-  return await readFile(path, 'utf-8');
+export async function carregarArquivo(relativePath: string): Promise<string> {
+  const absolutePath = path.resolve(__dirname, '../../../main/web/templates', relativePath);
+  return await readFile(absolutePath, 'utf-8');
 }
 
 export function montarHtmlFinal(base: string, header: string, corpo: string): string {
@@ -21,7 +23,7 @@ export function preencherTemplate(template: string, marcador: string, valor: str
   }
 
 export async function carregarTemplateExercito(ano: string): Promise<string> {
-    let template = await carregarArquivo("./src/templates/emails/exercito.html");
+    let template = await carregarArquivo("emails/exercito.html");
     return template.replace(/\${ano}/g, ano);
   }
 
