@@ -1,11 +1,6 @@
 # API Scraper Mailer
 
 Este projeto é uma API responsável por realizar scraping de dados de diferentes fontes e enviar e-mails com as informações coletadas. Ele utiliza **Node.js** com **TypeScript** e **Prisma** para comunicação com o banco de dados.
-## 🔹 Deploy da aplicação
-
-```sh
-https://api-scraper-mailer-17f81144de8c.herokuapp.com/
-```
 
 ## Funcionalidades
 
@@ -24,11 +19,28 @@ https://api-scraper-mailer-17f81144de8c.herokuapp.com/
 - **Node Cron** (para agendamento de tarefas)
 - **GitHub Actions** (para CI/CD)
 
+## Arquitetura
+
+O sistema é organizado de acordo com a **Clean Architecture**. Aqui estão as principais camadas do sistema:
+
+- **Controllers**: Responsáveis por lidar com as requisições HTTP e delegar o processamento para os serviços.
+- **Services (Usecases)**: Contêm a lógica de negócio, realizando as operações principais do sistema.
+- **Domain**: Contém entidades e repositórios que abstraem a persistência de dados.
+- **Infrastructure**: Responsável por integrar com tecnologias externas, como APIs, bancos de dados e envio de e-mails.
+
+## Main - Ponto de Entrada da Aplicação
+
+A camada **main** é responsável por:
+
+- Inicializar o servidor e configurar as rotas.
+- Definir os cron jobs agendados.
+- Orquestrar a execução de componentes como a configuração do banco de dados, envio de e-mails, e scraping de dados.
+  
 ## 🔧 Instalação
 
 Para configurar o projeto localmente, siga os passos abaixo:
 
-### 1. Clone o repositório
+1. Clone o repositório
 
 ```bash
 git clone https://github.com/seu-usuario/api-scraper-mailer.git
@@ -91,7 +103,12 @@ MAIL_HOST="smtp.mailtrap.io"
 MAIL_PORT=587
 MAIL_USER="user"
 MAIL_PASS="password"
+PORT_SERVER=1000
 ```
+## 📚 Documentação
+
+Para mais detalhes sobre a arquitetura, API e outras configurações, consulte a documentação na pasta [documentacao](./documentacao).
+
 
 ### Contribuindo
 
