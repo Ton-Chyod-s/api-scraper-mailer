@@ -105,10 +105,6 @@ MAIL_USER="user"
 MAIL_PASS="password"
 PORT_SERVER=1000
 ```
-## 📚 Documentação
-
-Para mais detalhes sobre a arquitetura, API e outras configurações, consulte a documentação na pasta [documentacao](./src/docs).
-
 
 ### Contribuindo
 
@@ -123,3 +119,7 @@ Envie para o repositório remoto (git push origin feature/nome-da-feature).
 
 Abra um Pull Request.
 ```
+
+## 📚 Documentação
+
+Para mais detalhes sobre a arquitetura, API e outras configurações, consulte a documentação na pasta [documentacao](./src/docs).
