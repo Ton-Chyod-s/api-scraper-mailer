@@ -1,8 +1,18 @@
+# Nova Feature + Testes Unitários
 
-### 6. **Contribuindo**
-Se você espera que outras pessoas contribuam para o projeto, uma documentação clara sobre como contribuir é sempre útil.
+## 📌 Tarefas
 
-**Exemplo de conteúdo**:
+- [ ] Definir o escopo da nova feature
+- [ ] Criar a branch para desenvolvimento (`feature/nome-da-feature`)
+- [ ] Implementar a feature
+- [ ] Criar testes unitários para a feature
+- [ ] Garantir cobertura mínima de 50% nos testes
+- [ ] Rodar todos os testes para validar
+- [ ] Atualizar documentação
+- [ ] Fazer push e abrir Pull Request para revisão
+  
+##
+
 ```markdown
 # Contribuindo
 
