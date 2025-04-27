@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { myTask } from '../../main/jobs/my-task';    
 import { CreateTaskLogUseCase } from '../../usecases/task-log/create-use-case';
 import { PrismaTaskLogRepository } from '../repositories/task-log/task-log-repository';
+import { parseExecutedAt } from '../utils/date/date-helper';
 
 const taskLogRepository = new PrismaTaskLogRepository();
 const createTaskLogUseCase = new CreateTaskLogUseCase(taskLogRepository);
@@ -18,10 +19,7 @@ async function executeTask() {
 
   const [taskName, executedAtString] = lastTaskLogEntry.split(' - ');
   
-  const executedAtUTC = new Date(executedAtString);
-
-  const campoGrandeTimestamp = executedAtUTC.getTime() - (4 * 60 * 60 * 1000);
-  const campoGrandeDate = new Date(campoGrandeTimestamp);
+  const campoGrandeDate = parseExecutedAt(executedAtString);
 
   if (taskNames.includes('my-task') && campoGrandeDate.getTime() === now.getTime()) {
     console.log('Tarefa já executada hoje, no mesmo horário!');
