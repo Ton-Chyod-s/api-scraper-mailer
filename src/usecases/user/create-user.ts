@@ -1,9 +1,5 @@
 import { User } from '../../domain/entities/User';
-
-export interface UserRepository {
-  save(user: User): Promise<void>;
-  findByEmail(email: string): Promise<User | null>;
-}
+import { UserRepository } from '../../domain/repositories/user-repository';
 
 export class CreateUser {
   constructor(private userRepo: UserRepository) {}
