@@ -9,36 +9,33 @@ const create_use_case_1 = require("../../usecases/task-log/create-use-case");
 const task_log_repository_1 = require("../repositories/task-log/task-log-repository");
 const taskLogRepository = new task_log_repository_1.PrismaTaskLogRepository();
 const createTaskLogUseCase = new create_use_case_1.CreateTaskLogUseCase(taskLogRepository);
-function scheduleTask() {
+async function executeTask() {
     const now = new Date();
-    const scheduledTime = new Date();
-    scheduledTime.setHours(8, 0, 0, 0);
-    taskLogRepository.getAllTaskNames().then((taskNames) => {
-        if (taskNames.includes('my-task') && now.getDate() === scheduledTime.getDate()) {
-            console.log('Tarefa já executada hoje!');
-            return;
-        }
-        if (now > scheduledTime) {
-            scheduledTime.setDate(scheduledTime.getDate() + 1);
-        }
-        const timeUntilNextExecution = scheduledTime.getTime() - now.getTime();
-        setTimeout(() => {
-            console.log('Executando tarefa agendada...');
-            createTaskLogUseCase.execute('my-task');
-            (0, my_task_1.myTask)();
-        }, timeUntilNextExecution);
-    });
-    if (now > scheduledTime) {
-        console.log('Executando tarefa perdida...');
+    const taskNames = await taskLogRepository.getAllTaskNames();
+    if (taskNames.includes('my-task') && now.getDate() === new Date().getDate()) {
+        console.log('Tarefa já executada hoje!');
+        return;
+    }
+    try {
+        console.log('Executando tarefa agendada...');
+        await createTaskLogUseCase.execute('my-task');
         (0, my_task_1.myTask)();
     }
+    catch (error) {
+        console.error('Erro ao executar tarefa:', error);
+    }
 }
-node_cron_1.default.schedule('0 8 * * 1-7', () => {
+node_cron_1.default.schedule('0 8 * * 1-7', async () => {
     console.log('Tarefa executada no horário!');
-    createTaskLogUseCase.execute('my-task');
-    (0, my_task_1.myTask)();
+    await executeTask();
 }, {
     scheduled: true,
     timezone: 'America/Campo_Grande'
 });
-scheduleTask();
+const now = new Date();
+const scheduledTime = new Date();
+scheduledTime.setHours(8, 0, 0, 0);
+if (now > scheduledTime) {
+    console.log('Executando tarefa perdida...');
+    executeTask();
+}
