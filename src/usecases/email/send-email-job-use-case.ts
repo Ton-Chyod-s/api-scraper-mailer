@@ -1,5 +1,5 @@
 import { enviarEmail } from "../../controllers/email/send-email-controller";
-import { PrismaUserRepository } from "../../infrastructure/repositories/user-repository";
+import { PrismaUserRepository } from "../../infrastructure/repositories/user/user-repository";
 import { formatarData } from "../../infrastructure/utils/date/date-helper";
 import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "../../infrastructure/utils/email/email-helper";
 import { GetEmails } from "../user/get-emails";

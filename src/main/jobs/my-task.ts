@@ -1,4 +1,4 @@
-import { PrismaUserRepository } from "../../infrastructure/repositories/user-repository";
+import { PrismaUserRepository } from "../../infrastructure/repositories/user/user-repository";
 import { GetEmails } from "../../usecases/user/get-emails";
 import { GetUserNameByEmail } from "../../usecases/user/get-user-name-by-email";
 import { EnviarEmailsCompletos } from "../../usecases/email/send-email-job-use-case";

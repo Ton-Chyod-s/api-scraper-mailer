@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myTask = myTask;
-const user_repository_1 = require("../../infrastructure/repositories/user-repository");
+const user_repository_1 = require("../../infrastructure/repositories/user/user-repository");
 const get_emails_1 = require("../../usecases/user/get-emails");
 const get_user_name_by_email_1 = require("../../usecases/user/get-user-name-by-email");
 const send_email_job_use_case_1 = require("../../usecases/email/send-email-job-use-case");

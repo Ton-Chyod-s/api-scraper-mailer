@@ -1,5 +1,21 @@
 
 ### 3. **Documentação de Banco de Dados**
+ - exemplo
+
+  ```sql
+    model task_log {
+      id INT                @id @default(autoincrement())
+      task_name String      
+      executed_at DateTime  @default(now())
+    }
+  ```
+- execute
+```
+  npx prisma migrate dev --name add-task-log
+```
+
+
+
 Esse documento pode descrever o esquema do banco de dados, as tabelas, relacionamentos e como as migrações são gerenciadas.
 
 **Exemplo de conteúdo**:
