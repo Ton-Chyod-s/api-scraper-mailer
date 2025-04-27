@@ -6,9 +6,10 @@ const prisma = new client_1.PrismaClient();
 class PrismaTaskLogRepository {
     async getAllTaskNames() {
         const taskLogs = await prisma.task_log.findMany({
-            select: { task_name: true }
+            select: { task_name: true,
+                executed_at: true }
         });
-        return taskLogs.map((taskLog) => taskLog.task_name);
+        return taskLogs.map((taskLog) => `${taskLog.task_name} - ${taskLog.executed_at.toISOString()}`);
     }
     async save(taskLog) {
         await prisma.task_log.create({
