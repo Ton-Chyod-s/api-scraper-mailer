@@ -26,7 +26,6 @@ jobs:
   enable-automerge:
     needs: test
     runs-on: ubuntu-latest
-    if: github.actor == 'KlaytonDias'
     permissions:
       pull-requests: write
     steps:
@@ -36,4 +35,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ github.event.pull_request.number }}
           merge-method: squash
-          
