@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EnviarEmailsCompletos = void 0;
 const send_email_controller_1 = require("../../controllers/email/send-email-controller");
-const user_repository_1 = require("../../infrastructure/repositories/user-repository");
+const user_repository_1 = require("../../infrastructure/repositories/user/user-repository");
 const date_helper_1 = require("../../infrastructure/utils/date/date-helper");
 const email_helper_1 = require("../../infrastructure/utils/email/email-helper");
 const get_emails_1 = require("../user/get-emails");

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { HomeController } from '../../../controllers/home-controller';
 import { UserController } from '../../../controllers/user-controller';
 import { CreateUser } from '../../../usecases/user/create-user';
-import { PrismaUserRepository } from '../../../infrastructure/repositories/user-repository';
+import { PrismaUserRepository } from '../../../infrastructure/repositories/user/user-repository';
 import { ExercitoWebScraper } from '../../../infrastructure/providers/gateways/exercito-work/exercito-web-scraper';
 import { ExercitoUseCase } from '../../../usecases/exercito-work/exercito-use-case';
 import { DiarioOficialEstadoWeb } from '../../../infrastructure/providers/gateways/diario-oficial/diario-oficial-estado-web';
