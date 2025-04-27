@@ -21,9 +21,8 @@ async function executeTask() {
   
   const campoGrandeDate = parseExecutedAt(executedAtString);
 
-  if (taskNames.includes('my-task') && campoGrandeDate.getTime() === now.getTime()) {
-    console.log('Tarefa já executada hoje, no mesmo horário!');
-    console.log('Data da tarefa (Campo Grande):', campoGrandeDate.toISOString());  
+  if (taskNames.includes('my-task') && campoGrandeDate.getTime() === now.getTime() || campoGrandeDate.getDate() === now.getDate()) {
+    console.log('Tarefa já executada hoje!');
     return;
   }
 
@@ -50,10 +49,5 @@ scheduledTime.setHours(8, 0, 0, 0);
 
 if (now > scheduledTime) {
   console.log('Executando tarefa perdida...');
-  executeTask();
-}
-
-if (require.main === module) {
-  console.log('Scheduler is running...');
   executeTask();
 }
