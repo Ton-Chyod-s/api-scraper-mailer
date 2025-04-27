@@ -7,6 +7,7 @@ const node_cron_1 = __importDefault(require("node-cron"));
 const my_task_1 = require("../../main/jobs/my-task");
 const create_use_case_1 = require("../../usecases/task-log/create-use-case");
 const task_log_repository_1 = require("../repositories/task-log/task-log-repository");
+const date_helper_1 = require("../utils/date/date-helper");
 const taskLogRepository = new task_log_repository_1.PrismaTaskLogRepository();
 const createTaskLogUseCase = new create_use_case_1.CreateTaskLogUseCase(taskLogRepository);
 async function executeTask() {
@@ -17,9 +18,7 @@ async function executeTask() {
         throw new Error('No task logs available.');
     }
     const [taskName, executedAtString] = lastTaskLogEntry.split(' - ');
-    const executedAtUTC = new Date(executedAtString);
-    const campoGrandeTimestamp = executedAtUTC.getTime() - (4 * 60 * 60 * 1000);
-    const campoGrandeDate = new Date(campoGrandeTimestamp);
+    const campoGrandeDate = (0, date_helper_1.parseExecutedAt)(executedAtString);
     if (taskNames.includes('my-task') && campoGrandeDate.getTime() === now.getTime()) {
         console.log('Tarefa já executada hoje, no mesmo horário!');
         console.log('Data da tarefa (Campo Grande):', campoGrandeDate.toISOString());
