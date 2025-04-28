@@ -9,6 +9,7 @@ A aplicação depende das seguintes variáveis de ambiente para funcionar corret
 - `MAIL_PORT`: Porta do servidor de e-mail
 - `MAIL_USER`: Usuário para autenticação no servidor de e-mail
 - `MAIL_PASS`: Senha para autenticação no servidor de e-mail
+- `PORT_SERVER`: Porta do servidor do express
 
 ## Exemplo de .env
 
@@ -18,5 +19,6 @@ MAIL_HOST="smtp.mailtrap.io"
 MAIL_PORT=587
 MAIL_USER="user"
 MAIL_PASS="password"
+PORT_SERVER=1000
 ```
 
