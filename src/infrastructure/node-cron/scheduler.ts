@@ -9,13 +9,26 @@ const createTaskLogUseCase = new CreateTaskLogUseCase(taskLogRepository);
 
 async function executeTask() {
   const now = new Date();
+
+
   const taskNames = await taskLogRepository.getAllTaskNames();
-  
-  const lastTaskLogEntry = taskNames.at(-1);
+
+  if (!taskNames || taskNames.length === 0) {
+    console.warn('Nenhum log de tarefa encontrado. Executando pela primeira vez...');
+    await createTaskLogUseCase.execute('my-task');
+    myTask();
+    return;
+  }
+
+  const lastTaskLogEntry = taskNames.at(-1) ?? '';
 
   if (!lastTaskLogEntry) {
-    throw new Error('No task logs available.');
+    console.warn('Último log de tarefa não encontrado. Executando a tarefa...');
+    await createTaskLogUseCase.execute('my-task');
+    myTask();
+    return;
   }
+
 
   const [taskName, executedAtString] = lastTaskLogEntry.split(' - ');
   
@@ -25,7 +38,8 @@ async function executeTask() {
     console.log('Tarefa já executada hoje!');
     return;
   }
-
+ 
+  
   try {
     console.log('Executando tarefa agendada...');
     await createTaskLogUseCase.execute('my-task');
