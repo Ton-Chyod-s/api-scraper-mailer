@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "cross-env DATABASE_URL=${DATABASE_URL_DEV} npx prisma generate --schema=./prisma/schema.dev.prisma && nodemon src/main/server.ts",
-    "start": "cross-env DATABASE_URL=${DATABASE_URL_PROD} prisma generate --schema=./prisma/schema.prisma && node dist/main/web/index.js",
+    "dev": "cross-env DATABASE_URL=${DATABASE_URL_DEV} npx prisma generate --schema=./prisma/schema.dev.prisma && nodemon --exec ts-node src/main/web/index.ts",
+    "start": "cross-env DATABASE_URL=${DATABASE_URL_PROD} prisma generate --schema=./prisma/schema.prisma && node dist/main/web/web/index.js",
     "build": "tsc && npm run copy:templates",
     "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",
     "test": "vitest"
