@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "npx prisma generate --schema=./prisma/schema.dev.prisma && npx prisma migrate dev --name init --schema=prisma/schema.dev.prisma && nodemon --exec ts-node src/main/web/index.ts",
+    "dev": "cross-env DOTENV_CONFIG_PATH=.env.dev npx prisma generate --schema=./prisma/schema.dev.prisma && npx prisma migrate dev --name init --schema=prisma/schema.dev.prisma && nodemon src/main/web/index.ts",
     "start": "npx prisma generate --schema=./prisma/schema.prisma && npx prisma migrate deploy --name init --schema=prisma/schema.prisma && node dist/main/web/web/index.js",
     "build": "tsc && npm run copy:templates",
     "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",
@@ -47,6 +47,7 @@
     "@vitest/coverage-istanbul": "^3.1.1",
     "@vitest/coverage-v8": "^3.1.1",
     "cpx": "^1.5.0",
+    "dotenv-cli": "^8.0.0",
     "nodemon": "^3.1.9",
     "prisma": "^6.7.0",
     "ts-node": "^10.9.2",
