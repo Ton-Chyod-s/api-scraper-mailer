@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "cross-env DATABASE_URL=${DATABASE_URL_DEV} npx prisma generate --schema=./prisma/schema.dev.prisma && nodemon --exec ts-node src/main/web/index.ts",
-    "start": "cross-env DATABASE_URL=${DATABASE_URL_PROD} prisma generate --schema=./prisma/schema.prisma && node dist/main/web/web/index.js",
+    "dev": "npx prisma generate --schema=./prisma/schema.dev.prisma && npx prisma migrate dev --name init --schema=prisma/schema.dev.prisma && nodemon --exec ts-node src/main/web/index.ts",
+    "start": "npx prisma generate --schema=./prisma/schema.prisma && npx prisma migrate deploy --name init --schema=prisma/schema.prisma && node dist/main/web/web/index.js",
     "build": "tsc && npm run copy:templates",
     "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",
     "test": "vitest"
@@ -26,11 +26,11 @@
     "node": "22.14.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^6.7.0",
     "axios": "^1.8.4",
     "cheerio": "^1.0.0",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.5.0",
+    "dotenv-safe": "^9.1.0",
     "express": "^5.1.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
