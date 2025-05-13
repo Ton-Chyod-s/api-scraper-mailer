@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./data/scraper-mailer.db"
+  url      = env("DATABASE_URL_DEV")
 }
 
 model User {
