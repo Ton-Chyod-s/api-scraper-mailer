@@ -13,9 +13,18 @@ const createTaskLogUseCase = new create_use_case_1.CreateTaskLogUseCase(taskLogR
 async function executeTask() {
     const now = new Date();
     const taskNames = await taskLogRepository.getAllTaskNames();
-    const lastTaskLogEntry = taskNames.at(-1);
+    if (!taskNames || taskNames.length === 0) {
+        console.warn('Nenhum log de tarefa encontrado. Executando pela primeira vez...');
+        await createTaskLogUseCase.execute('my-task');
+        (0, my_task_1.myTask)();
+        return;
+    }
+    const lastTaskLogEntry = taskNames.at(-1) ?? '';
     if (!lastTaskLogEntry) {
-        throw new Error('No task logs available.');
+        console.warn('Último log de tarefa não encontrado. Executando a tarefa...');
+        await createTaskLogUseCase.execute('my-task');
+        (0, my_task_1.myTask)();
+        return;
     }
     const [taskName, executedAtString] = lastTaskLogEntry.split(' - ');
     const campoGrandeDate = (0, date_helper_1.parseExecutedAt)(executedAtString);

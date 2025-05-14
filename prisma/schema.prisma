@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_PROD")
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  name    String?
+  email   String   @unique
+  createdAt DateTime @default(now())
+} 
+
+model task_log {
+  id Int                @id @default(autoincrement())
+  task_name String      
+  executed_at DateTime  @default(now())
+}
