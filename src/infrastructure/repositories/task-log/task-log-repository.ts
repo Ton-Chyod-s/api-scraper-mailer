@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from ".prisma/client";
 import { TaskLogRepository } from "../../../domain/repositories/task-log-repository";
 
 const prisma = new PrismaClient();
