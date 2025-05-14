@@ -4,7 +4,7 @@ import { CreateUser } from "./create-user";
 let userData: { nome: string; email: string }[] = [];
 
 try {
-    userData = JSON.parse(process.env.USER_DATA || "[]");
+    userData = JSON.parse(process.env.USER_DATA_PROD || "[]");
 
     if (!Array.isArray(userData)) {
         throw new Error("USER_DATA deve ser um array.");
