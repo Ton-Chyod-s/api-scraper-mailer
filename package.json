@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "rimraf prisma/migrations && rimraf prisma/data && npx prisma generate --schema=./prisma/schema.dev.prisma && npx prisma migrate dev --name init --schema=prisma/schema.dev.prisma && ts-node src/usecases/user/add-data.ts && nodemon src/main/web/index.ts",
-    "start": "rimraf prisma/migrations && rimraf prisma/data && npx prisma migrate reset --force && npx prisma migrate dev --name init && npx prisma generate && node dist/main/web/index.js",
+    "start": "rimraf prisma/migrations && rimraf prisma/data && npx prisma migrate reset --force && npx prisma migrate dev --name init && npx prisma generate && ts-node src/usecases/user/add-data.ts && node dist/main/web/index.js",
     "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",
     "test": "vitest"
   },
