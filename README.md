@@ -68,6 +68,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/dbname?schema=public"
 
 ```bash
 npx prisma generate
+- npx prisma migrate dev --name init
 npx prisma migrate deploy
 ```
 
