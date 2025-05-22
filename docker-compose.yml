@@ -1,0 +1,33 @@
+  version: '3.8'
+
+  services:
+    api:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      container_name: scraper_mailer_api
+      ports:
+        - "8000:8000"
+      depends_on:
+        - db
+      environment:
+        - DATABASE_URL=${DATABASE_URL_PROD}
+        - DEBUG=True
+      restart: always
+      command: ["/bin/sh", "-c", "/usr/local/bin/wait-for-it db:5432 -- cross-env DATABASE_URL=${DATABASE_URL_PROD} npx prisma generate && npx prisma migrate dev --name init && npm start"]
+
+    db:
+      image: postgres:latest
+      container_name: postgres_db
+      environment:
+        POSTGRES_USER: userBoot
+        POSTGRES_PASSWORD: 'Dev-Ton-Chy0d-$'
+        POSTGRES_DB: scraper_mailer
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+      restart: always
+
+  volumes:
+    pgdata:
