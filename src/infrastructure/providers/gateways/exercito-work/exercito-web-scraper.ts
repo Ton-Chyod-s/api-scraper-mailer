@@ -31,14 +31,19 @@ export class ExercitoWebScraper {
 
   async buscarConteudo(): Promise<string> {
     return await this.acessarPagina(
-      'https://9rm.eb.mil.br/index.php/oficial-tecnico-temporario'
+      'https://9rm.eb.mil.br/index.php/servico-militar/oficial-tecnico-temporario'
     );
   }
 
-  async buscarConteudoAno(ano: string): Promise<string> {
-    return await this.acessarPagina(
-      `https://9rm.eb.mil.br/index.php/ott-${ano}`
-    );
+  async buscarConteudoAno(ano: string): Promise<string> {  
+    const anoAtual = ano.slice(2);                  
+    const anoSeguinte = (parseInt(anoAtual) + 1).toString().padStart(2, '0'); 
+
+    const url = `https://9rm.eb.mil.br/index.php/ott${anoAtual}-${anoSeguinte}`;
+
+    console.log("Acessando URL:", url); // DEBUG
+
+    return await this.acessarPagina(url);
   }
 }
 

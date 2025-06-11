@@ -17,7 +17,7 @@ export class ExercitoUseCase {
       anoAtual = (new Date().getFullYear() - 1).toString();
     }
     
-    const data: SiteData = { site: 'https://9rm.eb.mil.br/index.php/oficial-tecnico-temporario' };
+    const data: SiteData = { site: 'https://9rm.eb.mil.br/index.php/servico-militar/oficial-tecnico-temporario' };
 
     for (const paragrafo of paragraphs) {
       if (paragrafo.includes(anoAtual)) {
