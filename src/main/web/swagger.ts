@@ -4,9 +4,9 @@ const swaggerConfig = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "JubileuTaskListAPI",
+      title: "api-scraper-mailer",
       version: "1.0.0",
-      description: "Documentação da API de tarefas com autenticação JWT",
+      description: "Documentação da API",
     },
   },
   apis: ["./src/main/web/routes/*.ts"], 
