@@ -41,8 +41,6 @@ export class ExercitoWebScraper {
 
     const url = `https://9rm.eb.mil.br/index.php/ott${anoAtual}-${anoSeguinte}`;
 
-    console.log("Acessando URL:", url); // DEBUG
-
     return await this.acessarPagina(url);
   }
 }
