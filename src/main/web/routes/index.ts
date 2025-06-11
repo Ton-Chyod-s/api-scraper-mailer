@@ -35,7 +35,7 @@ const userController = new UserController(createUser);
  *           schema:
  *             type: object
  *             properties:
- *               nome:
+ *               name:
  *                 type: string
  *               email:
  *                 type: string
@@ -81,6 +81,19 @@ const diarioEstadoController = new DiarioOficialEstadoController(consultarEstado
  *   post:
  *     summary: Consulta Diário Oficial do Estado
  *     tags: [Diário Oficial]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               dateInit:
+ *                 type: string
+ *               dateEnd:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Consulta realizada com sucesso
@@ -97,6 +110,19 @@ const diarioMunicipioController = new DiarioOficialMunicipioController(consultar
  *   post:
  *     summary: Consulta Diário Oficial do Município
  *     tags: [Diário Oficial]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               dateInit:
+ *                 type: string
+ *               dateEnd:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Consulta realizada com sucesso
