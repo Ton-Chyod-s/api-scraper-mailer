@@ -16,14 +16,34 @@ import { ExercitoController } from '../../../controllers/exercito/exercito-contr
 
 export const router = Router();
 
-router.get('/', HomeController.welcome);
+// router.get('/', HomeController.welcome);
 
 const userRepository = new PrismaUserRepository();
 const createUser = new CreateUser(userRepository);
 const userController = new UserController(createUser);
 
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Cria um novo usuário
+ *     tags: [Usuários]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Usuário criado com sucesso
+ */
 router.post('/users', (req, res) => userController.create(req, res));
-
 
 router.post('/mail', async (req, res) => {
   try {
@@ -39,16 +59,46 @@ const exercitoWebScraper = new ExercitoWebScraper();
 const exercitoUseCase = new ExercitoUseCase(exercitoWebScraper);
 const exercitoController = new ExercitoController(exercitoUseCase);
 
+/**
+ * @swagger
+ * /exercito:
+ *   get:
+ *     summary: Consulta dados do Exército
+ *     tags: [Exército]
+ *     responses:
+ *       200:
+ *         description: Dados consultados com sucesso
+ */
 router.get('/exercito', (req, res) => exercitoController.consultar(req, res));
 
 const diarioOficialEstadoWeb = new DiarioOficialEstadoWeb();
 const consultarEstadoUseCase = new ConsultarDiarioOficialEstadoUseCase(diarioOficialEstadoWeb);
 const diarioEstadoController = new DiarioOficialEstadoController(consultarEstadoUseCase);
 
+/**
+ * @swagger
+ * /doe:
+ *   post:
+ *     summary: Consulta Diário Oficial do Estado
+ *     tags: [Diário Oficial]
+ *     responses:
+ *       200:
+ *         description: Consulta realizada com sucesso
+ */
 router.post('/doe', (req, res) => diarioEstadoController.consultar(req, res)); 
 
 const diarioOficialMunicipioWeb = new DiarioOficialMunicipioWeb();
 const consultarMunicipioUseCase = new ConsultarDiarioOficialMunicipioUseCase(diarioOficialMunicipioWeb);
 const diarioMunicipioController = new DiarioOficialMunicipioController(consultarMunicipioUseCase);
 
+/**
+ * @swagger
+ * /diogrande:
+ *   post:
+ *     summary: Consulta Diário Oficial do Município
+ *     tags: [Diário Oficial]
+ *     responses:
+ *       200:
+ *         description: Consulta realizada com sucesso
+ */
 router.post('/diogrande', (req, res) => diarioMunicipioController.consultar(req, res)); 
