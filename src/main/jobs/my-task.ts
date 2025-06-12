@@ -1,26 +1,66 @@
-import { PrismaUserRepository } from "../../infrastructure/repositories/user/user-repository";
-import { GetEmails } from "../../usecases/user/get-emails";
-import { GetUserNameByEmail } from "../../usecases/user/get-user-name-by-email";
-import { EnviarEmailsCompletos } from "../../usecases/email/send-email-job-use-case";
-import { enviarEmail } from "../../controllers/email/send-email-controller";
+import { GetEmails } from './../../usecases/user/get-emails';
+import { GetUserByEmail } from './../../usecases/user/get-user-name-by-email';
+import { PrismaUserRepository } from './../../infrastructure/repositories/user/user-repository';
+import { enviarEmail } from './../../controllers/email/send-email-controller';
 
-export async function myTask(): Promise<void> {
-  const userRepository = new PrismaUserRepository();
+import {
+  montarCorpoEmail,
+  carregarArquivo,
+  carregarTemplateExercito,
+  gerarListaFormatadaExercito,
+  preencherTemplate,
+  montarHtmlFinal
+} from '../../infrastructure/utils/email/email-helper';
 
-  const getEmails = new GetEmails(userRepository);
-  const getUserNameByEmail = new GetUserNameByEmail(userRepository);
+import { formatarData } from '../../infrastructure/utils/date/date-helper';
 
-  const enviarEmailsCompletos = new EnviarEmailsCompletos(
-    getEmails,
-    getUserNameByEmail,
-    enviarEmail
-  );
+export const myTaskRunner = async (): Promise<void> => {
 
-  await enviarEmailsCompletos.execute();
-}
+  const userRepo = new PrismaUserRepository();
+  const getEmails = new GetEmails(userRepo);
+  const getUserNameByEmail = new GetUserByEmail(userRepo);
 
-if (require.main === module) {
-  myTask().catch((error) => {
-    console.error("Erro ao executar a tarefa:", error);
-  });
-}
+  const ano = new Date().getFullYear();
+  const datas = {
+    inicio: formatarData(new Date(ano, 0, 1)),
+    fim: formatarData(new Date(ano, 11, 31))
+  };
+
+  const [emails, htmlBase, header, doeTemplate, diograndeTemplate] = await Promise.all([
+    getEmails.execute(),
+    carregarArquivo("main.html"),
+    carregarArquivo("emails/header.html"),
+    carregarArquivo("emails/doe.html"),
+    carregarArquivo("emails/diogrande.html")
+  ]);
+
+  const exercitoTemplate = await carregarTemplateExercito(ano.toString());
+  const listaFormatadaExercito = await gerarListaFormatadaExercito();
+  const exercitoFinal = preencherTemplate(exercitoTemplate, 'listaExercito', listaFormatadaExercito);
+
+  for (const email of emails) {
+    const user = await getUserNameByEmail.execute(email);
+
+    try {
+      if (!user?.name) {
+        console.warn(`[myTaskRunner] Nome de usuário não encontrado para: ${email}`);
+        continue;
+      }
+
+      const corpoEmail = await montarCorpoEmail(
+        user.name,
+        { doe: doeTemplate, diogrande: diograndeTemplate },
+        datas
+      );
+
+      const corpoCompleto = exercitoFinal + corpoEmail;
+      const htmlFinal = montarHtmlFinal(htmlBase, header, corpoCompleto);
+
+      await enviarEmail(email, htmlFinal, `Diário Oficial - ${ano}`);
+      console.log(`[myTaskRunner] E-mail enviado para: ${email}`);
+    } catch (erro) {
+      console.error(`[myTaskRunner] Erro ao enviar para ${email}:`, erro);
+    }
+  }
+
+};

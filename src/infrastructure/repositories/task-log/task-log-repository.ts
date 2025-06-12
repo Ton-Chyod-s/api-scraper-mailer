@@ -26,5 +26,20 @@ export class PrismaTaskLogRepository implements TaskLogRepository  {
 
     async disconnect(): Promise<void> {
         await prisma.$disconnect();
-      }
+    }
+
+    async getLastTaskLog(): Promise<string | null> {
+        const lastTaskLog = await prisma.task_log.findFirst({
+            orderBy: { executed_at: 'desc' },
+            select: { task_name: true, executed_at: true }
+        });
+
+        if (!lastTaskLog) return null;
+
+        return `${lastTaskLog.task_name} - ${lastTaskLog.executed_at.toISOString()}`;   
+    }  
+
+    async create(taskName: string): Promise<void> {
+        await this.save({ task_name: taskName });
+    }
 }

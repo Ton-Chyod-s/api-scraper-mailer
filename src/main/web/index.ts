@@ -1,7 +1,7 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import swaggerUi from "swagger-ui-express";
-import '../../infrastructure/node-cron/scheduler'; 
+import { scheduleDailyTask } from './../../main/jobs/scheduler';
 
 dotenv.config();
 
@@ -16,6 +16,7 @@ server.use(router);
 import { swaggerSpec } from "./swagger";
 server.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+scheduleDailyTask();
 
 server.listen(PORT, () => {
     console.log(`Servidor em execução em http://localhost:${PORT}`);
