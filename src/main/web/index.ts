@@ -10,6 +10,11 @@ const PORT = Number(process.env.PORT_SERVER) || 5050;
 
 server.use(express.json());
 
+server.use((req, res, next) => {
+  res.setHeader('ngrok-skip-browser-warning', 'true');
+  next();
+});
+
 import { router } from '../../main/web/routes';	
 server.use(router);
 
