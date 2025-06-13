@@ -6,7 +6,7 @@ import { scheduleDailyTask } from './../../main/jobs/scheduler';
 dotenv.config();
 
 const server = express();
-const PORT = process.env.PORT_SERVER || 3000;
+const PORT = process.env.PORT_SERVER || 5050;
 
 server.use(express.json());
 
@@ -21,3 +21,4 @@ scheduleDailyTask();
 server.listen(PORT, () => {
     console.log(`Servidor em execução em http://localhost:${PORT}`);
 });
+

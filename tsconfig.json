@@ -8,6 +8,7 @@
     "strict": true,
     "declaration": false,
     "skipLibCheck": true,
+    "sourceMap": true,
     "moduleResolution": "node"
   },
   "include": ["src"]
