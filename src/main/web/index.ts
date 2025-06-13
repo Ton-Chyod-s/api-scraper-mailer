@@ -26,4 +26,3 @@ scheduleDailyTask();
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor em execução em http://localhost:${PORT}`);
 });
-

@@ -40,7 +40,7 @@ export class EnviarEmailsCompletos {
             }
       
             const corpoEmail = await montarCorpoEmail(
-              userName,
+              userName.name,
               { doe: doeTemplate, diogrande: diograndeTemplate },
               { inicio: dataInit, fim: dataFinish }
             );

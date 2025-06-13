@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 import { UserRepository } from '../../domain/repositories/user-repository';
 
 
-export class GetUserByEmail {
+export class GetUserNameByEmail {
     constructor(private userRepository: UserRepository) {}
 
     async execute(email: string){

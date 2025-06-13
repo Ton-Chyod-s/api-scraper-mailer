@@ -1,5 +1,5 @@
 import { GetEmails } from './../../usecases/user/get-emails';
-import { GetUserByEmail } from './../../usecases/user/get-user-name-by-email';
+import { GetUserNameByEmail } from './../../usecases/user/get-user-name-by-email';
 import { PrismaUserRepository } from './../../infrastructure/repositories/user/user-repository';
 import { enviarEmail } from './../../controllers/email/send-email-controller';
 
@@ -18,7 +18,7 @@ export const myTaskRunner = async (): Promise<void> => {
 
   const userRepo = new PrismaUserRepository();
   const getEmails = new GetEmails(userRepo);
-  const getUserNameByEmail = new GetUserByEmail(userRepo);
+  const getUserNameByEmail = new GetUserNameByEmail(userRepo);
 
   const ano = new Date().getFullYear();
   const datas = {

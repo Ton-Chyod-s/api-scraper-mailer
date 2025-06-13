@@ -3,7 +3,7 @@ import { executeScheduledTask } from './../config/usecases/execute-scheduled-tas
 
 export function scheduleDailyTask(): void {
   cron.schedule(
-    '0 8 * * 1-7',
+    '* * * * 1-7',
     async () => {
       console.log('[Agendado] Iniciando tarefa diária.');
       await executeScheduledTask('my-task');
@@ -16,7 +16,7 @@ export function scheduleDailyTask(): void {
 
   const now = new Date();
   const scheduledTime = new Date();
-  scheduledTime.setHours(8, 0, 0, 0);
+  scheduledTime.setHours(0, 0, 0, 0);
 
   if (now > scheduledTime) {
     console.log('[Fallback] Executando tarefa perdida...');
