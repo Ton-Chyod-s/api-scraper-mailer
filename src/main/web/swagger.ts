@@ -9,7 +9,7 @@ const swaggerConfig = {
       description: "Documentação da API",
     },
   },
-  apis: ["./src/main/web/routes/*.ts"], 
+  apis: ["./src/interfaces/routes/*.ts"], 
 };
 
 export const swaggerSpec = swaggerJSDoc(swaggerConfig);
