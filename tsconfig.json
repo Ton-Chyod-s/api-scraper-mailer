@@ -9,7 +9,9 @@
     "declaration": false,
     "skipLibCheck": true,
     "sourceMap": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
   },
   "include": ["src"]
 }

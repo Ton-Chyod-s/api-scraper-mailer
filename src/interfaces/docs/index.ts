@@ -1,7 +1,7 @@
-import { usuariosDoc } from './user/usuarios.doc.js';
-import { exercitoDoc } from './exercito/exercito.doc.js';
-import { diarioOficialEstadoDoc } from './diario-oficial/diario-oficial-estado.doc.js';
-import { diarioOficialMunicipioDoc } from './diario-oficial/diario-oficial-municipio.doc.js';
+import { usuariosDoc } from './user/usuarios.doc.ts';
+import { exercitoDoc } from './exercito/exercito.doc.ts';
+import { diarioOficialEstadoDoc } from './diario-oficial/diario-oficial-estado.doc.ts';
+import { diarioOficialMunicipioDoc } from './diario-oficial/diario-oficial-municipio.doc.ts';
 
 export const swaggerPaths = {
   ...usuariosDoc,
