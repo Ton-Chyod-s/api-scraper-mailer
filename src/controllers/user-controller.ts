@@ -4,7 +4,7 @@ import { CreateUser } from '../usecases/user/create-user';
 export class UserController {
   constructor(private createUser: CreateUser) {}
 
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     const { name, email } = req.body;
 
     try {
