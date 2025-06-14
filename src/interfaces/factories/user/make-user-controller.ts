@@ -3,7 +3,7 @@ import { CreateUser } from "../../../usecases/user/create-user";
 import { UserController } from "../../controllers/user-controller";
 
 
-export function makeUserUseCase(): UserController {
+export function makeUserController(): UserController {
     const userRepository = new PrismaUserRepository();
     const createUser = new CreateUser(userRepository);
     return new UserController(createUser);''
