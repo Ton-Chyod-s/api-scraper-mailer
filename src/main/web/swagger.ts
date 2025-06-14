@@ -1,4 +1,5 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import { swaggerPaths } from "../../interfaces/docs";
 
 const swaggerConfig = {
   definition: {
@@ -8,6 +9,7 @@ const swaggerConfig = {
       version: "1.0.0",
       description: "Documentação da API",
     },
+    paths: swaggerPaths,
   },
   apis: ["./src/interfaces/routes/*.ts"], 
 };
