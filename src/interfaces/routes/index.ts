@@ -20,11 +20,11 @@ export const router = Router();
 
 const userRepository = new PrismaUserRepository();
 const createUser = new CreateUser(userRepository);
-const userController = new UserController(createUser);
+const userController = new UserController(createUser);''
 
 /**
  * @swagger
- * /users:
+ * /pessoas:
  *   post:
  *     summary: Cria um novo usuário
  *     tags: [Usuários]
@@ -43,7 +43,7 @@ const userController = new UserController(createUser);
  *       201:
  *         description: Usuário criado com sucesso
  */
-router.post('/users', (req, res) => userController.create(req, res));
+router.post('/pessoas', (req, res) => userController.create(req, res));
 
 router.post('/mail', async (req, res) => {
   try {
@@ -77,7 +77,7 @@ const diarioEstadoController = new DiarioOficialEstadoController(consultarEstado
 
 /**
  * @swagger
- * /doe:
+ * /diarios/estado:
  *   post:
  *     summary: Consulta Diário Oficial do Estado
  *     tags: [Diário Oficial]
@@ -98,7 +98,7 @@ const diarioEstadoController = new DiarioOficialEstadoController(consultarEstado
  *       200:
  *         description: Consulta realizada com sucesso
  */
-router.post('/doe', (req, res) => diarioEstadoController.consultar(req, res)); 
+router.post('/diarios/estado', (req, res) => diarioEstadoController.consultar(req, res)); 
 
 const diarioOficialMunicipioWeb = new DiarioOficialMunicipioWeb();
 const consultarMunicipioUseCase = new ConsultarDiarioOficialMunicipioUseCase(diarioOficialMunicipioWeb);
@@ -106,7 +106,7 @@ const diarioMunicipioController = new DiarioOficialMunicipioController(consultar
 
 /**
  * @swagger
- * /diogrande:
+ * /diarios/municipio:
  *   post:
  *     summary: Consulta Diário Oficial do Município
  *     tags: [Diário Oficial]
@@ -127,4 +127,4 @@ const diarioMunicipioController = new DiarioOficialMunicipioController(consultar
  *       200:
  *         description: Consulta realizada com sucesso
  */
-router.post('/diogrande', (req, res) => diarioMunicipioController.consultar(req, res)); 
+router.post('/diarios/municipio', (req, res) => diarioMunicipioController.consultar(req, res)); 
