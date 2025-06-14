@@ -12,6 +12,15 @@
     "moduleResolution": "node",
     "noEmit": true,
     "allowImportingTsExtensions": true,
+    "baseUrl": "src",
+    "paths": {
+      "@infra/*": ["infrastructure/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@usecases/*": ["usecases/*"],
+      "@domain/*": ["domain/*"],
+      "@utils/*": ["utils/*"],
+      "@main/*": ["main/*"]
+    }
   },
   "include": ["src"]
 }
