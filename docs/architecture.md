@@ -27,12 +27,6 @@ A arquitetura é composta pelas seguintes camadas:
 
 ---
 
-## Diagrama de Arquitetura
-
-(Adicione aqui um diagrama visual, se necessário, para ilustrar a comunicação entre as camadas)
-
----
-
 ### Observações
 
 - **Desacoplamento**: Cada camada tem uma responsabilidade bem definida, facilitando a manutenção e escalabilidade do sistema.
