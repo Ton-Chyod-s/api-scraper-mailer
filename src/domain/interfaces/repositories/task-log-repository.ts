@@ -1,4 +1,4 @@
-import { TaskLog } from "../entities/task-log";
+import { TaskLog } from "../../entities/task-log";
 
 export interface TaskLogRepository {
     getAllTaskNames(): Promise<string[]>;
