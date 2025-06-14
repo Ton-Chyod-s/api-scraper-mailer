@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ExercitoUseCase } from "../../usecases/exercito-work/exercito-use-case";
+import { ExercitoUseCase } from "../../../usecases/exercito-work/exercito-use-case";
 
 export class ExercitoController {
     constructor (private readonly exercitoUseCase: ExercitoUseCase) {}

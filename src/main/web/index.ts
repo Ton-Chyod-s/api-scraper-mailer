@@ -15,7 +15,7 @@ server.use((req, res, next) => {
   next();
 });
 
-import { router } from '../../main/web/routes';	
+import { router } from '../../interfaces/routes';	
 server.use(router);
 
 import { swaggerSpec } from "./swagger";

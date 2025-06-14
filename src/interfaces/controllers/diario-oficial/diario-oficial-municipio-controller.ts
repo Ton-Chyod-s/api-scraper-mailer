@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ConsultarDiarioOficialMunicipioUseCase } from '../../usecases/diario-oficial/consultar-diario-oficial-municipio';
+import { ConsultarDiarioOficialMunicipioUseCase } from '../../../usecases/diario-oficial/consultar-diario-oficial-municipio';
 
 export class DiarioOficialMunicipioController {
     constructor (private readonly consultarUseCase: ConsultarDiarioOficialMunicipioUseCase) {}

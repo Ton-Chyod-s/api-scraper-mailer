@@ -1,7 +1,7 @@
 import { GetEmails } from './../../usecases/user/get-emails';
 import { GetUserNameByEmail } from './../../usecases/user/get-user-name-by-email';
 import { PrismaUserRepository } from './../../infrastructure/repositories/user/user-repository';
-import { enviarEmail } from './../../controllers/email/send-email-controller';
+import { enviarEmail } from '../../interfaces/controllers/email/send-email-controller';
 
 import {
   montarCorpoEmail,
@@ -10,9 +10,9 @@ import {
   gerarListaFormatadaExercito,
   preencherTemplate,
   montarHtmlFinal
-} from '../../infrastructure/utils/email/email-helper';
+} from '../../utils/email/email-helper';
 
-import { formatarData } from '../../infrastructure/utils/date/date-helper';
+import { formatarData } from '../../utils/date/date-helper';
 
 export const myTaskRunner = async (): Promise<void> => {
 
