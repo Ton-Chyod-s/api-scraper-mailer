@@ -1,4 +1,4 @@
-import { TaskLogRepository } from '../../domain/repositories/task-log-repository';
+import { TaskLogRepository } from '../../domain/interfaces/repositories/task-log-repository';
 import { parseExecutedAt } from '../../utils/date/date-helper';
 
 type TaskRunner = () => void;

@@ -1,4 +1,4 @@
-import { IMailProvider } from "../../domain/providers/mail/mail-provider";
+import { IMailProvider } from "../../domain/interfaces/providers/mail/mail-provider";
 import { NodemailerProvider } from "../../infrastructure/providers/nodemailer-provider";
 
 export class SendEmailUseCase {
