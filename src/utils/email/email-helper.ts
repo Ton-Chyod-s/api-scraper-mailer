@@ -1,11 +1,11 @@
 import { readFile } from 'fs/promises';
-import { DiarioOficialMunicipioWeb } from '../../infrastructure/providers/gateways/diario-oficial/diario-oficial-municipio-web';
-import { ConsultarDiarioOficialMunicipioUseCase } from '../../usecases/diario-oficial/consultar-diario-oficial-municipio';
+import { DiarioOficialMunicipioWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-municipio-web';
+import { ConsultarDiarioOficialMunicipioUseCase } from '@usecases/diario-oficial/consultar-diario-oficial-municipio';
 import { formatarLista } from './html-formatter-helper';
-import { DiarioOficialEstadoWeb } from '../../infrastructure/providers/gateways/diario-oficial/diario-oficial-estado-web';
-import { ConsultarDiarioOficialEstadoUseCase } from '../../usecases/diario-oficial/consultar-diario-oficial-estado';
-import { ExercitoWebScraper } from '../../infrastructure/providers/gateways/exercito-work/exercito-web-scraper';
-import { ExercitoUseCase } from '../../usecases/exercito-work/exercito-use-case';
+import { DiarioOficialEstadoWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-estado-web';
+import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/diario-oficial/consultar-diario-oficial-estado';
+import { ExercitoWebScraper } from '@infra/providers/gateways/exercito-work/exercito-web-scraper';
+import { ExercitoUseCase } from '@usecases/exercito-work/exercito-use-case';
 import path from 'path';
 
 export async function carregarArquivo(relativePath: string): Promise<string> {

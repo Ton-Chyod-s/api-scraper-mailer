@@ -1,9 +1,9 @@
-import { enviarEmail } from "../../interfaces/controllers/email/send-email-controller";
-import { PrismaUserRepository } from "../../infrastructure/repositories/user/user-repository";
-import { formatarData } from "../../utils/date/date-helper";
-import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "../../utils/email/email-helper";
-import { GetEmails } from "../user/get-emails";
-import { GetUserNameByEmail } from "../user/get-user-name-by-email";
+import { enviarEmail } from "@interfaces/controllers/email/send-email-controller";
+import { PrismaUserRepository } from "@infra/repositories/user/user-repository";
+import { formatarData } from "@utils/date/date-helper";
+import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "@utils/email/email-helper";
+import { GetEmails } from "@usecases/user/get-emails";
+import { GetUserNameByEmail } from "@usecases/user/get-user-name-by-email";
 
 export class EnviarEmailsCompletos {
     constructor(

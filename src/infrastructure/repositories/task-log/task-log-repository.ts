@@ -1,11 +1,11 @@
-import { PrismaClient } from ".prisma/client";
-import { TaskLogRepository } from "../../../domain/interfaces/repositories/task-log-repository";
+import { PrismaClient } from "@prisma/client";
+import { TaskLogRepository } from "@domain/interfaces/repositories/task-log-repository";
 
 const prisma = new PrismaClient();
 
 export class PrismaTaskLogRepository implements TaskLogRepository  {
     async getAllTaskNames(): Promise<string[]> {
-        const taskLogs = await prisma.task_log.findMany({
+        const taskLogs = await prisma.taskLog.findMany({
             select: { task_name: true,
                 executed_at: true }
         });
@@ -17,7 +17,7 @@ export class PrismaTaskLogRepository implements TaskLogRepository  {
     }
 
     async save(taskLog: { task_name: string }): Promise<void> {
-        await prisma.task_log.create({
+        await prisma.taskLog.create({
             data: {
                 task_name: taskLog.task_name
             }
@@ -29,7 +29,7 @@ export class PrismaTaskLogRepository implements TaskLogRepository  {
     }
 
     async getLastTaskLog(): Promise<string | null> {
-        const lastTaskLog = await prisma.task_log.findFirst({
+        const lastTaskLog = await prisma.taskLog.findFirst({
             orderBy: { executed_at: 'desc' },
             select: { task_name: true, executed_at: true }
         });

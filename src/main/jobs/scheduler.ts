@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { executeScheduledTask } from './../config/usecases/execute-scheduled-task-factory';
+import { executeScheduledTask } from '@main/config/usecases/execute-scheduled-task-factory';
 
 export function scheduleDailyTask(): void {
   cron.schedule(

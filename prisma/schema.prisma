@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -15,7 +14,7 @@ model User {
   createdAt DateTime @default(now())
 } 
 
-model task_log {
+model TaskLog {
   id Int                @id @default(autoincrement())
   task_name String      
   executed_at DateTime  @default(now())

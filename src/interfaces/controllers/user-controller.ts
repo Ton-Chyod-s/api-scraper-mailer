@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreateUser } from '../../usecases/user/create-user';
+import { CreateUser } from '@usecases/user/create-user';
 
 export class UserController {
   constructor(private createUser: CreateUser) {}

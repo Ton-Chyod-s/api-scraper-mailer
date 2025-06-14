@@ -1,7 +1,7 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import swaggerUi from "swagger-ui-express";
-import { scheduleDailyTask } from './../../main/jobs/scheduler';
+import { scheduleDailyTask } from '@main/jobs/scheduler';
 
 dotenv.config();
 

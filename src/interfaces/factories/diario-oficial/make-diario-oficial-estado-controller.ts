@@ -1,6 +1,6 @@
-import { DiarioOficialEstadoWeb } from "../../../infrastructure/providers/gateways/diario-oficial/diario-oficial-estado-web";
-import { ConsultarDiarioOficialEstadoUseCase } from "../../../usecases/diario-oficial/consultar-diario-oficial-estado";
-import { DiarioOficialEstadoController } from "../../controllers/diario-oficial/diario-oficial-estado-controller";
+import { DiarioOficialEstadoWeb } from "@infra/providers/gateways/diario-oficial/diario-oficial-estado-web";
+import { ConsultarDiarioOficialEstadoUseCase } from "@usecases/diario-oficial/consultar-diario-oficial-estado";
+import { DiarioOficialEstadoController } from "@interfaces/controllers/diario-oficial/diario-oficial-estado-controller";
 
 export function makeDiarioOficialEstadoController(): DiarioOficialEstadoController {
     const diarioOficialEstadoWeb = new DiarioOficialEstadoWeb();

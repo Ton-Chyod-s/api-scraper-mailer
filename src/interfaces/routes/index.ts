@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { HomeController } from '../controllers/home-controller';
-import { enviarEmail } from '../controllers/email/send-email-controller';
-import { makeUserController } from '../factories/user/make-user-controller';
-import { makeExercitoController } from '../factories/exercito/make-exercito-controller';
-import { makeDiarioOficialEstadoController } from '../factories/diario-oficial/make-diario-oficial-estado-controller';
-import { makeDiarioOficialMunicipioController } from '../factories/diario-oficial/make-diario-oficial-municipio-controller';
+import { enviarEmail } from '@interfaces/controllers/email/send-email-controller';
+import { makeUserController } from '@interfaces/factories/user/make-user-controller';
+import { makeExercitoController } from '@interfaces/factories/exercito/make-exercito-controller';
+import { makeDiarioOficialEstadoController } from '@interfaces/factories/diario-oficial/make-diario-oficial-estado-controller';
+import { makeDiarioOficialMunicipioController } from '@interfaces/factories/diario-oficial/make-diario-oficial-municipio-controller';
 
 export const router = Router();
 

@@ -1,5 +1,5 @@
 import swaggerJSDoc from "swagger-jsdoc";
-import { swaggerPaths } from "../../interfaces/docs";
+import { swaggerPaths } from "@interfaces/docs";
 
 const swaggerConfig = {
   definition: {
