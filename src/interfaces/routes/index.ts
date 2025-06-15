@@ -7,6 +7,8 @@ import { makeDiarioOficialEstadoController } from '@interfaces/factories/diario-
 import { makeDiarioOficialMunicipioController } from '@interfaces/factories/diario-oficial/make-diario-oficial-municipio-controller';
 import { makeAuthUserController } from '@interfaces/factories/auth-user/make-auth-user-controller';
 import { authenticateToken } from '@interfaces/middlewares/auth-middleware';
+import { makeLoginController } from '@interfaces/factories/auth-user/make-login-controller';
+
 
 export const router = Router();
 
@@ -15,6 +17,7 @@ const exercitoController = makeExercitoController();
 const diarioEstadoController = makeDiarioOficialEstadoController();
 const diarioMunicipioController = makeDiarioOficialMunicipioController();
 const authUserController = makeAuthUserController(); 
+const loginController = makeLoginController();
 
 // router.get('/', HomeController.welcome);
 
@@ -41,4 +44,8 @@ router.post('/diarios/municipio', (req, res) => diarioMunicipioController.consul
 
 router.post('/auth/user', async (req, res) => {
   await authUserController.create(req, res);
+});
+
+router.post('/auth/login', async (req, res) => {
+  await loginController.execute(req, res);
 });
