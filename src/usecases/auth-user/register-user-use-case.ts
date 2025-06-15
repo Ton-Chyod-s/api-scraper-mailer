@@ -2,7 +2,7 @@ import { AuthUser } from '@domain/entities/auth-user';
 import { AuthUserRepository } from '@domain/interfaces/repositories/auth-user-repository';
 
 
-export class AuthUserUseCase {
+export class RegisterUserUseCase {
   constructor(private authUserRepo: AuthUserRepository) {}
 
   async execute(name: string, email: string, password: string, role: string = 'user'): Promise<AuthUser> {

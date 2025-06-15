@@ -5,7 +5,7 @@ import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito,
 import { GetEmails } from "@usecases/user/get-emails";
 import { GetUserNameByEmail } from "@usecases/user/get-user-name-by-email";
 
-export class EnviarEmailsCompletos {
+export class SendEmailJobUseCase {
     constructor(
       private readonly getEmails: GetEmails,
       private readonly getUserNameByEmail: GetUserNameByEmail,
@@ -65,7 +65,7 @@ if (require.main === module) {
   const getEmails = new GetEmails(userRepo);
   const getUserNameByEmail = new GetUserNameByEmail(userRepo);
 
-  const sendEmailControllersCompletos = new EnviarEmailsCompletos(
+  const sendEmailControllersCompletos = new SendEmailJobUseCase(
     getEmails,
     getUserNameByEmail,
     sendEmailController

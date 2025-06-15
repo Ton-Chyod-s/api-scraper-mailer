@@ -1,6 +1,6 @@
 import { OfficialJournalsProvider } from '@domain/interfaces/providers/official-journals/official-journals-provider';
 
-export class ConsultarDiarioOficialEstadoUseCase {
+export class OfficialJournalsStateUseCase {
   constructor(private readonly diarioOficialProvider: OfficialJournalsProvider) {}
 
   async execute(nome: string, dataInicio: string, dataFim: string): Promise<any> {

@@ -1,11 +1,11 @@
 import { readFile } from 'fs/promises';
 import { OfficialJournalsMunicipalityGateway } from '@infra/providers/gateways/official-journals/official-journals-municipality-gateway';
-import { ConsultarDiarioOficialMunicipioUseCase } from '@usecases/official-journals/official-journals-municipality-use-case';
+import { OfficialJournalsMunicipalityUseCase } from '@usecases/official-journals/official-journals-municipality-use-case';
 import { formatarLista } from './html-formatter-helper';
 import { OfficialJournalsStateGateway } from '@infra/providers/gateways/official-journals/official-journals-state-gateway';
-import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/official-journals/official-journals-state-use-case';
+import { OfficialJournalsStateUseCase } from '@usecases/official-journals/official-journals-state-use-case';
 import { MilitaryOttGateway } from '@infra/providers/gateways/military/military-ott-gateway';
-import { ExercitoUseCase } from '@usecases/military/military-ott-use-case';
+import { MilitaryOttUseCase } from '@usecases/military/military-ott-use-case';
 import path from 'path';
 
 export async function carregarArquivo(relativePath: string): Promise<string> {
@@ -38,7 +38,7 @@ export async function montarCorpoEmail(userName: string, templates: { doe: strin
   
 export async function gerarListaFormatadaExercito(): Promise<string> {
     const scraper = new MilitaryOttGateway();
-    const useCase = new ExercitoUseCase(scraper);
+    const useCase = new MilitaryOttUseCase(scraper);
     const resultado = await useCase.execute();
     const listaExercito = formatarLista(Object.values(resultado));
     return listaExercito;
@@ -46,14 +46,14 @@ export async function gerarListaFormatadaExercito(): Promise<string> {
 
 export async function gerarListaFormatadaDoe(name: string, dateInit: string, dateFinish: string): Promise<string> {
     const scraper = new OfficialJournalsStateGateway();
-    const useCase = new ConsultarDiarioOficialEstadoUseCase(scraper);
+    const useCase = new OfficialJournalsStateUseCase(scraper);
     const resultado = await useCase.execute(name, dateInit, dateFinish);
     return formatarLista(Object.values(resultado));
   }
 
 export async function gerarListaFormatadaDiogrande(name: string, dateInit: string, dateFinish: string): Promise<string> {
   const scraper = new OfficialJournalsMunicipalityGateway();
-  const useCase = new ConsultarDiarioOficialMunicipioUseCase(scraper);
+  const useCase = new OfficialJournalsMunicipalityUseCase(scraper);
   const resultado = await useCase.execute(name, dateInit, dateFinish);
   return formatarLista(Object.values(resultado));
 }

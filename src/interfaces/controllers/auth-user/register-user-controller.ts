@@ -1,11 +1,11 @@
-  import { AuthUserUseCase } from '@usecases/auth-user/register-user-use-case';
+  import { RegisterUserUseCase } from '@usecases/auth-user/register-user-use-case';
   import { Request, Response } from 'express';
   import { hashPassword } from "@utils/password/password-generator";
   import { RegisterRequestDTO } from '@domain/dtos/auth-user/register-request-dto';
   import { AuthService } from '@infra/jwt/auth-service';
 
   export class RegisterCreateUserController {
-    constructor(private authUserUseCase: AuthUserUseCase) {}
+    constructor(private authUserUseCase: RegisterUserUseCase) {}
 
     async create(req: Request, res: Response): Promise<Response> {
       const dados: RegisterRequestDTO = req.body;

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { ConsultarDiarioOficialMunicipioUseCase } from '@usecases/official-journals/official-journals-municipality-use-case';
+import { OfficialJournalsMunicipalityUseCase } from '@usecases/official-journals/official-journals-municipality-use-case';
 
 export class OfficialJournalsMunicipalityController {
-    constructor (private readonly consultarUseCase: ConsultarDiarioOficialMunicipioUseCase) {}
+    constructor (private readonly consultarUseCase: OfficialJournalsMunicipalityUseCase) {}
 
     consultar = async (req: Request, res: Response): Promise<void> => {
         try {

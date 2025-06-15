@@ -3,7 +3,7 @@ import { MilitaryOttGateway } from '@infra/providers/gateways/military/military-
 import { SiteData } from '@domain/interfaces/site-data';
 import { formatarLista } from '@utils/email/html-formatter-helper';
 
-export class ExercitoUseCase {
+export class MilitaryOttUseCase {
   constructor(private scraper: MilitaryOttGateway) {}
 
   async execute(): Promise<SiteData> {
@@ -59,7 +59,7 @@ export class ExercitoUseCase {
 
 if (require.main === module) {
   const scraper = new MilitaryOttGateway();
-  const useCase = new ExercitoUseCase(scraper);
+  const useCase = new MilitaryOttUseCase(scraper);
   const resultado = useCase.execute().then((data) => {
     const value = Object.values(data);
     const listaExercito = formatarLista(value);
