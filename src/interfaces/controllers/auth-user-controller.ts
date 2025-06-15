@@ -12,7 +12,7 @@ export class AuthUserController {
       res.status(400).send({ error: 'Todos os campos são obrigatórios.' });
       return;
     }
-    
+
     if (dados.password !== dados.confirmPassword) {
       res.status(400).send({ error: 'As senhas não coincidem.' });
       return;
