@@ -28,7 +28,7 @@ export class PrismaAuthUserRepository implements AuthUserRepository {
             const user = await prisma.authUser.findUnique({
                 where: { email }
             });
-            return user ? new AuthUser(user.name, user.email, user.password, user.role) : null;
+            return user ? new AuthUser(user.name, user.email, user.password, user.role, user.id) : null;
         } catch (error) {
             throw new Error("Could not find user by email");
         }
