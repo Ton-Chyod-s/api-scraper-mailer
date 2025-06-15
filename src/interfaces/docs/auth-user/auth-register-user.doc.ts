@@ -1,4 +1,4 @@
-export const authUserDoc = {
+export const authRegisterUserDoc = {
   '/auth/register': {
     post: {
       summary: 'Register a new user and return JWT token',

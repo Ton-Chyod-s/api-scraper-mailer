@@ -1,5 +1,5 @@
 
-export const usuariosDoc = {
+export const createUserDoc = {
   '/users': {
     post: {
       summary: 'Create a new user',

@@ -1,9 +1,9 @@
-import { RegisterUserController } from '@interfaces/controllers/auth-user/register-user-controller';
+import { RegisterCreateUserController } from '@interfaces/controllers/auth-user/register-user-controller';
 import { AuthUserUseCase } from '@usecases/auth-user/register-user-use-case';
 import { PrismaAuthUserRepository } from '@infra/repositories/auth-user/auth-user-repository';
 
-export function makeRegisterUserController(): RegisterUserController {
+export function makeRegisterCreateUserController(): RegisterCreateUserController {
     const authUserRepo = new PrismaAuthUserRepository();
     const authUserUseCase = new AuthUserUseCase(authUserRepo);   
-    return new RegisterUserController(authUserUseCase);
+    return new RegisterCreateUserController(authUserUseCase);
 }

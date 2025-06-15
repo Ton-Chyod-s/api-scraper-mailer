@@ -1,5 +1,5 @@
 
-export const authLoginDoc = {
+export const authLoginUserDoc = {
   '/auth/login': {
     post: {
       summary: 'Authenticate user and return JWT token',

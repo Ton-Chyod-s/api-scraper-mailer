@@ -1,22 +1,22 @@
 import { Router } from 'express';
 import { HomeController } from '../controllers/home-controller';
 import { sendEmailController } from '@interfaces/controllers/email/send-email-controller';
-import { makeUserController } from '@interfaces/factories/user/make-create-user-controller';
+import { makeCreateUserController } from '@interfaces/factories/user/make-create-user-controller';
 import { makeMilitaryOttController } from '@interfaces/factories/military/make-military-ott-controller';
-import { makeDiarioOficialEstadoController } from '@interfaces/factories/official-journals/make-official-journals-state-controller';
-import { makeDiarioOficialMunicipioController } from '@interfaces/factories/official-journals/make-official-journals-municipality-controller';
-import { makeRegisterUserController } from '@interfaces/factories/auth-user/make-register-user-controller';
+import { makeOfficialJournalsStateController } from '@interfaces/factories/official-journals/make-official-journals-state-controller';
+import { makeOfficialJournalsMunicipalityController } from '@interfaces/factories/official-journals/make-official-journals-municipality-controller';
+import { makeRegisterCreateUserController } from '@interfaces/factories/auth-user/make-register-user-controller';
 import { authenticateToken } from '@interfaces/middlewares/auth-middleware';
 import { makeLoginController } from '@interfaces/factories/auth-user/make-login-user-controller';
 
 
 export const router = Router();
 
-const userController = makeUserController();
+const userController = makeCreateUserController();
 const exercitoController = makeMilitaryOttController();
-const diarioEstadoController = makeDiarioOficialEstadoController();
-const diarioMunicipioController = makeDiarioOficialMunicipioController();
-const authUserController = makeRegisterUserController(); 
+const diarioEstadoController = makeOfficialJournalsStateController();
+const diarioMunicipioController = makeOfficialJournalsMunicipalityController();
+const authCreateUserController = makeRegisterCreateUserController(); 
 const loginController = makeLoginController();
 
 // router.get('/', HomeController.welcome);
@@ -43,7 +43,7 @@ router.post('/official-journals/state', (req, res) => diarioEstadoController.con
 router.post('/official-journals/municipality', (req, res) => diarioMunicipioController.consultar(req, res));
 
 router.post('/auth/register', async (req, res) => {
-  await authUserController.create(req, res);
+  await authCreateUserController.create(req, res);
 });
 
 router.post('/auth/login', async (req, res) => {

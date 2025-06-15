@@ -4,7 +4,7 @@
   import { RegisterRequestDTO } from '@domain/dtos/auth-user/register-request-dto';
   import { AuthService } from '@infra/jwt/auth-service';
 
-  export class RegisterUserController {
+  export class RegisterCreateUserController {
     constructor(private authUserUseCase: AuthUserUseCase) {}
 
     async create(req: Request, res: Response): Promise<Response> {

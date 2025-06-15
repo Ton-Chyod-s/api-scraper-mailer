@@ -1,5 +1,5 @@
 
-export const diarioOficialMunicipioDoc = {
+export const officialJournalsMunicipalityDoc = {
   '/official-journals/municipality': {
     post: {
       summary: 'Search Municipal Official Journals by filters',

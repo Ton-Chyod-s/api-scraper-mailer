@@ -1,6 +1,6 @@
 
 
-export const diarioOficialEstadoDoc = {
+export const officialJournalsStateDoc = {
   '/official-journals/state': {
     post: {
       summary: 'Search State Official Journals by filters',

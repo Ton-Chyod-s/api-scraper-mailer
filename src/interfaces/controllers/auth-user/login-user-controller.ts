@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { LoginUserUseCase } from '@usecases/auth-user/login-user-use-case';
 
-export class LoginUserController {
+export class LoginCreateUserController {
   constructor(private readonly loginUseCase: LoginUserUseCase) {}
 
   async execute(req: Request, res: Response): Promise<Response> {

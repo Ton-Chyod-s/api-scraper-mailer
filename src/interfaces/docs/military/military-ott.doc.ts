@@ -1,6 +1,6 @@
 
 
-export const exercitoDoc = {
+export const militaryOttDoc = {
   '/military/ott': {
     get: {
       summary: 'Retrieve Army data from OTT source',
