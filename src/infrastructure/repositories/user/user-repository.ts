@@ -37,13 +37,16 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async save(user: User): Promise<void> {
+    if (!user.authUserId) {
+    throw new Error("authUserId is required to save user");
+  }
     try {
       await prisma.user.create({
         data: {
           name: user.name,
           email: user.email,
           authUser: {
-            connect: { id: user.authUserId } 
+            connect: { id: Number(user.authUserId) } 
           }
         }
       });

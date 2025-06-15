@@ -18,7 +18,9 @@ const authUserController = makeAuthUserController();
 
 // router.get('/', HomeController.welcome);
 
-router.post('/user', authenticateToken, (req, res) => userController.create(req, res));
+router.post('/user', authenticateToken, async (req, res) => {
+  await userController.create(req, res)
+});
 
 router.post('/mail', async (req, res) => {
   try {
