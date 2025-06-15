@@ -19,4 +19,15 @@ export class PrismaAuthUserRepository implements AuthUserRepository {
             throw new Error("Could not create user");
         }
     }
+
+    async findByEmail(email: string): Promise<AuthUser | null> {
+        try {
+            const user = await prisma.authUser.findUnique({
+                where: { email }
+            });
+            return user ? new AuthUser(user.name, user.email, user.password, user.role) : null;
+        } catch (error) {
+            throw new Error("Could not find user by email");
+        }
+    }
 }
