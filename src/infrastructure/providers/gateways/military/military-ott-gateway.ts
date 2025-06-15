@@ -1,7 +1,7 @@
 import axios from 'axios';
 import https from 'https';
 
-export class ExercitoWebScraper {
+export class MilitaryOttGateway {
   private async acessarPagina(url: string, retries = 3, delay = 2000): Promise<string> {
     const agent = new https.Agent({
       rejectUnauthorized: false,  
@@ -46,7 +46,7 @@ export class ExercitoWebScraper {
 }
 
 if (require.main === module) {
-  const scraper = new ExercitoWebScraper();
+  const scraper = new MilitaryOttGateway();
   scraper.buscarConteudo().then((data) => {
     console.log('Conteúdo obtido com sucesso:');
     console.log(data);

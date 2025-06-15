@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ExercitoUseCase } from "@usecases/military/military-ott-use-case";
 
-export class ExercitoController {
+export class MilitaryOttController {
     constructor (private readonly exercitoUseCase: ExercitoUseCase) {}
 
     consultar = async (req: Request, res: Response): Promise<void> => {

@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import { OfficialJournalsProvider } from '@domain/interfaces/providers/official-journals/official-journals-provider';
 import { SiteData } from '@domain/interfaces/site-data';
 
-export class DiarioOficialEstadoWeb implements OfficialJournalsProvider {
+export class OfficialJournalsStateGateway implements OfficialJournalsProvider {
   private url = 'https://www.spdo.ms.gov.br/DiarioDOE/Index/Index/1';
 
   async buscarPublicacoes(nome: string, dataInicio: string, dataFim: string): Promise<SiteData> {
@@ -17,11 +17,11 @@ export class DiarioOficialEstadoWeb implements OfficialJournalsProvider {
 
     const response = await axios.post(this.url, form, { headers });
 
-    return DiarioOficialDeserializer.fromRawData(response.data['dataElastic']);
+    return OfficialJournalsDeserializer.fromRawData(response.data['dataElastic']);
   }
 }
 
-class DiarioOficialDeserializer {
+class OfficialJournalsDeserializer {
   static fromRawData(rawData: any[]): SiteData {
     const conteudos: Record<string, string> = {};
 
@@ -44,7 +44,7 @@ class DiarioOficialDeserializer {
 }
 
 if (require.main === module) {
-  const diarioOficialProvider = new DiarioOficialEstadoWeb();
+  const diarioOficialProvider = new OfficialJournalsStateGateway();
   diarioOficialProvider.buscarPublicacoes('Klayton Chrysthian Oliveira Dias', '01/01/2023', '15/11/2023')
     .then(result => console.log(result))
     .catch(error => console.error(error));

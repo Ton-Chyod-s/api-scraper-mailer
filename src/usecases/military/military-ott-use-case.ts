@@ -1,10 +1,10 @@
 import { load } from 'cheerio';
-import { ExercitoWebScraper } from '@infra/providers/gateways/military/military-ott-gateway';
+import { MilitaryOttGateway } from '@infra/providers/gateways/military/military-ott-gateway';
 import { SiteData } from '@domain/interfaces/site-data';
 import { formatarLista } from '@utils/email/html-formatter-helper';
 
 export class ExercitoUseCase {
-  constructor(private scraper: ExercitoWebScraper) {}
+  constructor(private scraper: MilitaryOttGateway) {}
 
   async execute(): Promise<SiteData> {
     const html = await this.scraper.buscarConteudo();
@@ -58,7 +58,7 @@ export class ExercitoUseCase {
 }
 
 if (require.main === module) {
-  const scraper = new ExercitoWebScraper();
+  const scraper = new MilitaryOttGateway();
   const useCase = new ExercitoUseCase(scraper);
   const resultado = useCase.execute().then((data) => {
     const value = Object.values(data);

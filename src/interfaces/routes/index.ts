@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { HomeController } from '../controllers/home-controller';
-import { enviarEmail } from '@interfaces/controllers/email/send-email-controller';
+import { sendEmailController } from '@interfaces/controllers/email/send-email-controller';
 import { makeUserController } from '@interfaces/factories/user/make-create-user-controller';
-import { makeExercitoController } from '@interfaces/factories/military/make-military-ott-controller';
+import { makeMilitaryOttController } from '@interfaces/factories/military/make-military-ott-controller';
 import { makeDiarioOficialEstadoController } from '@interfaces/factories/official-journals/make-official-journals-state-controller';
 import { makeDiarioOficialMunicipioController } from '@interfaces/factories/official-journals/make-official-journals-municipality-controller';
 import { makeRegisterUserController } from '@interfaces/factories/auth-user/make-register-user-controller';
@@ -13,7 +13,7 @@ import { makeLoginController } from '@interfaces/factories/auth-user/make-login-
 export const router = Router();
 
 const userController = makeUserController();
-const exercitoController = makeExercitoController();
+const exercitoController = makeMilitaryOttController();
 const diarioEstadoController = makeDiarioOficialEstadoController();
 const diarioMunicipioController = makeDiarioOficialMunicipioController();
 const authUserController = makeRegisterUserController(); 
@@ -28,7 +28,7 @@ router.post('/users', authenticateToken, async (req, res) => {
 router.post('/mail', async (req, res) => {
   try {
     const { email, html, ano } = req.body; 
-    await enviarEmail(email, html, ano);  
+    await sendEmailController(email, html, ano);  
     res.status(200).send('E-mails enviados com sucesso!');
   } catch (error) {
     res.status(500).send('Erro ao enviar e-mails');

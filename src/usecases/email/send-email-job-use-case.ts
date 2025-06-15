@@ -1,4 +1,4 @@
-import { enviarEmail } from "@interfaces/controllers/email/send-email-controller";
+import { sendEmailController } from "@interfaces/controllers/email/send-email-controller";
 import { PrismaUserRepository } from "@infra/repositories/user/user-repository";
 import { formatarData } from "@utils/date/date-helper";
 import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "@utils/email/email-helper";
@@ -9,7 +9,7 @@ export class EnviarEmailsCompletos {
     constructor(
       private readonly getEmails: GetEmails,
       private readonly getUserNameByEmail: GetUserNameByEmail,
-      private readonly enviarEmail: (email: string, html: string, subject: string) => Promise<void>
+      private readonly sendEmailController: (email: string, html: string, subject: string) => Promise<void>
     ) {}
   
     async execute(): Promise<void> {
@@ -49,7 +49,7 @@ export class EnviarEmailsCompletos {
             
             const htmlFinal = montarHtmlFinal(htmlBase, header, corpoCompleto);
       
-            await this.enviarEmail(email, htmlFinal, ano.toString());
+            await this.sendEmailController(email, htmlFinal, ano.toString());
             console.log(`E-mail enviado para: ${userName} email: ${email}`);
           } catch (error) {
             console.error(`Falha ao enviar e-mail para ${email}:`, error);
@@ -65,11 +65,11 @@ if (require.main === module) {
   const getEmails = new GetEmails(userRepo);
   const getUserNameByEmail = new GetUserNameByEmail(userRepo);
 
-  const enviarEmailsCompletos = new EnviarEmailsCompletos(
+  const sendEmailControllersCompletos = new EnviarEmailsCompletos(
     getEmails,
     getUserNameByEmail,
-    enviarEmail
+    sendEmailController
   );
 
-  enviarEmailsCompletos.execute()
+  sendEmailControllersCompletos.execute()
 }
