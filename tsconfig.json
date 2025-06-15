@@ -10,8 +10,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "moduleResolution": "node",
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
+   
     "baseUrl": "src",
     "typeRoots": ["./node_modules/@types", "src/types"],
     "paths": {
