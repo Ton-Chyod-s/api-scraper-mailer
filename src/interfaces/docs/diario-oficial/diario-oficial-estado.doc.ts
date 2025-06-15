@@ -1,10 +1,10 @@
 
 
 export const diarioOficialEstadoDoc = {
-  '/diarios/estado': {
+  '/official-journals/state': {
     post: {
-      summary: 'Consulta Diário Oficial do Estado',
-      tags: ['Diário Oficial'],
+      summary: 'Search State Official Journals by filters',
+      tags: ['Official Journals'],
       requestBody: {
         required: true,
         content: {

@@ -21,7 +21,7 @@ const loginController = makeLoginController();
 
 // router.get('/', HomeController.welcome);
 
-router.post('/user', authenticateToken, async (req, res) => {
+router.post('/users', authenticateToken, async (req, res) => {
   await userController.create(req, res)
 });
 
@@ -36,13 +36,13 @@ router.post('/mail', async (req, res) => {
 });
 
 
-router.get('/exercito', (req, res) => exercitoController.consultar(req, res));
+router.get('/military/ott', (req, res) => exercitoController.consultar(req, res));
 
-router.post('/diarios/estado', (req, res) => diarioEstadoController.consultar(req, res)); 
+router.post('/official-journals/state', (req, res) => diarioEstadoController.consultar(req, res)); 
 
-router.post('/diarios/municipio', (req, res) => diarioMunicipioController.consultar(req, res));
+router.post('/official-journals/municipality', (req, res) => diarioMunicipioController.consultar(req, res));
 
-router.post('/auth/user', async (req, res) => {
+router.post('/auth/register', async (req, res) => {
   await authUserController.create(req, res);
 });
 

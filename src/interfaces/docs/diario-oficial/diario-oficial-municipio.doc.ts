@@ -1,9 +1,9 @@
 
 export const diarioOficialMunicipioDoc = {
-  '/diarios/municipio': {
+  '/official-journals/municipality': {
     post: {
-      summary: 'Consulta Diário Oficial do Município',
-      tags: ['Diário Oficial'],
+      summary: 'Search Municipal Official Journals by filters',
+      tags: ['Official Journals'],
       requestBody: {
         required: true,
         content: {

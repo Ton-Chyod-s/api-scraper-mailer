@@ -1,10 +1,10 @@
 
 export const usuariosDoc = {
-  '/user': {
+  '/users': {
     post: {
-      summary: 'Pesquisa usuários cadastrados',
-      description: 'Retorna lista ou dados de usuários. Requer token Bearer válido.',
-      tags: ['Usuários'],
+      summary: 'Create a new user',
+      // description: 'Retorna lista ou dados de usuários. Requer token Bearer válido.',
+      tags: ['Users'],
       requestBody: {
         required: true,
         content: {

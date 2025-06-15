@@ -2,8 +2,8 @@
 export const authLoginDoc = {
   '/auth/login': {
     post: {
-      summary: 'Logar com usuário autenticado',
-      tags: ['Usuários Autenticados'],
+      summary: 'Authenticate user and return JWT token',
+      tags: ['Auth'],
       requestBody: {
         required: true,
         content: {

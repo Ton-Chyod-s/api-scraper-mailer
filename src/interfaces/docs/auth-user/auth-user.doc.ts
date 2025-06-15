@@ -1,13 +1,13 @@
 export const authUserDoc = {
-  '/auth/user': {
+  '/auth/register': {
     post: {
-      summary: 'Cria um novo usuário autenticado',
-      tags: ['Usuários Autenticados'],
+      summary: 'Register a new user and return JWT token',
+      tags: ['Auth'],
       requestBody: {
         required: true,
         content: {
           'application/json': {
-            schema: { // <-- aqui estava como "shema"
+            schema: { 
               type: 'object',
               properties: {
                 name: { type: 'string' },
