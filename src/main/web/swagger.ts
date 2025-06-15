@@ -9,9 +9,23 @@ const swaggerConfig = {
       version: "1.0.0",
       description: "Documentação da API",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     paths: swaggerPaths,
   },
-  apis: ["./src/interfaces/routes/*.ts"], 
+  apis: ["./src/interfaces/routes/*.ts"],
 };
 
 export const swaggerSpec = swaggerJSDoc(swaggerConfig);

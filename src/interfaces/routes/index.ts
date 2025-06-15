@@ -6,6 +6,7 @@ import { makeExercitoController } from '@interfaces/factories/exercito/make-exer
 import { makeDiarioOficialEstadoController } from '@interfaces/factories/diario-oficial/make-diario-oficial-estado-controller';
 import { makeDiarioOficialMunicipioController } from '@interfaces/factories/diario-oficial/make-diario-oficial-municipio-controller';
 import { makeAuthUserController } from '@interfaces/factories/auth-user/make-auth-user-controller';
+import { authenticateToken } from '@interfaces/middlewares/auth-middleware';
 
 export const router = Router();
 
@@ -17,7 +18,7 @@ const authUserController = makeAuthUserController();
 
 // router.get('/', HomeController.welcome);
 
-router.post('/pessoas', (req, res) => userController.create(req, res));
+router.post('/user', authenticateToken, (req, res) => userController.create(req, res));
 
 router.post('/mail', async (req, res) => {
   try {

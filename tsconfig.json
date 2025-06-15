@@ -13,6 +13,7 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "baseUrl": "src",
+    "typeRoots": ["./node_modules/@types", "src/types"],
     "paths": {
       "@infra/*": ["infrastructure/*"],
       "@interfaces/*": ["interfaces/*"],
