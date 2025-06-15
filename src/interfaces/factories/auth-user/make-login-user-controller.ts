@@ -1,6 +1,6 @@
 import { PrismaAuthUserRepository } from '@infra/repositories/auth-user/auth-user-repository';
-import { LoginUserUseCase } from '@usecases/user/login-user-use-case';
-import { LoginUserController } from '@interfaces/controllers/user/login-user-controller';
+import { LoginUserUseCase } from '@usecases/auth-user/login-user-use-case';
+import { LoginUserController } from '@interfaces/controllers/auth-user/login-user-controller';
 
 export function makeLoginController(): LoginUserController {
   const userRepo = new PrismaAuthUserRepository();

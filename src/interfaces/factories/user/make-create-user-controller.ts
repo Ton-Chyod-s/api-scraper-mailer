@@ -1,6 +1,6 @@
 import { PrismaUserRepository } from "@infra/repositories/user/user-repository";
 import { CreateUser } from "@usecases/user/create-user";
-import { UserController } from "@interfaces/controllers/user-controller";
+import { UserController } from "@interfaces/controllers/user/create-user-controller";
 
 
 export function makeUserController(): UserController {

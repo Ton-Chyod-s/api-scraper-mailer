@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/diario-oficial/consultar-diario-oficial-estado';
+import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/official-journals/official-journals-state-use-case';
 
 export class DiarioOficialEstadoController {
   constructor(private readonly consultarUseCase: ConsultarDiarioOficialEstadoUseCase) {}

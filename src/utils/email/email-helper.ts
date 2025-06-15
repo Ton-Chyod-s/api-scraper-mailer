@@ -1,11 +1,11 @@
 import { readFile } from 'fs/promises';
 import { DiarioOficialMunicipioWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-municipio-web';
-import { ConsultarDiarioOficialMunicipioUseCase } from '@usecases/diario-oficial/consultar-diario-oficial-municipio';
+import { ConsultarDiarioOficialMunicipioUseCase } from '@usecases/official-journals/official-journals-municipality-use-case';
 import { formatarLista } from './html-formatter-helper';
 import { DiarioOficialEstadoWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-estado-web';
-import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/diario-oficial/consultar-diario-oficial-estado';
+import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/official-journals/official-journals-state-use-case';
 import { ExercitoWebScraper } from '@infra/providers/gateways/exercito-work/exercito-web-scraper';
-import { ExercitoUseCase } from '@usecases/exercito-work/exercito-use-case';
+import { ExercitoUseCase } from '@usecases/military/military-ott-use-case';
 import path from 'path';
 
 export async function carregarArquivo(relativePath: string): Promise<string> {

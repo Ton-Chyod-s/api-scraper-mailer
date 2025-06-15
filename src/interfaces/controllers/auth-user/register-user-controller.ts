@@ -1,9 +1,8 @@
-  import { AuthUserUseCase } from '@usecases/user/auth-user-use-case';
+  import { AuthUserUseCase } from '@usecases/auth-user/register-user-use-case';
   import { Request, Response } from 'express';
   import { hashPassword } from "@utils/password/password-generator";
   import { RegisterRequestDTO } from '@domain/dtos/user/register-request-dto';
   import { AuthService } from '@infra/jwt/auth-service';
-  import jwt from 'jsonwebtoken';
 
   export class AuthUserController {
     constructor(private authUserUseCase: AuthUserUseCase) {}

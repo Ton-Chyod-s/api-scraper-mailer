@@ -1,6 +1,6 @@
 import { DiarioOficialMunicipioWeb } from "@infra/providers/gateways/diario-oficial/diario-oficial-municipio-web";
-import { ConsultarDiarioOficialMunicipioUseCase } from "@usecases/diario-oficial/consultar-diario-oficial-municipio";
-import { DiarioOficialMunicipioController } from "@interfaces/controllers/diario-oficial/diario-oficial-municipio-controller";
+import { ConsultarDiarioOficialMunicipioUseCase } from "@usecases/official-journals/official-journals-municipality-use-case";
+import { DiarioOficialMunicipioController } from "@interfaces/controllers/official-journals/official-journals-municipality-controller";
 
 export function makeDiarioOficialMunicipioController(): DiarioOficialMunicipioController {
    const diarioOficialMunicipioWeb = new DiarioOficialMunicipioWeb();
