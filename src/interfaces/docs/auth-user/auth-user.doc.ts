@@ -13,6 +13,7 @@ export const authUserDoc = {
                 name: { type: 'string' },
                 email: { type: 'string' },
                 password: { type: 'string' },
+                confirmPassword: { type: 'string' }
               },
               required: ['name', 'email', 'password'],
             },

@@ -8,6 +8,15 @@ export class AuthUserController {
 
   async create(req: Request, res: Response): Promise<void> {
     const dados: RegisterRequestDTO = req.body;
+    if (!dados.name || !dados.email || !dados.password || !dados.confirmPassword) {
+      res.status(400).send({ error: 'Todos os campos são obrigatórios.' });
+      return;
+    }
+    
+    if (dados.password !== dados.confirmPassword) {
+      res.status(400).send({ error: 'As senhas não coincidem.' });
+      return;
+    }
 
     const hashedPassword = await hashPassword(dados.password);
 
