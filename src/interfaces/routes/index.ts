@@ -5,6 +5,7 @@ import { makeUserController } from '@interfaces/factories/user/make-user-control
 import { makeExercitoController } from '@interfaces/factories/exercito/make-exercito-controller';
 import { makeDiarioOficialEstadoController } from '@interfaces/factories/diario-oficial/make-diario-oficial-estado-controller';
 import { makeDiarioOficialMunicipioController } from '@interfaces/factories/diario-oficial/make-diario-oficial-municipio-controller';
+import { makeAuthUserController } from '@interfaces/factories/auth-user/make-auth-user-controller';
 
 export const router = Router();
 
@@ -12,6 +13,7 @@ const userController = makeUserController();
 const exercitoController = makeExercitoController();
 const diarioEstadoController = makeDiarioOficialEstadoController();
 const diarioMunicipioController = makeDiarioOficialMunicipioController();
+const authUserController = makeAuthUserController(); 
 
 // router.get('/', HomeController.welcome);
 
@@ -32,4 +34,7 @@ router.get('/exercito', (req, res) => exercitoController.consultar(req, res));
 
 router.post('/diarios/estado', (req, res) => diarioEstadoController.consultar(req, res)); 
 
-router.post('/diarios/municipio', (req, res) => diarioMunicipioController.consultar(req, res)); 
+router.post('/diarios/municipio', (req, res) => diarioMunicipioController.consultar(req, res));
+
+router.post('/auth/user', (req, res) => authUserController.create(req, res));
+
