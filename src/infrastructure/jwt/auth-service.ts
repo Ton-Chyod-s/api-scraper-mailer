@@ -3,8 +3,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 export class AuthService {
     private secretKey = process.env.JWT_SECRET_KEY || 'S&cr3tK3y';
 
-    generateToken(userId: string): string {
-        const payload = { sub: userId };
+    generateToken(userId: string, role: string): string {
+        const payload = { sub: userId, role: role };
         return jwt.sign(payload, this.secretKey, {
             expiresIn: '6h'
         });

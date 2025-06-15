@@ -23,8 +23,10 @@
       try {
         const user = await this.authUserUseCase.execute(dados.name, dados.email, hashedPassword);
 
+        if (!user.id) throw new Error('ID do usuário inválido');
+
         const authService = new AuthService();
-        const token = authService.generateToken(user.id?.toString() || "");
+        const token = authService.generateToken(user.id.toString(), user.role);
 
         return res.status(201).json({
                 message: "User registered successfully",
