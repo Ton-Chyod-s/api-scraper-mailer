@@ -1,4 +1,4 @@
-import { ExercitoWebScraper } from "@infra/providers/gateways/exercito-work/exercito-web-scraper";
+import { ExercitoWebScraper } from "@infra/providers/gateways/military/military-ott-gateway";
 import { ExercitoUseCase } from "@usecases/military/military-ott-use-case";
 import { ExercitoController } from "@interfaces/controllers/military/military-ott-controller";
 

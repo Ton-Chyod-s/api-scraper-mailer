@@ -1,7 +1,7 @@
 import { AuthUserRepository } from '@domain/interfaces/repositories/auth-user-repository';
 import { AuthService } from '@infra/jwt/auth-service';
 import bcrypt from "bcrypt";
-import { LoginUserDTO } from '@domain/dtos/user/login-user-dto';
+import { LoginRequestDTO } from '@domain/dtos/auth-user/login-request-dto';
 
 export class LoginUserUseCase {
     constructor(
@@ -9,7 +9,7 @@ export class LoginUserUseCase {
         private readonly authService: AuthService = new AuthService()
     ) {}
 
-  async execute(email: string, password: string): Promise<LoginUserDTO | null> {
+  async execute(email: string, password: string): Promise<LoginRequestDTO | null> {
     const user = await this.authUserRepo.findByEmail(email);
     if (!user) throw new Error('Usuário não encontrado');
 

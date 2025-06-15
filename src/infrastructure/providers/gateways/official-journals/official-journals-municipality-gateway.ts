@@ -1,9 +1,9 @@
-import { DiarioOficialProvider } from "@domain/interfaces/providers/diario-oficial/diario-oficial-provider";
+import { OfficialJournalsProvider } from "@domain/interfaces/providers/official-journals/official-journals-provider";
 import { SiteData } from '@domain/interfaces/site-data';
 
 import axios from 'axios';
 
-export class DiarioOficialMunicipioWeb implements DiarioOficialProvider {
+export class DiarioOficialMunicipioWeb implements OfficialJournalsProvider {
   private readonly url = 'https://diogrande.campogrande.ms.gov.br/wp-admin/admin-ajax.php';
 
   async buscarPublicacoes(nome: string, dataInicio: string, dataFim: string): Promise<SiteData> {

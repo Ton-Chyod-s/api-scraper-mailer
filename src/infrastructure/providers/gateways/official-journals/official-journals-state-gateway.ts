@@ -1,9 +1,9 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import { DiarioOficialProvider } from '@domain/interfaces/providers/diario-oficial/diario-oficial-provider';
+import { OfficialJournalsProvider } from '@domain/interfaces/providers/official-journals/official-journals-provider';
 import { SiteData } from '@domain/interfaces/site-data';
 
-export class DiarioOficialEstadoWeb implements DiarioOficialProvider {
+export class DiarioOficialEstadoWeb implements OfficialJournalsProvider {
   private url = 'https://www.spdo.ms.gov.br/DiarioDOE/Index/Index/1';
 
   async buscarPublicacoes(nome: string, dataInicio: string, dataFim: string): Promise<SiteData> {

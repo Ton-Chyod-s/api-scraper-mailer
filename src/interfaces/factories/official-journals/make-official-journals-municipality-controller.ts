@@ -1,4 +1,4 @@
-import { DiarioOficialMunicipioWeb } from "@infra/providers/gateways/diario-oficial/diario-oficial-municipio-web";
+import { DiarioOficialMunicipioWeb } from "@infra/providers/gateways/official-journals/official-journals-municipality-gateway";
 import { ConsultarDiarioOficialMunicipioUseCase } from "@usecases/official-journals/official-journals-municipality-use-case";
 import { DiarioOficialMunicipioController } from "@interfaces/controllers/official-journals/official-journals-municipality-controller";
 

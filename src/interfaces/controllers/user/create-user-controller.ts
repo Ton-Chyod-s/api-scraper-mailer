@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { CreateUser } from '@usecases/user/create-user';
 import { CreateUserDTO } from '@domain/dtos/user/create-user-dto';
-import { User } from '@domain/entities/User';
+import { User } from '@domain/entities/user';
 
 export class UserController {
   constructor(private createUser: CreateUser) {}

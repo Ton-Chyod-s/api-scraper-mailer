@@ -5,7 +5,7 @@ import { makeUserController } from '@interfaces/factories/user/make-create-user-
 import { makeExercitoController } from '@interfaces/factories/military/make-military-ott-controller';
 import { makeDiarioOficialEstadoController } from '@interfaces/factories/official-journals/make-official-journals-state-controller';
 import { makeDiarioOficialMunicipioController } from '@interfaces/factories/official-journals/make-official-journals-municipality-controller';
-import { makeAuthUserController } from '@interfaces/factories/auth-user/make-register-user-controller';
+import { makeRegisterUserController } from '@interfaces/factories/auth-user/make-register-user-controller';
 import { authenticateToken } from '@interfaces/middlewares/auth-middleware';
 import { makeLoginController } from '@interfaces/factories/auth-user/make-login-user-controller';
 
@@ -16,7 +16,7 @@ const userController = makeUserController();
 const exercitoController = makeExercitoController();
 const diarioEstadoController = makeDiarioOficialEstadoController();
 const diarioMunicipioController = makeDiarioOficialMunicipioController();
-const authUserController = makeAuthUserController(); 
+const authUserController = makeRegisterUserController(); 
 const loginController = makeLoginController();
 
 // router.get('/', HomeController.welcome);

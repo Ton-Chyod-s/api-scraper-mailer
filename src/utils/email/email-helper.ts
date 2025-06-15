@@ -1,10 +1,10 @@
 import { readFile } from 'fs/promises';
-import { DiarioOficialMunicipioWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-municipio-web';
+import { DiarioOficialMunicipioWeb } from '@infra/providers/gateways/official-journals/official-journals-municipality-gateway';
 import { ConsultarDiarioOficialMunicipioUseCase } from '@usecases/official-journals/official-journals-municipality-use-case';
 import { formatarLista } from './html-formatter-helper';
-import { DiarioOficialEstadoWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-estado-web';
+import { DiarioOficialEstadoWeb } from '@infra/providers/gateways/official-journals/official-journals-state-gateway';
 import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/official-journals/official-journals-state-use-case';
-import { ExercitoWebScraper } from '@infra/providers/gateways/exercito-work/exercito-web-scraper';
+import { ExercitoWebScraper } from '@infra/providers/gateways/military/military-ott-gateway';
 import { ExercitoUseCase } from '@usecases/military/military-ott-use-case';
 import path from 'path';
 

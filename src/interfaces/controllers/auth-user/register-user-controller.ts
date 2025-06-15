@@ -1,10 +1,10 @@
   import { AuthUserUseCase } from '@usecases/auth-user/register-user-use-case';
   import { Request, Response } from 'express';
   import { hashPassword } from "@utils/password/password-generator";
-  import { RegisterRequestDTO } from '@domain/dtos/user/register-request-dto';
+  import { RegisterRequestDTO } from '@domain/dtos/auth-user/register-request-dto';
   import { AuthService } from '@infra/jwt/auth-service';
 
-  export class AuthUserController {
+  export class RegisterUserController {
     constructor(private authUserUseCase: AuthUserUseCase) {}
 
     async create(req: Request, res: Response): Promise<Response> {
