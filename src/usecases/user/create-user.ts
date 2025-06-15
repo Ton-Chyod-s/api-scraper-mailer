@@ -8,7 +8,7 @@ export class CreateUser {
     const existing = await this.userRepo.findByEmail(email);
     if (existing) throw new Error('Usuário já existe');
 
-    const user = new User(name, email);
+    const user = new User(name, email, 0); 
     await this.userRepo.save(user);
   }
 }
