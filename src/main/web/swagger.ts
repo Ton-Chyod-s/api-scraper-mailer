@@ -5,9 +5,9 @@ const swaggerConfig = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "api-scraper-mailer",
-      version: "1.0.0",
-      description: "Documentação da API",
+      title: "Scraper Mailer API",
+      version: "0.1.0",
+      description: "REST API for automation, data scraping, and user management, including official journal and military information handling.",
     },
     components: {
       securitySchemes: {
