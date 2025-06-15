@@ -3,7 +3,8 @@ export class AuthUser {
     public name: string,
     public email: string,
     public password: string,
-    public role: string = 'user'
+    public role: string = 'user',
+    public id?: number 
   ) {
     if (!email.includes('@')) throw new Error('Email inválido');
     if (role !== 'admin' && role !== 'user') throw new Error('Role inválido');

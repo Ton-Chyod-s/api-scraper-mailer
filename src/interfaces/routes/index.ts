@@ -36,5 +36,6 @@ router.post('/diarios/estado', (req, res) => diarioEstadoController.consultar(re
 
 router.post('/diarios/municipio', (req, res) => diarioMunicipioController.consultar(req, res));
 
-router.post('/auth/user', (req, res) => authUserController.create(req, res));
-
+router.post('/auth/user', async (req, res) => {
+  await authUserController.create(req, res);
+});
