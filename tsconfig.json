@@ -9,7 +9,18 @@
     "declaration": false,
     "skipLibCheck": true,
     "sourceMap": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+   
+    "baseUrl": "src",
+    "typeRoots": ["./node_modules/@types", "src/types"],
+    "paths": {
+      "@infra/*": ["infrastructure/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@usecases/*": ["usecases/*"],
+      "@domain/*": ["domain/*"],
+      "@utils/*": ["utils/*"],
+      "@main/*": ["main/*"]
+    }
   },
   "include": ["src"]
 }

@@ -1,4 +1,4 @@
-import { DiarioOficialProvider } from '../../domain/interfaces/providers/diario-oficial/diario-oficial-provider';
+import { DiarioOficialProvider } from '@domain/interfaces/providers/diario-oficial/diario-oficial-provider';
 
 export class ConsultarDiarioOficialEstadoUseCase {
   constructor(private readonly diarioOficialProvider: DiarioOficialProvider) {}

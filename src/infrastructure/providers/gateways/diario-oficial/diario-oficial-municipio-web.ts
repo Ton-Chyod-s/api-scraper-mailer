@@ -1,5 +1,5 @@
-import { DiarioOficialProvider } from "../../../../domain/interfaces/providers/diario-oficial/diario-oficial-provider";
-import { SiteData } from '../../../../domain/interfaces/site-data';
+import { DiarioOficialProvider } from "@domain/interfaces/providers/diario-oficial/diario-oficial-provider";
+import { SiteData } from '@domain/interfaces/site-data';
 
 import axios from 'axios';
 

@@ -1,6 +1,4 @@
-
-import { User } from '@prisma/client';
-import { UserRepository } from '../../domain/interfaces/repositories/user-repository';
+import { UserRepository } from '@domain/interfaces/repositories/user-repository';
 
 
 export class GetUserNameByEmail {

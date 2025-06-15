@@ -1,6 +1,6 @@
-import { PrismaClient } from '.prisma/client';
-import { User } from '../../../domain/entities/User';
-import { UserRepository } from '../../../domain/interfaces/repositories/user-repository';
+import { PrismaClient } from '@prisma/client';
+import { User } from '@domain/entities/User';
+import { UserRepository } from '@domain/interfaces/repositories/user-repository';
 
 const prisma = new PrismaClient();
 
@@ -8,15 +8,18 @@ export class PrismaUserRepository implements UserRepository {
   async findByEmail(email: string): Promise<User | null> {
     try {
       const user = await prisma.user.findUnique({
-        where: { email }
+        where: { email },
+        include: {
+          authUser: true,
+        }
       });
-      
+
       if (!user) return null;
-  
-      return new User(user.name ?? '', user.email);
+
+      return new User(user.name ?? '', user.email, user.authUser.id);
     } catch (error) {
       console.error("Error fetching user by email: ", error);
-      throw new Error("Could not fetch user by email");
+      return null;
     }
   }
 
@@ -38,7 +41,10 @@ export class PrismaUserRepository implements UserRepository {
       await prisma.user.create({
         data: {
           name: user.name,
-          email: user.email
+          email: user.email,
+          authUser: {
+            connect: { id: user.authUserId } 
+          }
         }
       });
     } catch (error) {

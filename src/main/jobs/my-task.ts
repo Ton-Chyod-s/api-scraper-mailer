@@ -1,7 +1,7 @@
-import { GetEmails } from './../../usecases/user/get-emails';
-import { GetUserNameByEmail } from './../../usecases/user/get-user-name-by-email';
-import { PrismaUserRepository } from './../../infrastructure/repositories/user/user-repository';
-import { enviarEmail } from '../../interfaces/controllers/email/send-email-controller';
+import { GetEmails } from '@usecases/user/get-emails';
+import { GetUserNameByEmail } from '@usecases/user/get-user-name-by-email';
+import { PrismaUserRepository } from '@infra/repositories/user/user-repository';
+import { enviarEmail } from '@interfaces/controllers/email/send-email-controller';
 
 import {
   montarCorpoEmail,

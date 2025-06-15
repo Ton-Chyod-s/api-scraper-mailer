@@ -1,13 +1,15 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import swaggerUi from "swagger-ui-express";
-import { scheduleDailyTask } from './../../main/jobs/scheduler';
+import { scheduleDailyTask } from '@main/jobs/scheduler';
+import cors from 'cors';
 
 dotenv.config();
 
 const server = express();
 const PORT = Number(process.env.PORT_SERVER) || 5050;
 
+server.use(cors());
 server.use(express.json());
 
 server.use((req, res, next) => {

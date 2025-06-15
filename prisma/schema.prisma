@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -9,14 +8,28 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?
-  email   String   @unique
-  createdAt DateTime @default(now())
-} 
+  id         Int       @id @default(autoincrement())
+  name       String?
+  email      String    @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  authUserId Int
+  authUser   AuthUser  @relation(fields: [authUserId], references: [id])
+}
 
-model task_log {
-  id Int                @id @default(autoincrement())
-  task_name String      
-  executed_at DateTime  @default(now())
+model TaskLog {
+  id          Int      @id @default(autoincrement())
+  task_name   String
+  executed_at DateTime @default(now())
+}
+
+model AuthUser {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  role      String    @default("user")
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  users     User[]
 }

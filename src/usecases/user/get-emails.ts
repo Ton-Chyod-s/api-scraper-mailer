@@ -1,4 +1,4 @@
-import { UserRepository } from '../../domain/interfaces/repositories/user-repository';
+import { UserRepository } from '@domain/interfaces/repositories/user-repository';
 
 export class GetEmails {
     constructor(private userRepository: UserRepository) {}
