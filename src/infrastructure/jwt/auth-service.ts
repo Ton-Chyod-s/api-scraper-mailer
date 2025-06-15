@@ -13,4 +13,12 @@ export class AuthService {
     verifyToken(token: string): string | JwtPayload {
         return jwt.verify(token, this.secretKey);
     }
+    
+    getRoleFromToken(token: string): string {
+        const decoded = this.verifyToken(token) as JwtPayload;
+        if (!decoded.role) {
+            throw new Error('Token não contém role');
+        }
+        return decoded.role;
+    }
 }
