@@ -5,5 +5,4 @@ node_modules
 .vercel
 dist
 data
-migrations
 package-lock.json
