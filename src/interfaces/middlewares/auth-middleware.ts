@@ -16,7 +16,7 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
         const decoded = authService.verifyToken(token);
 
         if (typeof decoded === 'object' && decoded !== null) {
-            req.user = decoded; 
+            req.user = { id: decoded.sub as string }; 
             return next();
         } 
 

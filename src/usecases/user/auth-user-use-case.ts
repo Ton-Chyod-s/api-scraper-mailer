@@ -10,8 +10,8 @@ export class AuthUserUseCase {
     if (existing) throw new Error('Usuário já existe');
 
     const user = new AuthUser(name, email, password, role);
-    await this.authUserRepo.createUser(user);
+    return await this.authUserRepo.createUser(user);
 
-    return user;
+ 
   }
 }
