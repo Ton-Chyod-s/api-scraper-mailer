@@ -1,5 +1,9 @@
 import cron from 'node-cron';
 import { executeScheduledTask } from '@main/config/usecases/execute-scheduled-task-factory';
+import { toZonedTime } from 'date-fns-tz';
+import { strict } from 'assert';
+
+const timeZone = 'America/Campo_Grande';
 
 export function scheduleDailyTask(): void {
   cron.schedule(
@@ -14,12 +18,13 @@ export function scheduleDailyTask(): void {
     },
     {
       scheduled: true,
-      timezone: 'America/Campo_Grande',
+      timezone: timeZone,
     }
   );
 
   const now = new Date();
-  const scheduledTime = new Date();
+  const nowInCampoGrande = toZonedTime(now, timeZone);
+  const scheduledTime = new Date(nowInCampoGrande);
   scheduledTime.setHours(8, 0, 0, 0);
 
   if (now > scheduledTime) {

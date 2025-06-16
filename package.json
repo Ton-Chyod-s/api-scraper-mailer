@@ -32,6 +32,8 @@
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "dotenv-safe": "^9.1.0",
     "express": "^5.1.0",
     "express-list-endpoints": "^7.1.1",

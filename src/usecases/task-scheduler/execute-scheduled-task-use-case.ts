@@ -30,7 +30,7 @@ export class ExecuteScheduledTaskUseCase {
       lastExecutedAt.getFullYear() === now.getFullYear();
 
     if (sameDay) {
-      console.log('Tarefa já executada hoje.');
+      console.log(`[Cron] Tarefa executada hoje. Nova execução agendada para as 8h de amanhã.`);
       return;
     }
 
