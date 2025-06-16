@@ -23,7 +23,6 @@ export function scheduleDailyTask(): void {
   scheduledTime.setHours(8, 0, 0, 0);
 
   if (now > scheduledTime) {
-    console.log('[Fallback] Executando tarefa perdida...');
     executeScheduledTask('my-task');
   }
 }

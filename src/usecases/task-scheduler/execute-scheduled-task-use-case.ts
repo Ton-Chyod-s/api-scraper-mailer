@@ -15,9 +15,9 @@ export class ExecuteScheduledTaskUseCase {
     const lastTaskLogEntry = taskNames.at(-1) ?? '';
 
     if (!lastTaskLogEntry) {
-      console.warn('Primeira execução.');
-      await this.taskLogRepository.create(taskName);
-      this.taskRunner();
+      // console.warn('Primeira execução.');
+      // await this.taskLogRepository.create(taskName);
+      // this.taskRunner();
       return;
     }
 
