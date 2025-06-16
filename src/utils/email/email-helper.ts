@@ -1,11 +1,11 @@
 import { readFile } from 'fs/promises';
-import { DiarioOficialMunicipioWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-municipio-web';
-import { ConsultarDiarioOficialMunicipioUseCase } from '@usecases/diario-oficial/consultar-diario-oficial-municipio';
+import { OfficialJournalsMunicipalityGateway } from '@infra/providers/gateways/official-journals/official-journals-municipality-gateway';
+import { OfficialJournalsMunicipalityUseCase } from '@usecases/official-journals/official-journals-municipality-use-case';
 import { formatarLista } from './html-formatter-helper';
-import { DiarioOficialEstadoWeb } from '@infra/providers/gateways/diario-oficial/diario-oficial-estado-web';
-import { ConsultarDiarioOficialEstadoUseCase } from '@usecases/diario-oficial/consultar-diario-oficial-estado';
-import { ExercitoWebScraper } from '@infra/providers/gateways/exercito-work/exercito-web-scraper';
-import { ExercitoUseCase } from '@usecases/exercito-work/exercito-use-case';
+import { OfficialJournalsStateGateway } from '@infra/providers/gateways/official-journals/official-journals-state-gateway';
+import { OfficialJournalsStateUseCase } from '@usecases/official-journals/official-journals-state-use-case';
+import { MilitaryOttGateway } from '@infra/providers/gateways/military/military-ott-gateway';
+import { MilitaryOttUseCase } from '@usecases/military/military-ott-use-case';
 import path from 'path';
 
 export async function carregarArquivo(relativePath: string): Promise<string> {
@@ -37,23 +37,23 @@ export async function montarCorpoEmail(userName: string, templates: { doe: strin
 
   
 export async function gerarListaFormatadaExercito(): Promise<string> {
-    const scraper = new ExercitoWebScraper();
-    const useCase = new ExercitoUseCase(scraper);
+    const scraper = new MilitaryOttGateway();
+    const useCase = new MilitaryOttUseCase(scraper);
     const resultado = await useCase.execute();
     const listaExercito = formatarLista(Object.values(resultado));
     return listaExercito;
   }
 
 export async function gerarListaFormatadaDoe(name: string, dateInit: string, dateFinish: string): Promise<string> {
-    const scraper = new DiarioOficialEstadoWeb();
-    const useCase = new ConsultarDiarioOficialEstadoUseCase(scraper);
+    const scraper = new OfficialJournalsStateGateway();
+    const useCase = new OfficialJournalsStateUseCase(scraper);
     const resultado = await useCase.execute(name, dateInit, dateFinish);
     return formatarLista(Object.values(resultado));
   }
 
 export async function gerarListaFormatadaDiogrande(name: string, dateInit: string, dateFinish: string): Promise<string> {
-  const scraper = new DiarioOficialMunicipioWeb();
-  const useCase = new ConsultarDiarioOficialMunicipioUseCase(scraper);
+  const scraper = new OfficialJournalsMunicipalityGateway();
+  const useCase = new OfficialJournalsMunicipalityUseCase(scraper);
   const resultado = await useCase.execute(name, dateInit, dateFinish);
   return formatarLista(Object.values(resultado));
 }

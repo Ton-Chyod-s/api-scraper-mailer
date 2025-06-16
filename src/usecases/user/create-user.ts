@@ -1,4 +1,4 @@
-import { User } from '@domain/entities/User';
+import { User } from '@domain/entities/user';
 import { UserRepository } from '@domain/interfaces/repositories/user-repository';
 
 export class CreateUser {

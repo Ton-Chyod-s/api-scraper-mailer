@@ -1,15 +1,15 @@
-import { usuariosDoc } from './user/usuarios.doc';
-import { exercitoDoc } from './exercito/exercito.doc';
-import { diarioOficialEstadoDoc } from './diario-oficial/diario-oficial-estado.doc';
-import { diarioOficialMunicipioDoc } from './diario-oficial/diario-oficial-municipio.doc';
-import { authUserDoc } from './auth-user/auth-user.doc';
-import { authLoginDoc } from './auth-user/auth-login.doc';
+import { createUserDoc } from './user/create-user.doc';
+import { militaryOttDoc } from './military/military-ott.doc';
+import { officialJournalsStateDoc } from './official-journals/official-journals-state.doc';
+import { officialJournalsMunicipalityDoc } from './official-journals/official-journals-municipality.doc';
+import { authRegisterUserDoc } from './auth-user/auth-register-user.doc';
+import { authLoginUserDoc } from './auth-user/auth-login-user.doc';
 
 export const swaggerPaths = {
-  ...usuariosDoc,
-  ...exercitoDoc,
-  ...diarioOficialEstadoDoc,
-  ...diarioOficialMunicipioDoc,
-  ...authUserDoc,
-  ...authLoginDoc
+  ...createUserDoc,
+  ...militaryOttDoc,
+  ...officialJournalsStateDoc,
+  ...officialJournalsMunicipalityDoc,
+  ...authRegisterUserDoc,
+  ...authLoginUserDoc
 };

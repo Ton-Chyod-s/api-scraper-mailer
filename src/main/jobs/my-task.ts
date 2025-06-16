@@ -1,7 +1,7 @@
 import { GetEmails } from '@usecases/user/get-emails';
 import { GetUserNameByEmail } from '@usecases/user/get-user-name-by-email';
 import { PrismaUserRepository } from '@infra/repositories/user/user-repository';
-import { enviarEmail } from '@interfaces/controllers/email/send-email-controller';
+import { sendEmailController } from '@interfaces/controllers/email/send-email-controller';
 
 import {
   montarCorpoEmail,
@@ -56,7 +56,7 @@ export const myTaskRunner = async (): Promise<void> => {
       const corpoCompleto = exercitoFinal + corpoEmail;
       const htmlFinal = montarHtmlFinal(htmlBase, header, corpoCompleto);
 
-      await enviarEmail(email, htmlFinal, `Diário Oficial - ${ano}`);
+      await sendEmailController(email, htmlFinal, `Diário Oficial - ${ano}`);
       console.log(`[myTaskRunner] E-mail enviado para: ${email}`);
     } catch (erro) {
       console.error(`[myTaskRunner] Erro ao enviar para ${email}:`, erro);

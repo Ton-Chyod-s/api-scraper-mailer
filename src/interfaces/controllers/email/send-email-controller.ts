@@ -1,7 +1,7 @@
 import { SendEmailUseCase } from "@usecases/email/send-email-use-case";
 import { NodemailerProvider } from "@infra/providers/nodemailer-provider";
 
-export async function enviarEmail(email: string, html: string, ano: string): Promise<void> {
+export async function sendEmailController(email: string, html: string, ano: string): Promise<void> {
   const mailProvider = new NodemailerProvider();
   const sendMail = new SendEmailUseCase(mailProvider);
 
