@@ -16,6 +16,8 @@ services:
     networks:
       - app-network
 
+    restart: always
+
   db:
     image: postgres
     container_name: postgres_container
@@ -30,6 +32,8 @@ services:
     networks:
       - app-network
 
+    restart: always
+
   ngrok:
     image: ngrok/ngrok:latest
     container_name: ngrok_tunnel
@@ -40,6 +44,8 @@ services:
       - "4040:4040"
     networks:
       - app-network
+
+    restart: always
 
 volumes:
   pgdata:
