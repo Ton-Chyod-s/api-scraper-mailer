@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import { executeScheduledTask } from '@main/config/usecases/execute-scheduled-task-factory';
 import { toZonedTime } from 'date-fns-tz';
+import { strict } from 'assert';
 
 const timeZone = 'America/Campo_Grande';
 
@@ -27,6 +28,9 @@ export function scheduleDailyTask(): void {
   scheduledTime.setHours(8, 0, 0, 0);
 
   if (now > scheduledTime) {
-    executeScheduledTask('my-task');
+    const resScheduled = executeScheduledTask('my-task');
+    if (resScheduled instanceof Promise) {
+      console.log(`[Cron] Tarefa agendada para as 8h MS para dia posterior. Hora atual: ${nowInCampoGrande.toISOString()}`);
+    }
   }
 }
