@@ -28,9 +28,6 @@ export function scheduleDailyTask(): void {
   scheduledTime.setHours(8, 0, 0, 0);
 
   if (now > scheduledTime) {
-    const resScheduled = executeScheduledTask('my-task');
-    if (resScheduled instanceof Promise) {
-      console.log(`[Cron] Tarefa agendada para as 8h MS para dia posterior. Hora atual: ${nowInCampoGrande.toISOString()}`);
-    }
+    executeScheduledTask('my-task');
   }
 }
