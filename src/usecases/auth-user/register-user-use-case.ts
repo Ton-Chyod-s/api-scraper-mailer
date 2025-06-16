@@ -11,7 +11,5 @@ export class RegisterUserUseCase {
 
     const user = new AuthUser(name, email, password, role);
     return await this.authUserRepo.createUser(user);
-
- 
   }
 }

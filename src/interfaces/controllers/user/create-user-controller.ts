@@ -2,9 +2,12 @@ import { Request, Response } from 'express';
 import { CreateUser } from '@usecases/user/create-user';
 import { CreateUserDTO } from '@domain/dtos/user/create-user-dto';
 import { User } from '@domain/entities/user';
+import { AuthService } from '@infra/jwt/auth-service';
 
 export class CreateUserController {
-  constructor(private createUser: CreateUser) {}
+  constructor(
+    private createUser: CreateUser
+  ) {}
 
   async create(req: Request, res: Response): Promise<Response> {
     const createUserDTO: CreateUserDTO = req.body;
@@ -21,8 +24,16 @@ export class CreateUserController {
       authUserId
     );
 
+    const authHeader = req.headers.authorization;
+    if (!authHeader) throw new Error('Token não fornecido');
+
+    const token = authHeader.split(' ')[1];
+    
+    const authService = new AuthService();
+    const roleFromToken = authService.getRoleFromToken(token);
+
     try {
-      await this.createUser.execute(user);
+      await this.createUser.execute(user, roleFromToken);
       return res.status(201).send('Usuário criado com sucesso!');
     } catch (err: any) {
       return res.status(400).send({ error: err.message });

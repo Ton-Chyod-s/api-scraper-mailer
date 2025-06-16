@@ -18,7 +18,7 @@ export class LoginUserUseCase {
 
     if (!user.id) throw new Error('ID do usuário inválido');
 
-    const token = this.authService.generateToken(user.id.toString());
+    const token = this.authService.generateToken(user.id.toString(), user.role);
 
     return {
             name: user.name,
