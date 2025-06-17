@@ -8,6 +8,7 @@ import { makeOfficialJournalsMunicipalityController } from '@interfaces/factorie
 import { makeRegisterCreateUserController } from '@interfaces/factories/auth-user/make-register-user-controller';
 import { authenticateToken } from '@interfaces/middlewares/auth-middleware';
 import { makeLoginController } from '@interfaces/factories/auth-user/make-login-user-controller';
+import { makeFindAllUserController } from '@interfaces/factories/user/make-find-all-user-controller';
 
 
 export const router = Router();
@@ -18,11 +19,16 @@ const diarioEstadoController = makeOfficialJournalsStateController();
 const diarioMunicipioController = makeOfficialJournalsMunicipalityController();
 const authCreateUserController = makeRegisterCreateUserController(); 
 const loginController = makeLoginController();
+const findAllUserController = makeFindAllUserController();
 
 // router.get('/', HomeController.welcome);
 
 router.post('/users', authenticateToken, async (req, res) => {
   await userController.create(req, res)
+});
+
+router.get('/users', authenticateToken, async (req, res) => {
+  await findAllUserController.findAll(req, res);
 });
 
 router.post('/mail', async (req, res) => {

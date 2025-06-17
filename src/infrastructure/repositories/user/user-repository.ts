@@ -60,4 +60,22 @@ export class PrismaUserRepository implements UserRepository {
     await prisma.$disconnect();
   }
 
+  async findAllUsers(authUserId: string): Promise<User[]> {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          authUserId: Number(authUserId)
+        },
+        include: {
+          authUser: true
+        }
+      });
+
+      return users.map(user => new User(user.name ?? '', user.email, user.authUser.id));
+    } catch (error) {
+      console.error("Error fetching all users: ", error);
+      throw new Error("Could not fetch users");
+    }
+  }
+
 }
