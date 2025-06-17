@@ -6,7 +6,8 @@ async function main() {
   await prisma.source.createMany({
     data: [
       { nome: 'doe' },
-      { nome: 'diogrande' }
+      { nome: 'diogrande' },
+      { nome: 'exercito' }
     ],
     skipDuplicates: true
   });
