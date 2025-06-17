@@ -1,9 +1,7 @@
-
-export const createUserDoc = {
+export const usersDoc = {
   '/users': {
     post: {
       summary: 'Create a new user',
-      // description: 'Retorna lista ou dados de usuários. Requer token Bearer válido.',
       tags: ['Users'],
       requestBody: {
         required: true,
@@ -13,7 +11,7 @@ export const createUserDoc = {
               type: 'object',
               properties: {
                 name: { type: 'string' },
-                email: { type: 'string' }
+                email: { type: 'string' },
               },
             },
           },
@@ -22,6 +20,40 @@ export const createUserDoc = {
       responses: {
         201: {
           description: 'Usuário criado com sucesso',
+        },
+      },
+    },
+    get: {
+      summary: 'Retrieve all users',
+      tags: ['Users'],
+      parameters: [
+        {
+          name: 'authUserId',      
+          in: 'query',             
+          required: true,          
+          schema: {
+            type: 'string',        
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Usuários recuperados com sucesso',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    name: { type: 'string' },
+                    email: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
