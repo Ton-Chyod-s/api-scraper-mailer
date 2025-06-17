@@ -10,6 +10,9 @@
     "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",
     "test": "vitest"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ton-Chyod-s/api-scraper-mailer.git"
