@@ -35,13 +35,25 @@ export class MilitaryOttGateway {
     );
   }
 
-  async buscarConteudoAno(ano: string): Promise<string> {  
-    const anoAtual = ano.slice(2);                  
-    const anoSeguinte = (parseInt(anoAtual) + 1).toString().padStart(2, '0'); 
+  async buscarConteudoAno(ano: string): Promise<string> {
+    let anoAtual = ano.slice(2);
+    let anoSeguinte = (parseInt(anoAtual) + 1).toString().padStart(2, '0');
 
-    const url = `https://9rm.eb.mil.br/index.php/ott${anoAtual}-${anoSeguinte}`;
+    const urlInicial = `https://9rm.eb.mil.br/index.php/ott${anoAtual}-${anoSeguinte}`;
 
-    return await this.acessarPagina(url);
+    try {
+      return await this.acessarPagina(urlInicial);
+    } catch (error) {
+      const anoAtualNum = parseInt(anoAtual) + 1;
+      const anoSeguinteNum = anoAtualNum + 1;
+
+      const novoAnoAtual = anoAtualNum.toString().padStart(2, '0');
+      const novoAnoSeguinte = anoSeguinteNum.toString().padStart(2, '0');
+
+      const urlAlternativa = `https://9rm.eb.mil.br/index.php/ott${novoAnoAtual}-${novoAnoSeguinte}`;
+      
+      return await this.acessarPagina(urlAlternativa);
+    }
   }
 }
 
