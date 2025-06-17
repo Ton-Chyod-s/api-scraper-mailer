@@ -21,7 +21,7 @@ export class MilitaryOttUseCase {
 
     for (const paragrafo of paragraphs) {
       if (paragrafo.includes(anoAtual)) {
-        data.mensagem = 'Prepare-se e leia atentamente o edital da convocação. Boa sorte, guerreiro!';
+        // data.mensagem = 'Prepare-se e leia atentamente o edital da convocação. Boa sorte, guerreiro!';
         const corpoHtml = await this.scraper.buscarConteudoAno(anoAtual);
         const $corpo = load(corpoHtml);
 

@@ -43,7 +43,7 @@ export class MilitaryOttGateway {
 
     try {
       return await this.acessarPagina(urlInicial);
-    } catch (error) {
+    } catch {
       const anoAtualNum = parseInt(anoAtual) + 1;
       const anoSeguinteNum = anoAtualNum + 1;
 
