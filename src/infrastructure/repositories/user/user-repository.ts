@@ -61,6 +61,7 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async findAllUsers(authUserId: string): Promise<User[]> {
+    
   try {
     const users = await prisma.user.findMany({
       where: {

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { FindAllUserUseCase } from '@usecases/user/find-all-user-use-case';
 import { AuthService } from '@infra/jwt/auth-service';
 
+
 export class FindAllUserController {
   constructor(
     private findAllUsers: FindAllUserUseCase

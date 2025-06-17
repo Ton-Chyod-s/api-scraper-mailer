@@ -21,7 +21,7 @@ export class AuthService {
         }
         return decoded.role;
     }
-
+  
     getUserIdFromToken(token: string): string {
         const decoded = this.verifyToken(token) as JwtPayload;
         if (!decoded.sub) {
