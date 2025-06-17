@@ -26,16 +26,6 @@ export const usersDoc = {
     get: {
       summary: 'Retrieve all users',
       tags: ['Users'],
-      parameters: [
-        {
-          name: 'authUserId',      
-          in: 'query',             
-          required: true,          
-          schema: {
-            type: 'string',        
-          },
-        },
-      ],
       responses: {
         200: {
           description: 'Usuários recuperados com sucesso',
@@ -46,9 +36,9 @@ export const usersDoc = {
                 items: {
                   type: 'object',
                   properties: {
-                    id: { type: 'number' },
                     name: { type: 'string' },
                     email: { type: 'string' },
+                    id: { type: 'number' },
                   },
                 },
               },
