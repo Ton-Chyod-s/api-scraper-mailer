@@ -18,7 +18,19 @@ export class UserSourceRepository implements IUserSourceRepository {
       id: us.source.id!,
       nome: us.source.nome
     }));
-    return fontes; 
-      
+    return fontes;  
   }
+
+  async addSourceToUser(userId: number, sourceId: number): Promise<void> {
+    const userIdNumber = Number(userId);
+    const sourceIdNumber = Number(sourceId);
+
+    await prisma.userSource.create({
+      data: {
+        userId: userIdNumber,
+        sourceId: sourceIdNumber
+      }
+    });
+  }
+  
 }
