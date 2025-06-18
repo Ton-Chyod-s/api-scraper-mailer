@@ -33,7 +33,7 @@ router.get('/users', authenticateToken, async (req, res) => {
   await findAllUserController.findAll(req, res);
 });
 
-router.get('/users-sources', authenticateToken, async (req, res) => {  
+router.get('/sources/list-associated', authenticateToken, async (req, res) => {  
   await getSourcesByUserIdController.execute(req, res);
 });
 

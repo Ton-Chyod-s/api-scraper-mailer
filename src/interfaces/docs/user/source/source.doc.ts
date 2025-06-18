@@ -1,8 +1,8 @@
 export const sourceDoc = {
-  '/users-sources': {
+  '/sources/list-associated': {
     get: {
-      tags: ['User Sources'],
-      summary: 'Lista todas as fontes de um usuário',
+      tags: ['Sources'],
+      summary: 'List all sources of a user',
       parameters: [
         {
           name: 'userId',
@@ -11,12 +11,12 @@ export const sourceDoc = {
           schema: {
             type: 'string',
           },
-          description: 'ID do usuário para buscar as fontes associadas',
+          description: 'User ID to fetch associated fonts',
         },
       ],
       responses: {
         200: {
-          description: 'Fontes associadas ao usuário retornadas com sucesso',
+          description: 'User-associated fonts returned successfully',
           content: {
             'application/json': {
               schema: {
@@ -33,7 +33,7 @@ export const sourceDoc = {
           },
         },
         400: {
-          description: 'Erro na requisição',
+          description: 'Error retrieving user-associated fonts',
         },
       },
     },
