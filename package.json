@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "npx prisma generate && nodemon -r tsconfig-paths/register --exec ts-node src/main/web/index.ts",
+    "dev": "npx prisma generate && nodemon --exec \"ts-node -r tsconfig-paths/register\" src/main/web/index.ts",
     "start": "npx prisma generate && npx prisma migrate deploy && node dist/main/web/index.js",
     "build": "tsc && tsc-alias && npm run copy:templates",
     "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",

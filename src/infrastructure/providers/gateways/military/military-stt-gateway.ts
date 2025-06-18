@@ -1,10 +1,10 @@
-import { acessPage } from '@utils/access-page-axios';
+import { acessPage } from './../../../../utils/access-page-axios';
 
-export class MilitaryOttGateway {
+export class MilitarySttGateway {
 
   async buscarConteudo(): Promise<string> {
     return await acessPage(
-      'https://9rm.eb.mil.br/index.php/servico-militar/oficial-tecnico-temporario'
+      'https://9rm.eb.mil.br/index.php/servico-militar/sargento-tecnico-temporario'
     );
   }
 
@@ -31,7 +31,7 @@ export class MilitaryOttGateway {
 }
 
 if (require.main === module) {
-  const scraper = new MilitaryOttGateway();
+  const scraper = new MilitarySttGateway();
   scraper.buscarConteudo().then((data) => {
     console.log('Conteúdo obtido com sucesso:');
     console.log(data);
