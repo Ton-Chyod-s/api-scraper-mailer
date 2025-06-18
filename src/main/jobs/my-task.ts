@@ -11,6 +11,7 @@ import {
 
 import { formatarData } from '../../utils/date/date-helper';
 import { buildMilitaryOttEmail } from './helpers/build-military-ott-email';
+import { buildMilitarySttEmail } from './helpers/build-military-stt-email';
 
 export const myTaskRunner = async (): Promise<void> => {
 
@@ -32,7 +33,10 @@ export const myTaskRunner = async (): Promise<void> => {
     carregarArquivo("emails/diogrande.html")
   ]);
 
-  const exercitoFinal = await buildMilitaryOttEmail(ano.toString());
+  const exercitoOtt = await buildMilitaryOttEmail(ano.toString());
+  const exercitoStt = await buildMilitarySttEmail(ano.toString());
+  
+  const exercitoFinal = exercitoOtt + exercitoStt;
 
   for (const email of emails) {
     const user = await getUserNameByEmail.execute(email);

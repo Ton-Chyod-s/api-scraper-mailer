@@ -7,6 +7,8 @@ import { OfficialJournalsStateUseCase } from '@usecases/official-journals/offici
 import { MilitaryOttGateway } from '@infra/providers/gateways/military/military-ott-gateway';
 import { MilitaryOttUseCase } from '@usecases/military/military-ott-use-case';
 import path from 'path';
+import { MilitarySttGateway } from '@infra/providers/gateways/military/military-stt-gateway';
+import { MilitarySttUseCase } from '@usecases/military/military-stt-use-case';
 
 export async function carregarArquivo(relativePath: string): Promise<string> {
   const absolutePath = path.resolve(process.cwd(), 'src/main/web/templates', relativePath);
@@ -23,9 +25,14 @@ export function preencherTemplate(template: string, marcador: string, valor: str
   }
 
 export async function carregarTemplateExercitoOtt(ano: string): Promise<string> {
-    let template = await carregarArquivo("emails/exercito.html");
+    let template = await carregarArquivo("emails/exercitoOtt.html");
     return template.replace(/\${ano}/g, ano);
   }
+
+export async function carregarTemplateExercitoStt(ano: string): Promise<string> {
+  let template = await carregarArquivo("emails/exercitoStt.html");
+  return template.replace(/\${ano}/g, ano);
+}
 
 export async function montarCorpoEmail(userName: string, templates: { doe: string; diogrande: string }, datas: { inicio: string; fim: string }) {
     const listaDoe = await gerarListaFormatadaDoe(userName, datas.inicio, datas.fim);
@@ -39,6 +46,14 @@ export async function montarCorpoEmail(userName: string, templates: { doe: strin
 export async function gearListaFormatadaExercictoOtt(): Promise<string> {
     const scraper = new MilitaryOttGateway();
     const useCase = new MilitaryOttUseCase(scraper);
+    const resultado = await useCase.execute();
+    const listaExercito = formatarLista(Object.values(resultado));
+    return listaExercito;
+  }
+
+export async function gearListaFormatadaExercictoStt(): Promise<string> {
+    const scraper = new MilitarySttGateway();
+    const useCase = new MilitarySttUseCase(scraper);
     const resultado = await useCase.execute();
     const listaExercito = formatarLista(Object.values(resultado));
     return listaExercito;
