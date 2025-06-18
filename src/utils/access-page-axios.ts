@@ -1,7 +1,7 @@
 import axios from "axios";
 import https from 'https';
 
-export const acessPage = async function acessarPagina(url: string, retries = 3, delay = 1000): Promise<string> {
+export const acessPage = async function acessarPagina(url: string, retries = 1, delay = 500): Promise<string> {
   const agent = new https.Agent({
     rejectUnauthorized: false,
   });
