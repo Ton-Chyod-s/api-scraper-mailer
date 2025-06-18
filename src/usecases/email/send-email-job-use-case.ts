@@ -1,7 +1,7 @@
 import { sendEmailController } from "@interfaces/controllers/email/send-email-controller";
 import { PrismaUserRepository } from "@infra/repositories/user/user-repository";
 import { formatarData } from "@utils/date/date-helper";
-import { carregarArquivo, carregarTemplateExercito, gerarListaFormatadaExercito, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "@utils/email/email-helper";
+import { carregarArquivo, carregarTemplateExercitoOtt, gearListaFormatadaExercictoOtt, montarCorpoEmail, montarHtmlFinal, preencherTemplate } from "@utils/email/email-helper";
 import { GetEmails } from "@usecases/user/get-emails";
 import { GetUserNameByEmail } from "@usecases/user/get-user-name-by-email";
 
@@ -26,8 +26,8 @@ export class SendEmailJobUseCase {
           carregarArquivo('emails/diogrande.html')
         ]);
       
-        const exercitoTemplate = await carregarTemplateExercito(ano.toString());
-        const listaFormatadaExercito = await gerarListaFormatadaExercito();
+        const exercitoTemplate = await carregarTemplateExercitoOtt(ano.toString());
+        const listaFormatadaExercito = await gearListaFormatadaExercictoOtt();
         const exercitoFinal = preencherTemplate(exercitoTemplate, 'listaExercito', listaFormatadaExercito);
       
         for (const email of emails) {

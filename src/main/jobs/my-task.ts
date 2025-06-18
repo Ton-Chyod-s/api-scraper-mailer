@@ -6,13 +6,11 @@ import { sendEmailController } from '@interfaces/controllers/email/send-email-co
 import {
   montarCorpoEmail,
   carregarArquivo,
-  carregarTemplateExercito,
-  gerarListaFormatadaExercito,
-  preencherTemplate,
   montarHtmlFinal
 } from '../../utils/email/email-helper';
 
 import { formatarData } from '../../utils/date/date-helper';
+import { buildMilitaryOttEmail } from './helpers/build-military-ott-email';
 
 export const myTaskRunner = async (): Promise<void> => {
 
@@ -34,9 +32,7 @@ export const myTaskRunner = async (): Promise<void> => {
     carregarArquivo("emails/diogrande.html")
   ]);
 
-  const exercitoTemplate = await carregarTemplateExercito(ano.toString());
-  const listaFormatadaExercito = await gerarListaFormatadaExercito();
-  const exercitoFinal = preencherTemplate(exercitoTemplate, 'listaExercito', listaFormatadaExercito);
+  const exercitoFinal = await buildMilitaryOttEmail(ano.toString());
 
   for (const email of emails) {
     const user = await getUserNameByEmail.execute(email);
@@ -62,5 +58,4 @@ export const myTaskRunner = async (): Promise<void> => {
       console.error(`[myTaskRunner] Erro ao enviar para ${email}:`, erro);
     }
   }
-
 };

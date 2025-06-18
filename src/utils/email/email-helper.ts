@@ -22,7 +22,7 @@ export function preencherTemplate(template: string, marcador: string, valor: str
     return template.replace(new RegExp(`\\\${${marcador}}`, 'g'), valor);
   }
 
-export async function carregarTemplateExercito(ano: string): Promise<string> {
+export async function carregarTemplateExercitoOtt(ano: string): Promise<string> {
     let template = await carregarArquivo("emails/exercito.html");
     return template.replace(/\${ano}/g, ano);
   }
@@ -36,7 +36,7 @@ export async function montarCorpoEmail(userName: string, templates: { doe: strin
   }
 
   
-export async function gerarListaFormatadaExercito(): Promise<string> {
+export async function gearListaFormatadaExercictoOtt(): Promise<string> {
     const scraper = new MilitaryOttGateway();
     const useCase = new MilitaryOttUseCase(scraper);
     const resultado = await useCase.execute();
