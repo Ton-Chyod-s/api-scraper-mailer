@@ -5,10 +5,12 @@ import { officialJournalsMunicipalityDoc } from './official-journals/official-jo
 import { authRegisterUserDoc } from './auth-user/auth-register-user.doc';
 import { authLoginUserDoc } from './auth-user/auth-login-user.doc';
 import { sourceDoc } from './user/source/source.doc';
+import { militarySttDoc } from './military/military-stt.doc';
 
 export const swaggerPaths = {
   ...usersDoc,
   ...militaryOttDoc,
+  ...militarySttDoc,
   ...officialJournalsStateDoc,
   ...officialJournalsMunicipalityDoc,
   ...authRegisterUserDoc,

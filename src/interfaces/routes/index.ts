@@ -10,12 +10,14 @@ import { authenticateToken } from '@interfaces/middlewares/auth-middleware';
 import { makeLoginController } from '@interfaces/factories/auth-user/make-login-user-controller';
 import { makeFindAllUserController } from '@interfaces/factories/user/make-find-all-user-controller';
 import { makeGetSourcesByUserIdController } from '@interfaces/factories/user/source/make-get-source-by-user-id-controller';
+import { makeMilitarySttController } from '@interfaces/factories/military/make-military-Stt-controller';
 
 
 export const router = Router();
 
 const userController = makeCreateUserController();
-const exercitoController = makeMilitaryOttController();
+const exercitoOttController = makeMilitaryOttController();
+const exercitoSttController = makeMilitarySttController();
 const diarioEstadoController = makeOfficialJournalsStateController();
 const diarioMunicipioController = makeOfficialJournalsMunicipalityController();
 const authCreateUserController = makeRegisterCreateUserController(); 
@@ -48,7 +50,9 @@ router.post('/mail', async (req, res) => {
 });
 
 
-router.get('/military/ott', (req, res) => exercitoController.consultar(req, res));
+router.get('/military/ott', (req, res) => exercitoOttController.consultar(req, res));
+
+router.get('/military/stt', (req, res) => exercitoSttController.consultar(req, res));
 
 router.post('/official-journals/state', (req, res) => diarioEstadoController.consultar(req, res)); 
 
