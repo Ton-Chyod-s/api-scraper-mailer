@@ -27,7 +27,7 @@ export function scheduleDailyTask(): void {
   const scheduledTime = new Date(nowInCampoGrande);
   scheduledTime.setHours(8, 0, 0, 0);
 
-  if (now > scheduledTime) {
+  if (nowInCampoGrande > scheduledTime) {
     executeScheduledTask('my-task');
   }
 }
