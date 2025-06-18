@@ -8,6 +8,7 @@
     "start": "npx prisma generate && npx prisma migrate deploy && node dist/main/web/index.js",
     "build": "tsc && tsc-alias && npm run copy:templates",
     "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",
+    "deploy": "npm run build && docker-compose down -v && docker-compose up -d --build",
     "test": "vitest"
   },
   "prisma": {

@@ -1,0 +1,8 @@
+
+node_modules
+src
+npm-debug.log
+docs
+.github
+.vscode
+__test__
