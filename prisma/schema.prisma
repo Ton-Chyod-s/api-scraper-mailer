@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
+  id         Int           @id @default(autoincrement())
   name       String?
-  email      String    @unique
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @updatedAt
+  email      String        @unique
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime?     @updatedAt
   authUserId Int
-  authUser   AuthUser  @relation(fields: [authUserId], references: [id])
+  authUser   AuthUser      @relation(fields: [authUserId], references: [id])
+  userSources UserSource[]
 }
 
 model TaskLog {
@@ -32,4 +33,20 @@ model AuthUser {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   users     User[]
+}
+
+model Source {
+  id     Int          @id @default(autoincrement())
+  nome   String       @unique
+  users  UserSource[]
+}
+
+model UserSource {
+  id        Int     @id @default(autoincrement())
+  sourceId  Int
+  userId    Int
+  source    Source  @relation(fields: [sourceId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@unique([sourceId, userId])
 }

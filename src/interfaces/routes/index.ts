@@ -9,6 +9,7 @@ import { makeRegisterCreateUserController } from '@interfaces/factories/auth-use
 import { authenticateToken } from '@interfaces/middlewares/auth-middleware';
 import { makeLoginController } from '@interfaces/factories/auth-user/make-login-user-controller';
 import { makeFindAllUserController } from '@interfaces/factories/user/make-find-all-user-controller';
+import { makeGetSourcesByUserIdController } from '@interfaces/factories/user/source/make-get-source-by-user-id-controller';
 
 
 export const router = Router();
@@ -20,6 +21,7 @@ const diarioMunicipioController = makeOfficialJournalsMunicipalityController();
 const authCreateUserController = makeRegisterCreateUserController(); 
 const loginController = makeLoginController();
 const findAllUserController = makeFindAllUserController();
+const getSourcesByUserIdController = makeGetSourcesByUserIdController();
 
 // router.get('/', HomeController.welcome);
 
@@ -29,6 +31,10 @@ router.post('/users', authenticateToken, async (req, res) => {
 
 router.get('/users', authenticateToken, async (req, res) => {
   await findAllUserController.findAll(req, res);
+});
+
+router.get('/sources/list-associated', authenticateToken, async (req, res) => {  
+  await getSourcesByUserIdController.execute(req, res);
 });
 
 router.post('/mail', async (req, res) => {
@@ -55,3 +61,4 @@ router.post('/auth/register', async (req, res) => {
 router.post('/auth/login', async (req, res) => {
   await loginController.execute(req, res);
 });
+
