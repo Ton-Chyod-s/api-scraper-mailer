@@ -1,36 +1,9 @@
-import axios from 'axios';
-import https from 'https';
+import { acessPage } from '@utils/military/access-page';
 
 export class MilitaryOttGateway {
-  private async acessarPagina(url: string, retries = 3, delay = 2000): Promise<string> {
-    const agent = new https.Agent({
-      rejectUnauthorized: false,  
-    });
-
-    for (let attempt = 0; attempt < retries; attempt++) {
-      try {
-        const { data } = await axios.get(url, {
-          headers: {
-            'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept':
-              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-            'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Connection': 'keep-alive',
-          },
-          timeout: 60000,  
-          httpsAgent: agent,
-        });
-        return data;  
-      } catch (err: any) {  
-        console.error(`Erro:`, err.message);
-      }
-    }
-    throw new Error('Não foi possível acessar a página após várias tentativas');
-  }
 
   async buscarConteudo(): Promise<string> {
-    return await this.acessarPagina(
+    return await acessPage(
       'https://9rm.eb.mil.br/index.php/servico-militar/oficial-tecnico-temporario'
     );
   }
@@ -42,7 +15,7 @@ export class MilitaryOttGateway {
     const urlInicial = `https://9rm.eb.mil.br/index.php/ott${anoAtual}-${anoSeguinte}`;
 
     try {
-      return await this.acessarPagina(urlInicial);
+      return await acessPage(urlInicial);
     } catch {
       const anoAtualNum = parseInt(anoAtual) + 1;
       const anoSeguinteNum = anoAtualNum + 1;
@@ -52,7 +25,7 @@ export class MilitaryOttGateway {
 
       const urlAlternativa = `https://9rm.eb.mil.br/index.php/ott${novoAnoAtual}-${novoAnoSeguinte}`;
       
-      return await this.acessarPagina(urlAlternativa);
+      return await acessPage(urlAlternativa);
     }
   }
 }
