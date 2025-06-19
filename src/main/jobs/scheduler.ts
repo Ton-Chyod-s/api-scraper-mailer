@@ -1,7 +1,6 @@
 import cron from 'node-cron';
 import { executeScheduledTask } from '@main/config/usecases/execute-scheduled-task-factory';
 import { toZonedTime } from 'date-fns-tz';
-import { strict } from 'assert';
 
 const timeZone = 'America/Campo_Grande';
 

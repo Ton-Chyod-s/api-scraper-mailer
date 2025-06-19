@@ -16,7 +16,7 @@ export class PrismaUserRepository implements UserRepository {
 
       if (!user) return null;
 
-      return new User(user.name ?? '', user.email, user.authUser.id);
+      return new User(user.name ?? '', user.email, user.authUser.id, user.id);
     } catch (error) {
       console.error("Error fetching user by email: ", error);
       return null;
