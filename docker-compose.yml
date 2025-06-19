@@ -18,6 +18,9 @@ services:
 
     restart: always
 
+    command: >
+      ./wait-for-it.sh db:5432 -- sh -c "npx prisma db seed && npm start"
+      
   db:
     image: postgres
     container_name: postgres_container

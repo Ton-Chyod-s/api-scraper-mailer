@@ -1,4 +1,4 @@
-import { SourceDTO } from "@domain/dtos/source/source-DTO";
+import { SourceDTO } from "@domain/dtos/source/source-dto";
 import { ISourceRepository } from "@domain/interfaces/repositories/source-repository";
 
 export class GetAllSourcesUseCase {

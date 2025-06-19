@@ -5,9 +5,10 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.source.createMany({
     data: [
-      { nome: 'doe' },
-      { nome: 'diogrande' },
-      { nome: 'exercito' }
+      { nome: 'diarioOficialEstado' },
+      { nome: 'diarioOficialMunicipio' },
+      { nome: 'exercitoOtt' },
+      { nome: 'exercitoStt' },
     ],
     skipDuplicates: true
   });
