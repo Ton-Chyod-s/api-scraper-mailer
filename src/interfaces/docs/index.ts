@@ -4,8 +4,9 @@ import { officialJournalsStateDoc } from './official-journals/official-journals-
 import { officialJournalsMunicipalityDoc } from './official-journals/official-journals-municipality.doc';
 import { authRegisterUserDoc } from './auth-user/auth-register-user.doc';
 import { authLoginUserDoc } from './auth-user/auth-login-user.doc';
-import { sourceDoc } from './user/source/source.doc';
+import { getSourceByUserIdDoc } from './user/source/get-source-by-user-id.doc';
 import { militarySttDoc } from './military/military-stt.doc';
+import { getAllSourceDoc } from './user/source/get-all-source.doc';
 
 export const swaggerPaths = {
   ...usersDoc,
@@ -15,5 +16,6 @@ export const swaggerPaths = {
   ...officialJournalsMunicipalityDoc,
   ...authRegisterUserDoc,
   ...authLoginUserDoc,
-  ...sourceDoc
+  ...getSourceByUserIdDoc,
+  ...getAllSourceDoc
 };

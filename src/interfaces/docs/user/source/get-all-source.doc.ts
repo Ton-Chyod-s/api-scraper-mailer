@@ -1,22 +1,11 @@
-export const sourceDoc = {
-  '/sources/list-associated': {
+export const getAllSourceDoc = {
+  '/sources/list-all': {
     get: {
       tags: ['Sources'],
-      summary: 'List all sources of a user',
-      parameters: [
-        {
-          name: 'userId',
-          in: 'query',
-          required: true,
-          schema: {
-            type: 'string',
-          },
-          description: 'User ID to fetch associated fonts',
-        },
-      ],
+      summary: 'List all sources',
       responses: {
         200: {
-          description: 'User-associated fonts returned successfully',
+          description: 'All sources returned successfully',
           content: {
             'application/json': {
               schema: {
@@ -33,7 +22,7 @@ export const sourceDoc = {
           },
         },
         400: {
-          description: 'Error retrieving user-associated fonts',
+          description: 'Error retrieving sources',
         },
       },
     },

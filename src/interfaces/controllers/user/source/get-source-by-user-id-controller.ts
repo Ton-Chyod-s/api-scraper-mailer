@@ -1,4 +1,3 @@
-import { AuthService } from "@infra/jwt/auth-service";
 import { GetSourcesByUserIdUseCase } from "@usecases/user/source/get-source-by-user-id-use-case";
 import { Request, Response } from 'express';
 
