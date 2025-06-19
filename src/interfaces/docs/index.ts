@@ -7,6 +7,7 @@ import { authLoginUserDoc } from './auth-user/auth-login-user.doc';
 import { getSourceByUserIdDoc } from './user/source/get-source-by-user-id.doc';
 import { militarySttDoc } from './military/military-stt.doc';
 import { getAllSourceDoc } from './user/source/get-all-source.doc';
+import { addSourceToUserDoc } from './user/source/add-source-to-user.doc';
 
 export const swaggerPaths = {
   ...usersDoc,
@@ -17,5 +18,6 @@ export const swaggerPaths = {
   ...authRegisterUserDoc,
   ...authLoginUserDoc,
   ...getSourceByUserIdDoc,
-  ...getAllSourceDoc
+  ...getAllSourceDoc,
+  ...addSourceToUserDoc
 };

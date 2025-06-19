@@ -12,6 +12,7 @@ import { makeFindAllUserController } from '@interfaces/factories/user/make-find-
 import { makeGetSourcesByUserIdController } from '@interfaces/factories/user/source/make-get-source-by-user-id-controller';
 import { makeMilitarySttController } from '@interfaces/factories/military/make-military-Stt-controller';
 import { makeGetAllSourcesController } from '@interfaces/factories/user/source/make-get-all-source-controller';
+import { makeAddSourceToUserController } from '@interfaces/factories/user/source/make-add-source-to-user-controller';
 
 
 export const router = Router();
@@ -26,6 +27,7 @@ const loginController = makeLoginController();
 const findAllUserController = makeFindAllUserController();
 const getSourcesByUserIdController = makeGetSourcesByUserIdController();
 const getAllSourcesController = makeGetAllSourcesController();
+const addSourceToUserController = makeAddSourceToUserController();
 
 // router.get('/', HomeController.welcome);
 
@@ -43,6 +45,10 @@ router.get('/sources/list-associated', authenticateToken, async (req, res) => {
 
 router.get('/sources/list-all', authenticateToken, async (req, res) => {
   await getAllSourcesController.execute(req, res);
+});
+
+router.post('/sources/add', authenticateToken, async (req, res) => {
+  await addSourceToUserController.execute(req, res);
 });
 
 router.post('/mail', async (req, res) => {
