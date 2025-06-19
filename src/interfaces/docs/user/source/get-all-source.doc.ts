@@ -1,5 +1,5 @@
 export const getAllSourceDoc = {
-  '/sources/list-all': {
+  '/sources': {
     get: {
       tags: ['Sources'],
       summary: 'List all sources',

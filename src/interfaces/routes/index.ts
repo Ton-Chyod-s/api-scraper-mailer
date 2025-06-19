@@ -39,15 +39,15 @@ router.get('/users', authenticateToken, async (req, res) => {
   await findAllUserController.findAll(req, res);
 });
 
-router.get('/sources/list-associated', authenticateToken, async (req, res) => {  
+router.get('/users/sources', authenticateToken, async (req, res) => {  
   await getSourcesByUserIdController.execute(req, res);
 });
 
-router.get('/sources/list-all', authenticateToken, async (req, res) => {
+router.get('/sources', authenticateToken, async (req, res) => {
   await getAllSourcesController.execute(req, res);
 });
 
-router.post('/sources/add', authenticateToken, async (req, res) => {
+router.post('/users/sourcess', authenticateToken, async (req, res) => {
   await addSourceToUserController.execute(req, res);
 });
 
