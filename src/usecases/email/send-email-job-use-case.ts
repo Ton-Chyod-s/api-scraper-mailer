@@ -70,9 +70,16 @@ export const sendEmailJobUseCase = async (): Promise<void> => {
 
       const exercitoFinal = exercitoFinalParts.join('');
 
+
+      const temDiarioEstado = checkSources.some(source => source.nome === 'diarioOficialEstado');
+      const temDiarioMunicipio = checkSources.some(source => source.nome === 'diarioOficialMunicipio');
+
       const corpoEmail = await montarCorpoEmail(
         user.name,
-        { doe: doeTemplate, diogrande: diograndeTemplate },
+        {
+          doe: temDiarioEstado ? doeTemplate : '',
+          diogrande: temDiarioMunicipio ? diograndeTemplate : ''
+        },
         datas
       );
 
