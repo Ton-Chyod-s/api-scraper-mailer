@@ -14,7 +14,6 @@ import { buildMilitaryOttEmail } from '../../utils/military/build-military-ott-e
 import { buildMilitarySttEmail } from '../../utils/military/build-military-stt-email';
 import { GetSourcesByUserIdUseCase } from '@usecases/user/source/get-source-by-user-id-use-case';
 import { UserSourceRepository } from '@infra/repositories/user/user-source-repository';
-import { error } from 'console';
 
 export const sendEmailJobUseCase = async (): Promise<void> => {
 
@@ -40,8 +39,6 @@ export const sendEmailJobUseCase = async (): Promise<void> => {
 
   const exercitoOtt = await buildMilitaryOttEmail(ano.toString());
   const exercitoStt = await buildMilitarySttEmail(ano.toString());
-  
-  const exercitoFinal = exercitoOtt + exercitoStt;
 
   for (const email of emails) {
     
@@ -60,8 +57,6 @@ export const sendEmailJobUseCase = async (): Promise<void> => {
     }
 
     try {
-
-      const checkSources = await userSources.execute(user.id);
 
       const exercitoFinalParts = [];
 
