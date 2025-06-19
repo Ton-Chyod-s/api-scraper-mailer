@@ -15,9 +15,9 @@ export class ExecuteScheduledTaskUseCase {
     const lastTaskLogEntry = taskNames.at(-1) ?? '';
 
     if (!lastTaskLogEntry) {
-      // console.warn('Primeira execução.');
-      // await this.taskLogRepository.create(taskName);
-      // this.taskRunner();
+      console.warn('[Cron] Primeira execução.');
+      this.taskRunner();
+      await this.taskLogRepository.create(taskName);
       return;
     }
 
@@ -35,8 +35,8 @@ export class ExecuteScheduledTaskUseCase {
     }
 
     console.log('Executando tarefa agendada...');
-    await this.taskLogRepository.create(taskName);
     this.taskRunner();
+    await this.taskLogRepository.create(taskName);
   }
 }
 

@@ -11,7 +11,7 @@ import { MilitarySttGateway } from '@infra/providers/gateways/military/military-
 import { MilitarySttUseCase } from '@usecases/military/military-stt-use-case';
 
 export async function carregarArquivo(relativePath: string): Promise<string> {
-  const absolutePath = path.resolve(process.cwd(), 'src/main/web/templates', relativePath);
+  const absolutePath = path.resolve(__dirname, '../../main/web/templates', relativePath);
   return await readFile(absolutePath, 'utf-8');
 }
 
