@@ -25,7 +25,11 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.static(path.join(__dirname, '..', '..', '..', 'front-end', 'public')));
 
 server.get('/painel', (req, res) => {
-  res.render('index', { usuario: 'Klay' });
+  const items = [
+    { id: 1, name: 'Exemplo A' },
+    { id: 2, name: 'Exemplo B' }
+  ];
+  res.render('index', { usuario: 'Klay', items });
 });
 
 import { router } from '../../interfaces/routes';	
