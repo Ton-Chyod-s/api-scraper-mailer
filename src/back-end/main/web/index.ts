@@ -19,10 +19,14 @@ server.use((req, res, next) => {
 });
 
 server.set('view engine', 'ejs');
-server.set('views', path.join(__dirname, 'views'));
+server.set('views', path.join(__dirname, '..', '..', '..', 'front-end', 'views'));
 
 server.use(express.urlencoded({ extended: true }));
-server.use(express.static(path.join(__dirname, 'public')));
+server.use(express.static(path.join(__dirname, '..', '..', '..', 'front-end', 'public')));
+
+server.get('/painel', (req, res) => {
+  res.render('index', { usuario: 'Klay' });
+});
 
 import { router } from '../../interfaces/routes';	
 server.use(router);
