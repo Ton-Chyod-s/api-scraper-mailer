@@ -1,7 +1,7 @@
 import { User } from '@domain/entities/user';
 import { UserRepository } from "@domain/interfaces/repositories/user-repository";
 
-export class UpdateUser {
+export class UpdateUserUseCase {
   constructor(private userRepo: UserRepository) {}
 
   async execute(user: User): Promise<void> {
