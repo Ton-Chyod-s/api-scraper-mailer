@@ -70,11 +70,29 @@ export class PrismaUserRepository implements UserRepository {
     });
 
     const userList = users.map(user => new User(user.name ?? '', user.email, undefined, user.id));
-    return userList;
-  } catch (error) {
-    console.error("Error fetching all users: ", error);
-    throw new Error("Could not fetch users");
+      return userList;
+    } catch (error) {
+      console.error("Error fetching all users: ", error);
+      throw new Error("Could not fetch users");
+    }
   }
-}
+
+  async updateUser(user: User): Promise<void> {
+    try {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          name: user.name,
+          email: user.email,
+          authUser: {
+            connect: { id: Number(user.authUserId) }
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw new Error("Could not update user");
+    }
+  }
 
 }

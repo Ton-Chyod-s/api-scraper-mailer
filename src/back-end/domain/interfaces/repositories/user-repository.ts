@@ -5,4 +5,5 @@ export interface UserRepository {
     getAllEmails(): Promise<string[]>;
     save(user: User): Promise<void>;
     findAllUsers(authUserId: string): Promise<User[]>;
+    updateUser(user: User): Promise<void>;
 }
