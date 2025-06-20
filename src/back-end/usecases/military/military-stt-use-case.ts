@@ -1,7 +1,7 @@
 import { load } from 'cheerio';
 import { SiteData } from '@domain/interfaces/site-data';
-import { formatarLista } from './../../utils/email/html-formatter-helper';
-import { MilitarySttGateway } from './../../infrastructure/providers/gateways/military/military-stt-gateway';
+import { formatarLista } from '../../utils/email/html-formatter-helper';
+import { MilitarySttGateway } from '../../infrastructure/providers/gateways/military/military-stt-gateway';
 
 export class MilitarySttUseCase {
   constructor(private scraper: MilitarySttGateway) {}

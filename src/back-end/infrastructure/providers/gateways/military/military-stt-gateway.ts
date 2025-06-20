@@ -1,4 +1,4 @@
-import { acessPage } from './../../../../utils/access-page-axios';
+import { acessPage } from '../../../../utils/access-page-axios';
 
 export class MilitarySttGateway {
 
