@@ -21,7 +21,7 @@ export class MilitaryOttUseCase {
 
     for (const paragrafo of paragraphs) {
       if (paragrafo.includes(anoAtual)) {
-        // data.mensagem = 'Prepare-se e leia atentamente o edital da convocação. Boa sorte, guerreiro!';
+        data.mensagem = '2 a 11 JUL 25(até 16h) Inscrição Eletrônica (IN ELE/1ª Etapa) - Realização por meio do sítio www.9rm.eb.mil.br';
         const corpoHtml = await this.scraper.buscarConteudoAno(anoAtual);
         const $corpo = load(corpoHtml);
 
