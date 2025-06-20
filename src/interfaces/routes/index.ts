@@ -13,6 +13,7 @@ import { makeGetSourcesByUserIdController } from '@interfaces/factories/user/sou
 import { makeMilitarySttController } from '@interfaces/factories/military/make-military-Stt-controller';
 import { makeGetAllSourcesController } from '@interfaces/factories/user/source/make-get-all-source-controller';
 import { makeAddSourceToUserController } from '@interfaces/factories/user/source/make-add-source-to-user-controller';
+import { makeRemoveSourceFromUserController } from '@interfaces/factories/user/source/make-remove-source-from-user-controller';
 
 
 export const router = Router();
@@ -28,6 +29,7 @@ const findAllUserController = makeFindAllUserController();
 const getSourcesByUserIdController = makeGetSourcesByUserIdController();
 const getAllSourcesController = makeGetAllSourcesController();
 const addSourceToUserController = makeAddSourceToUserController();
+const removeSourceFromUserController = makeRemoveSourceFromUserController();
 
 // router.get('/', HomeController.welcome);
 
@@ -45,6 +47,10 @@ router.get('/users/sources', authenticateToken, async (req, res) => {
 
 router.get('/sources', authenticateToken, async (req, res) => {
   await getAllSourcesController.execute(req, res);
+});
+
+router.delete('/users/sources', authenticateToken, async (req, res) => {
+  await removeSourceFromUserController.execute(req, res);
 });
 
 router.post('/users/sourcess', authenticateToken, async (req, res) => {

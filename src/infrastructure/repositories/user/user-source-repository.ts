@@ -33,4 +33,16 @@ export class UserSourceRepository implements IUserSourceRepository {
     });
   }
   
+  async removeSourceFromUser(userId: number, sourceId: number): Promise<void> {
+    const userIdNumber = Number(userId);
+    const sourceIdNumber = Number(sourceId);
+
+    await prisma.userSource.deleteMany({
+      where: {
+        userId: userIdNumber,
+        sourceId: sourceIdNumber
+      }
+    });
+  } 
+
 }

@@ -75,5 +75,44 @@ export const sourcesDoc = {
         },
       },
     },
+
+    delete: {
+      tags: ['Sources'],
+      summary: 'Remove a source from a user',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                userId: { type: 'integer', description: 'ID of the user' },
+                sourceId: { type: 'integer', description: 'ID of the source' },
+              },
+              required: ['userId', 'sourceId'],
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Fonte removida com sucesso do usuário.',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: { type: 'string', example: 'Fonte removida com sucesso do usuário.' },
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: 'ID de usuário ou ID de fonte inválido',
+        },
+      },
+    }
+
   },
 };
