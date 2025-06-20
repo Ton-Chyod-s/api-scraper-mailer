@@ -5,9 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "dev": "npx prisma generate && nodemon --exec \"ts-node -r tsconfig-paths/register\" src/back-end/main/web/index.ts",
-    "start": "npx prisma generate && npx prisma migrate deploy && node dist/main/web/index.js",
+    "start": "npx prisma generate && npx prisma migrate deploy && node dist/back-end/main/web/index.js",
     "build": "tsc && tsc-alias && npm run copy:templates",
-    "copy:templates": "cpx \"src/main/web/templates/**/*.html\" dist/main/web/templates",
+    "copy:templates": "cpx \"src/back-end/main/web/templates/**/*.html\" dist/back-end/main/web/templates",
     "deploy": "npm run build && docker-compose down && docker-compose up -d --build",
     "test": "vitest"
   },
