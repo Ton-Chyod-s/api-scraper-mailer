@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel de Controle</title>
+  <!-- Link pro CSS gerado pelo Tailwind -->
+  <link href="/styles/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white shadow p-4">
+    <h1 class="text-2xl font-bold text-gray-800">🚀 Seu Painel</h1>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow p-6">
+      
+      <!-- Saudação -->
+      <p class="text-lg mb-4">Olá, <span class="font-semibold"><%= usuario %></span>! Bem-vindo ao seu CRUD.</p>
+      
+      <!-- Botão de ação -->
+      <button
+        id="meu-botao"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition"
+      >
+        Clique em mim
+      </button>
+
+      <!-- Exemplo de tabela -->
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2">ID</th>
+              <th class="p-2">Nome</th>
+              <th class="p-2">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach(item => { %>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="p-2"><%= item.id %></td>
+                <td class="p-2"><%= item.name %></td>
+                <td class="p-2">
+                  <a href="/items/<%= item.id %>/edit" class="text-blue-600 hover:underline">Editar</a>
+                  <form action="/items/<%= item.id %>?_method=DELETE" method="POST" class="inline">
+                    <button type="submit" class="text-red-600 hover:underline ml-4">Excluir</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow p-4 text-center text-gray-600 text-sm">
+    &copy; <%= new Date().getFullYear() %> Seu Projeto
+  </footer>
+
+  <!-- JS -->
+  <script src="/js/main.js"></script>
+</body>
+</html>
