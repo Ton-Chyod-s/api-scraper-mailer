@@ -1,5 +1,4 @@
 import { User } from '@domain/entities/user';
-import { UserRepository } from "@domain/interfaces/repositories/user-repository";
 import { UpdateUserUseCase } from '@usecases/user/update-user-use-case';
 
 export class UpdateUserController {
