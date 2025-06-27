@@ -11,8 +11,8 @@
     "sourceMap": true,
     "moduleResolution": "node",
    
-    "baseUrl": "./back/src",
-    "typeRoots": ["./node_modules/@types", "back/src/types"],
+    "baseUrl": "./src",
+    "typeRoots": ["./node_modules/@types", "src/types"],
     "paths": {
       "@infra/*": ["infrastructure/*"],
       "@interfaces/*": ["interfaces/*"],
