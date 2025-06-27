@@ -22,5 +22,6 @@
       "@main/*": ["main/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "types": ["node"]
 }
