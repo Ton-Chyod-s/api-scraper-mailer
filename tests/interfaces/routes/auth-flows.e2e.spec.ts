@@ -92,12 +92,21 @@ jest.mock('@infrastructure/repositories/user-repositories', () => {
 
     async updatePasswordHash(userId: string, passwordHash: string) {
       const store = getStore();
-      const user = store.usersById.get(userId);
+      const current = store.usersById.get(userId);
+      if (!current) return;
 
-      if (user) {
-        const mutable = user as unknown as { props: { passwordHash: string } };
-        mutable.props.passwordHash = passwordHash;
-      }
+      const updated = new User({
+        id: current.id,
+        name: current.name,
+        email: current.email,
+        passwordHash,
+        role: current.role,
+        createdAt: current.createdAt,
+        updatedAt: new Date(),
+      });
+
+      store.usersById.set(userId, updated);
+      store.usersByEmail.set(updated.email, updated);
     }
   }
 
