@@ -103,9 +103,9 @@ describe('fetchWithRetry', () => {
   it('no último retry, lança UPSTREAM_REQUEST_FAILED contendo cause', async () => {
     const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;
     fetchMock
-        .mockResolvedValueOnce(makeResponse(500))
-        .mockResolvedValueOnce(makeResponse(500))
-        .mockResolvedValueOnce(makeResponse(500));
+      .mockResolvedValueOnce(makeResponse(500))
+      .mockResolvedValueOnce(makeResponse(500))
+      .mockResolvedValueOnce(makeResponse(500));
 
     const p = fetchWithRetry(new URL('https://example.com/path'), { retries: 3, delayMs: 1000 });
 
@@ -127,7 +127,7 @@ describe('fetchWithRetry', () => {
     expect(cause.code).toBe('UPSTREAM_HTTP_ERROR');
 
     expect(fetchMock).toHaveBeenCalledTimes(3);
-    });
+  });
 
   it('data.url é resolvida corretamente quando input for Request', async () => {
     const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;

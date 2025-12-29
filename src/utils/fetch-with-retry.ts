@@ -104,7 +104,7 @@ if (require.main === module) {
       console.log('Response status:', res.status);
       console.log('Content-Type:', res.headers.get('content-type'));
 
-      const text = await res.text(); 
+      const text = await res.text();
       console.log('Body:', text);
     } catch (err) {
       console.error('Fetch failed:', err);
