@@ -1,0 +1,8 @@
+model TaskLog {
+  id         String   @id @default(uuid())
+  taskName   String
+  executedAt DateTime @default(now())
+
+  @@index([taskName])
+  @@index([executedAt])
+}
