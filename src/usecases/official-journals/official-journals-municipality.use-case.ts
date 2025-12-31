@@ -21,14 +21,15 @@ type AjaxPayload = {
 };
 
 export class OfficialJournalsMunicipalityUseCase {
+  constructor(private readonly client = new DiograndeHttpClient()) {}
+
   async execute(input: FetchPublicationsInputDTO): Promise<SiteDataDTO> {
     validateInput(input);
 
     const url = buildUrl(input);
     const init = buildFetchInit(input);
 
-    const client = new DiograndeHttpClient();
-    const res = await client.get(url, init);
+    const res = await this.client.get(url, init);
 
     const text = await res.text();
     const payload = parseJsonOrThrow<AjaxPayload>(text, url);
@@ -37,6 +38,7 @@ export class OfficialJournalsMunicipalityUseCase {
     return toSiteDataDTO(items);
   }
 }
+
 
 
 function buildUrl(input: FetchPublicationsInputDTO): string {
@@ -157,13 +159,14 @@ function toSiteDataDTO(items: OfficialJournalsMunicipalityItem[]): SiteDataDTO {
 
 if (require.main === module) {
   (async () => {
-    const uc = new OfficialJournalsMunicipalityUseCase();
+    const client = new DiograndeHttpClient();
+    const uc = new OfficialJournalsMunicipalityUseCase(client);
     const result = await uc.execute({
       nome: 'KLAYTON CHRYSTHIAN OLIVEIRA DIAS',
-      dataInicio: '01/01/2024',
-      dataFim: '31/12/2024',
+      dataInicio: '01/01/2023',
+      dataFim: '31/03/2023',
       retries: 1,
-      delayMs: 350,
+      delayMs: 50,
     });
 
     console.log(result);

@@ -93,27 +93,84 @@ function extractCaIssuersUrls(infoAccess: string): string[] {
   return urls;
 }
 
-async function fetchCertPemFromUrl(url: string): Promise<string | null> {
+/**
+ * Timeout do AIA fetch e allowlist de host.
+ * Espera no diograndeConfig:
+ * - aiaFetchTimeoutMs?: number
+ * - aiaAllowedHosts?: string[]
+ */
+type AbortSignalWithTimeout = typeof AbortSignal & {
+  timeout?: (ms: number) => AbortSignal;
+};
+
+function createTimeoutSignal(ms: number | undefined): { signal?: AbortSignal; clear: () => void } {
+  const timeoutMs = typeof ms === 'number' ? ms : 0;
+  if (!timeoutMs || timeoutMs <= 0) return { clear: () => {} };
+
+  const AS = AbortSignal as AbortSignalWithTimeout;
+  if (typeof AS.timeout === 'function') {
+    return { signal: AS.timeout(timeoutMs), clear: () => {} };
+  }
+
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(new Error(`Timeout ${timeoutMs}ms`)), timeoutMs);
+  return { signal: ac.signal, clear: () => clearTimeout(t) };
+}
+
+function matchHost(pattern: string, host: string): boolean {
+  const p = pattern.toLowerCase();
+  const h = host.toLowerCase();
+
+  if (p === h) return true;
+
+  // wildcard do tipo "*.example.com"
+  if (p.startsWith('*.')) {
+    const suffix = p.slice(1); // ".example.com"
+    return h.endsWith(suffix) && h.length > suffix.length;
+  }
+
+  return false;
+}
+
+function isAllowedIssuerUrl(raw: string): boolean {
+  let u: URL;
   try {
-    const res = await undiciFetch(url, { method: 'GET' });
+    u = new URL(raw);
+  } catch {
+    return false;
+  }
+
+  // trava protocolo
+  if (u.protocol !== 'https:') return false;
+  if (!u.hostname) return false;
+
+  const allow = diograndeConfig.aiaAllowedHosts ?? [];
+  if (allow.length === 0) return true; // sem allowlist configurada, não bloqueia
+
+  return allow.some((p) => matchHost(p, u.hostname));
+}
+
+async function fetchCertPemFromUrl(url: string): Promise<string | null> {
+  if (!isAllowedIssuerUrl(url)) return null;
+
+  const { signal, clear } = createTimeoutSignal(diograndeConfig.aiaFetchTimeoutMs);
+
+  try {
+    const res = await undiciFetch(url, { method: 'GET', signal, redirect: 'error' });
     if (!res.ok) return null;
 
-    const ab = await res.arrayBuffer();
-    const buf = Buffer.from(ab);
+    const buf = Buffer.from(await res.arrayBuffer());
 
-    const x509 = new X509Certificate(buf);
-    return x509.toString();
-  } catch {
     try {
-      const res = await undiciFetch(url, { method: 'GET' });
-      if (!res.ok) return null;
-
-      const ab = await res.arrayBuffer();
-      const buf = Buffer.from(ab);
-      return derToPem(buf);
+      const x509 = new X509Certificate(buf);
+      return x509.toString();
     } catch {
-      return null;
+      return derToPem(buf);
     }
+  } catch {
+    return null;
+  } finally {
+    clear();
   }
 }
 
@@ -220,7 +277,7 @@ async function discoverDiograndeChainPem(): Promise<string> {
               return;
             }
 
-            const urls = extractCaIssuersUrls(leaf.infoAccess ?? '');
+            const urls = extractCaIssuersUrls(leaf.infoAccess ?? '').filter(isAllowedIssuerUrl);
             for (const u of urls) {
               const pem = await fetchCertPemFromUrl(u);
               if (pem?.trim()) {
@@ -241,6 +298,12 @@ async function discoverDiograndeChainPem(): Promise<string> {
         })();
       },
     );
+
+    socket.setTimeout(diograndeConfig.discoverTimeoutMs, () => {
+      socket.destroy(
+        new Error(`Timeout conectando em ${diograndeConfig.host}:${diograndeConfig.port}`),
+      );
+    });
 
     socket.on('error', (e) => reject(e));
   });

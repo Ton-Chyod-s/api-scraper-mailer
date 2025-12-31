@@ -8,17 +8,30 @@ export type FetchWithRetryOptions = NonNullable<Parameters<typeof undiciFetch>[1
 
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
 
+function hasStringHref(v: unknown): v is { href: string } {
+  return (
+    typeof v === 'object' &&
+    v !== null &&
+    'href' in v &&
+    typeof (v as Record<'href', unknown>).href === 'string'
+  );
+}
+
 function getUrl(input: Parameters<typeof undiciFetch>[0]): string {
   if (typeof input === 'string') return input;
   if (input instanceof URL) return input.toString();
 
   if (input && typeof input === 'object' && 'url' in input) {
-    const url = (input as { url?: unknown }).url;
+    const url = (input as Record<'url', unknown>).url;
+
     if (typeof url === 'string') return url;
+    if (url instanceof URL) return url.toString();
+    if (hasStringHref(url)) return url.href;
   }
 
   return String(input);
 }
+
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
