@@ -1,13 +1,14 @@
 import { AppError } from '@utils/app-error';
+import { fetch as undiciFetch } from 'undici';
 
-export type FetchWithRetryOptions = RequestInit & {
+export type FetchWithRetryOptions = NonNullable<Parameters<typeof undiciFetch>[1]> & {
   retries?: number;
   delayMs?: number;
 };
 
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
 
-function getUrl(input: RequestInfo | URL): string {
+function getUrl(input: Parameters<typeof undiciFetch>[0]): string {
   if (typeof input === 'string') return input;
   if (input instanceof URL) return input.toString();
   if (input instanceof Request) return input.url;
@@ -27,9 +28,9 @@ function getStatusFromAppError(err: AppError): number | undefined {
 }
 
 export async function fetchWithRetry(
-  input: RequestInfo | URL,
+  input: Parameters<typeof undiciFetch>[0],
   options: FetchWithRetryOptions = {},
-): Promise<Response> {
+): Promise<Awaited<ReturnType<typeof undiciFetch>>> {
   const { retries = 1, delayMs = 500, ...init } = options;
 
   if (!Number.isInteger(retries) || retries < 1) {
@@ -46,7 +47,7 @@ export async function fetchWithRetry(
     const isLast = attempt === retries;
 
     try {
-      const res = await fetch(input, init);
+      const res = await undiciFetch(input, init);
 
       if (res.ok) return res;
 
@@ -94,20 +95,4 @@ export async function fetchWithRetry(
     data: { url, retries },
     cause: lastError,
   });
-}
-
-if (require.main === module) {
-  (async () => {
-    try {
-      const res = await fetchWithRetry('https://httpbin.org/json', { retries: 3, delayMs: 1000 });
-
-      console.log('Response status:', res.status);
-      console.log('Content-Type:', res.headers.get('content-type'));
-
-      const text = await res.text();
-      console.log('Body:', text);
-    } catch (err) {
-      console.error('Fetch failed:', err);
-    }
-  })();
 }
