@@ -7,6 +7,7 @@ import {
 } from '@domain/dtos/official-journals/search-official-journals.dto';
 import { diograndeConfig } from '@infrastructure/http/diogrande/diogrande.config';
 import { DiograndeHttpClient } from '@infrastructure/http/diogrande/diogrande.client';
+import { createTiming } from '@utils/timing';
 
 type OfficialJournalsMunicipalityItem = {
   numero: string;
@@ -41,22 +42,40 @@ export class OfficialJournalsMunicipalityUseCase {
   constructor(private readonly client = new DiograndeHttpClient()) {}
 
   async execute(input: FetchPublicationsInputDTO): Promise<SiteDataDTO> {
+    const t = createTiming('official-journals', {
+      debug: { envVar: 'OFFICIAL_JOURNALS_DEBUG' },
+      round: true,
+    });
+
     validateInput(input);
+    t.mark('validate');
 
     const url = buildUrl(input);
     const init = buildFetchInit(input);
+    t.mark('build');
 
     const res = await this.client.get(url, init);
+    t.mark('fetch');
 
     const text = await res.text();
+    t.mark('readText');
+
     const payload = parseJsonOrThrow<AjaxPayload>(text, url);
+    t.mark('parseJson');
 
     if (payload.success === false) {
+      t.mark('upstreamCheck');
+
       if (Array.isArray(payload.data) && payload.data.length === 0) {
-        return toSiteDataDTO([]);
+        const out = toSiteDataDTO([]);
+        t.mark('buildOutput');
+        t.end({ url, success: payload.success, empty: true });
+        return out;
       }
 
       const message = typeof payload.message === 'string' ? payload.message : undefined;
+      t.end({ url, success: payload.success, empty: false });
+
       throw new AppError({
         statusCode: 502,
         code: 'UPSTREAM_RESPONSE_ERROR',
@@ -71,7 +90,13 @@ export class OfficialJournalsMunicipalityUseCase {
     }
 
     const items = normalizeItems(payload.data);
-    return toSiteDataDTO(items);
+    t.mark('normalize');
+
+    const out = toSiteDataDTO(items);
+    t.mark('buildOutput');
+
+    t.end({ url, items: items.length });
+    return out;
   }
 }
 
