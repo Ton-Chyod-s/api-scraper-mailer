@@ -1,21 +1,24 @@
 import { AppError } from '@utils/app-error';
 import { fetchWithRetry } from '@utils/fetch-with-retry';
 
+jest.mock('undici', () => {
+  const actual = jest.requireActual('undici');
+  return { ...actual, fetch: jest.fn() };
+});
+
+import { fetch as undiciFetch, Request as UndiciRequest } from 'undici';
+
 function makeResponse(status: number, body = 'x'): Response {
   return new Response(body, { status });
 }
 
 describe('fetchWithRetry', () => {
-  const originalFetch = globalThis.fetch;
-
   beforeEach(() => {
     jest.useFakeTimers();
-
-    globalThis.fetch = jest.fn() as unknown as typeof fetch;
+    (undiciFetch as unknown as jest.Mock).mockReset();
   });
 
   afterEach(() => {
-    globalThis.fetch = originalFetch;
     jest.useRealTimers();
     jest.clearAllMocks();
   });
@@ -27,7 +30,7 @@ describe('fetchWithRetry', () => {
       code: 'FETCH_INVALID_RETRIES',
     });
 
-    expect(globalThis.fetch).not.toHaveBeenCalled();
+    expect(undiciFetch).not.toHaveBeenCalled();
   });
 
   it('lança AppError quando delayMs é inválido', async () => {
@@ -37,11 +40,11 @@ describe('fetchWithRetry', () => {
       code: 'FETCH_INVALID_DELAY',
     });
 
-    expect(globalThis.fetch).not.toHaveBeenCalled();
+    expect(undiciFetch).not.toHaveBeenCalled();
   });
 
   it('retorna Response quando ok na primeira tentativa', async () => {
-    const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;
+    const fetchMock = undiciFetch as unknown as jest.Mock;
     fetchMock.mockResolvedValueOnce(makeResponse(200, 'ok'));
 
     const res = await fetchWithRetry('https://example.com', { retries: 3, delayMs: 1000 });
@@ -52,7 +55,7 @@ describe('fetchWithRetry', () => {
   });
 
   it('faz retry em status retryable (500) e depois sucesso', async () => {
-    const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;
+    const fetchMock = undiciFetch as unknown as jest.Mock;
     fetchMock
       .mockResolvedValueOnce(makeResponse(500))
       .mockResolvedValueOnce(makeResponse(200, 'ok'));
@@ -60,7 +63,6 @@ describe('fetchWithRetry', () => {
     const p = fetchWithRetry('https://example.com', { retries: 2, delayMs: 1000 });
 
     await Promise.resolve();
-
     await jest.advanceTimersByTimeAsync(1000);
 
     const res = await p;
@@ -69,7 +71,7 @@ describe('fetchWithRetry', () => {
   });
 
   it('não faz retry em status não-retryable (400) e lança UPSTREAM_HTTP_ERROR direto', async () => {
-    const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;
+    const fetchMock = undiciFetch as unknown as jest.Mock;
     fetchMock.mockResolvedValueOnce(makeResponse(400, 'bad'));
 
     await expect(
@@ -85,7 +87,7 @@ describe('fetchWithRetry', () => {
   });
 
   it('faz retry quando fetch rejeita (erro de rede) e depois sucesso', async () => {
-    const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;
+    const fetchMock = undiciFetch as unknown as jest.Mock;
     fetchMock
       .mockRejectedValueOnce(new Error('network'))
       .mockResolvedValueOnce(makeResponse(200, 'ok'));
@@ -101,18 +103,20 @@ describe('fetchWithRetry', () => {
   });
 
   it('no último retry, lança UPSTREAM_REQUEST_FAILED contendo cause', async () => {
-    const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;
+    const fetchMock = undiciFetch as unknown as jest.Mock;
     fetchMock
       .mockResolvedValueOnce(makeResponse(500))
       .mockResolvedValueOnce(makeResponse(500))
       .mockResolvedValueOnce(makeResponse(500));
 
     const p = fetchWithRetry(new URL('https://example.com/path'), { retries: 3, delayMs: 1000 });
-
     const handled = p.catch((e) => e as unknown);
 
     await Promise.resolve();
-    await jest.runAllTimersAsync();
+    await jest.advanceTimersByTimeAsync(1000);
+
+    await Promise.resolve();
+    await jest.advanceTimersByTimeAsync(1000);
 
     const err = await handled;
 
@@ -130,10 +134,10 @@ describe('fetchWithRetry', () => {
   });
 
   it('data.url é resolvida corretamente quando input for Request', async () => {
-    const fetchMock = globalThis.fetch as unknown as jest.MockedFunction<typeof fetch>;
+    const fetchMock = undiciFetch as unknown as jest.Mock;
     fetchMock.mockResolvedValueOnce(makeResponse(500));
 
-    const req = new Request('https://example.com/abc');
+    const req = new UndiciRequest('https://example.com/abc');
 
     await expect(fetchWithRetry(req, { retries: 1, delayMs: 0 })).rejects.toMatchObject({
       name: 'AppError',

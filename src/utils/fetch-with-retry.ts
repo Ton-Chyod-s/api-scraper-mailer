@@ -11,7 +11,12 @@ const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
 function getUrl(input: Parameters<typeof undiciFetch>[0]): string {
   if (typeof input === 'string') return input;
   if (input instanceof URL) return input.toString();
-  if (input instanceof Request) return input.url;
+
+  if (input && typeof input === 'object' && 'url' in input) {
+    const url = (input as { url?: unknown }).url;
+    if (typeof url === 'string') return url;
+  }
+
   return String(input);
 }
 
