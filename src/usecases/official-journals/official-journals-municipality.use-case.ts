@@ -264,8 +264,8 @@ if (require.main === module) {
     const uc = new OfficialJournalsMunicipalityUseCase(client);
     const result = await uc.execute({
       nome: 'KLAYTON CHRYSTHIAN OLIVEIRA DIAS',
-      dataInicio: '01/01/2025',
-      dataFim: '31/01/2025',
+      dataInicio: '01/01/2023',
+      dataFim: '30/07/2023',
       retries: 1,
       delayMs: 50,
     });

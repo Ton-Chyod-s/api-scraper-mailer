@@ -1,0 +1,24 @@
+model OfficialJournalMunicipality {
+  id        String   @id @default(uuid())
+
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  numero    String
+  dia       DateTime @db.Date
+  arquivo   String
+  descricao String?
+  codigoDia String   @map("codigo_dia")
+
+  sourceSite String  @default("diogrande") @map("source_site")
+  fetchedAt  DateTime @default(now()) @map("fetched_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, codigoDia, arquivo], map: "official_journals_user_uniq")
+  @@index([dia], map: "official_journals_dia_idx")
+  @@index([numero], map: "official_journals_numero_idx")
+  @@index([codigoDia], map: "official_journals_codigo_idx")
+  @@index([userId], map: "official_journals_user_idx")
+}
