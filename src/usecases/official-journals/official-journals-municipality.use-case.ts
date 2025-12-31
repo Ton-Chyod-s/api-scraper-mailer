@@ -1,8 +1,8 @@
 import { AppError } from '@utils/app-error';
 import { FetchWithRetryOptions } from '@utils/fetch-with-retry';
 import {
-  BuscarPublicacoesInput,
-  SiteData,
+  FetchPublicationsInputDTO,
+  SiteDataDTO,
 } from '@domain/dtos/official-journals/search-official-journals.dto';
 import { diograndeConfig } from '@infrastructure/http/diogrande/diogrande.config';
 import { DiograndeHttpClient } from '@infrastructure/http/diogrande/diogrande.client';
@@ -21,7 +21,7 @@ type AjaxPayload = {
 };
 
 export class OfficialJournalsMunicipalityUseCase {
-  async execute(input: BuscarPublicacoesInput): Promise<SiteData> {
+  async execute(input: FetchPublicationsInputDTO): Promise<SiteDataDTO> {
     validateInput(input);
 
     const url = buildUrl(input);
@@ -34,12 +34,12 @@ export class OfficialJournalsMunicipalityUseCase {
     const payload = parseJsonOrThrow<AjaxPayload>(text, url);
 
     const items = Array.isArray(payload.data) ? payload.data : [];
-    return toSiteData(items);
+    return toSiteDataDTO(items);
   }
 }
 
 
-function buildUrl(input: BuscarPublicacoesInput): string {
+function buildUrl(input: FetchPublicationsInputDTO): string {
   const params = new URLSearchParams({
     action: 'edicoes_json',
     palavra: input.nome,
@@ -50,7 +50,7 @@ function buildUrl(input: BuscarPublicacoesInput): string {
   return `${diograndeConfig.baseUrl}?${params.toString()}`;
 }
 
-function buildFetchInit(input: BuscarPublicacoesInput): FetchWithRetryOptions {
+function buildFetchInit(input: FetchPublicationsInputDTO): FetchWithRetryOptions {
   const { retries = 2, delayMs = 350 } = input;
 
   return {
@@ -63,7 +63,7 @@ function buildFetchInit(input: BuscarPublicacoesInput): FetchWithRetryOptions {
   };
 }
 
-function validateInput(input: BuscarPublicacoesInput) {
+function validateInput(input: FetchPublicationsInputDTO) {
   const nome = (input.nome ?? '').trim();
   if (nome.length < 3) {
     throw AppError.badRequest('Nome inválido', 'OFFICIAL_JOURNALS_INVALID_NAME', {
@@ -134,7 +134,7 @@ function parseJsonOrThrow<T>(text: string, url: string): T {
   }
 }
 
-function toSiteData(items: OfficialJournalsMunicipalityItem[]): SiteData {
+function toSiteDataDTO(items: OfficialJournalsMunicipalityItem[]): SiteDataDTO {
   if (!items.length) {
     return {
       site: 'https://diogrande.campogrande.ms.gov.br/',

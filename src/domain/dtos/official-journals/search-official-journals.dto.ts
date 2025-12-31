@@ -1,10 +1,10 @@
-export interface SiteData {
+export interface SiteDataDTO {
   site: string;
   mensagem: string;
   conteudos: Record<string, string>;
 }
 
-export type BuscarPublicacoesInput = {
+export type FetchPublicationsInputDTO = {
   nome: string;
   dataInicio: string; // "DD/MM/YYYY"
   dataFim: string; // "DD/MM/YYYY"
