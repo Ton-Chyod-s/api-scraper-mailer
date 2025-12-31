@@ -1,20 +1,12 @@
 export type TimingSnapshot = Record<string, number>;
 
 export type TimingOptions = {
-  debug?: boolean | { envVar: string };
+  debug?: boolean;
   round?: boolean;
 };
 
 function nowMs(): number {
   return Number(process.hrtime.bigint()) / 1_000_000;
-}
-
-function isDebugEnabled(debug?: TimingOptions['debug']): boolean {
-  if (!debug) return false;
-  if (typeof debug === 'boolean') return debug;
-
-  const v = process.env[debug.envVar];
-  return v === 'true';
 }
 
 function maybeRound(n: number, round?: boolean): number {
@@ -46,7 +38,7 @@ export function createTiming(label: string, options?: TimingOptions) {
   function end(extra?: Record<string, unknown>) {
     const snap = snapshot();
 
-    if (isDebugEnabled(options?.debug)) {
+    if (options?.debug) {
       if (extra) console.log(`[timing] ${label}`, { ...snap, ...extra });
       else console.log(`[timing] ${label}`, snap);
     }

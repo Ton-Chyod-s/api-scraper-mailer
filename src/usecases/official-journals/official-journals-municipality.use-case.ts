@@ -1,4 +1,5 @@
 import { AppError } from '@utils/app-error';
+import { env } from '@config/env';
 import { FetchWithRetryOptions } from '@utils/fetch-with-retry';
 import {
   FetchPublicationsInputDTO,
@@ -23,11 +24,7 @@ type AjaxPayload = {
   message?: unknown;
 };
 
-const MAX_RANGE_DAYS = (() => {
-  const raw = process.env.OFFICIAL_JOURNALS_MAX_RANGE_DAYS;
-  const n = Number(raw);
-  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 365;
-})();
+const MAX_RANGE_DAYS = env.OFFICIAL_JOURNALS_MAX_RANGE_DAYS;
 
 const DIOGRANDE_REFERER = (() => {
   try {
@@ -43,7 +40,7 @@ export class OfficialJournalsMunicipalityUseCase {
 
   async execute(input: FetchPublicationsInputDTO): Promise<SiteDataDTO> {
     const t = createTiming('official-journals', {
-      debug: { envVar: 'OFFICIAL_JOURNALS_DEBUG' },
+      debug: env.OFFICIAL_JOURNALS_DEBUG,
       round: true,
     });
 

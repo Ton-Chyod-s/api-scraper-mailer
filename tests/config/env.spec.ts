@@ -29,6 +29,20 @@ async function loadEnv(envVars: Record<string, string | undefined>) {
     'SMTP_USER',
     'SMTP_PASSWORD',
     'EMAIL_FROM',
+    'DIOGRANDE_HOST',
+    'DIOGRANDE_PORT',
+    'DIOGRANDE_BASE_URL',
+    'DIOGRANDE_DEBUG',
+    'DIOGRANDE_ALLOW_INSECURE_TLS',
+    'DIOGRANDE_AUTO_DISCOVER_CA',
+    'DIOGRANDE_CACHE_DISCOVERED_CA',
+    'DIOGRANDE_CA_PEM',
+    'DIOGRANDE_CA_CACHE_PATH',
+    'DIOGRANDE_DISCOVER_TIMEOUT_MS',
+    'DIOGRANDE_AIA_FETCH_TIMEOUT_MS',
+    'DIOGRANDE_AIA_ALLOWED_HOSTS',
+    'OFFICIAL_JOURNALS_MAX_RANGE_DAYS',
+    'OFFICIAL_JOURNALS_DEBUG',
   ] as const;
 
   for (const k of keys) delete process.env[k];

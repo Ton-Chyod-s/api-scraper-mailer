@@ -79,10 +79,31 @@ function parseBoolean(value?: string): boolean | undefined {
   throw new Error(`Boolean inválido: "${value}". Use true/false (ou 1/0).`);
 }
 
+function parseBooleanOr(value: string | undefined, def: boolean): boolean {
+  const parsed = parseBoolean(value);
+  return parsed === undefined ? def : parsed;
+}
+
 function normalizeOptionalString(value?: string): string | undefined {
   if (value === undefined) return undefined;
   const v = value.trim();
   return v ? v : undefined;
+}
+
+function normalizePem(value?: string): string | undefined {
+  const v = normalizeOptionalString(value);
+  if (!v) return undefined;
+  return v.replace(/\\n/g, '\n').trim();
+}
+
+function parseStringList(value?: string): string[] {
+  const v = String(value ?? '').trim();
+  if (!v) return [];
+
+  return v
+    .split(',')
+    .map((x) => x.trim())
+    .filter(Boolean);
 }
 
 function preprocessOptional(value: unknown) {
@@ -151,6 +172,56 @@ const schema = z.object({
   SMTP_PASSWORD: z.string().optional().transform(normalizeOptionalString),
   SMTP_SECURE: z.string().optional().transform(parseBoolean),
   EMAIL_FROM: z.string().optional().transform(normalizeOptionalString),
+
+  // Diogrande (TLS/HTTP)
+  DIOGRANDE_HOST: z.string().optional().default('diogrande.campogrande.ms.gov.br'),
+  DIOGRANDE_PORT: z
+    .preprocess(preprocessOptional, z.coerce.number().int().min(1).max(65535))
+    .optional()
+    .default(443),
+  DIOGRANDE_BASE_URL: z
+    .string()
+    .optional()
+    .default('https://diogrande.campogrande.ms.gov.br/wp-admin/admin-ajax.php'),
+  DIOGRANDE_DEBUG: z
+    .string()
+    .optional()
+    .default('false')
+    .transform((v) => parseBooleanOr(v, false)),
+  DIOGRANDE_ALLOW_INSECURE_TLS: z
+    .string()
+    .optional()
+    .default('false')
+    .transform((v) => parseBooleanOr(v, false)),
+  // defaults dependem de NODE_ENV, aplicados em diogrande.config.ts
+  DIOGRANDE_AUTO_DISCOVER_CA: z.string().optional().transform(parseBoolean),
+  DIOGRANDE_CACHE_DISCOVERED_CA: z.string().optional().transform(parseBoolean),
+  DIOGRANDE_CA_PEM: z.string().optional().transform(normalizePem),
+  DIOGRANDE_CA_CACHE_PATH: z.string().optional().default('certs/diogrande-ca.pem'),
+  DIOGRANDE_DISCOVER_TIMEOUT_MS: z
+    .preprocess(preprocessOptional, z.coerce.number().int().min(0).max(120_000))
+    .optional()
+    .default(6000),
+  DIOGRANDE_AIA_FETCH_TIMEOUT_MS: z
+    .preprocess(preprocessOptional, z.coerce.number().int().min(0).max(120_000))
+    .optional()
+    .default(6000),
+  DIOGRANDE_AIA_ALLOWED_HOSTS: z
+    .string()
+    .optional()
+    .default('')
+    .transform((v) => parseStringList(v)),
+
+  // Official Journals
+  OFFICIAL_JOURNALS_MAX_RANGE_DAYS: z
+    .preprocess(preprocessOptional, z.coerce.number().int().min(1).max(3650))
+    .optional()
+    .default(365),
+  OFFICIAL_JOURNALS_DEBUG: z
+    .string()
+    .optional()
+    .default('false')
+    .transform((v) => parseBooleanOr(v, false)),
 });
 
 export const env = schema.parse(process.env);
