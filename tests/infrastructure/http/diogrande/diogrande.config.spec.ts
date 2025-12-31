@@ -5,8 +5,7 @@ describe('diograndeConfig', () => {
 
       DIOGRANDE_HOST: 'diogrande.campogrande.ms.gov.br',
       DIOGRANDE_PORT: 443,
-      DIOGRANDE_BASE_URL:
-        'https://diogrande.campogrande.ms.gov.br/wp-admin/admin-ajax.php',
+      DIOGRANDE_BASE_URL: 'https://diogrande.campogrande.ms.gov.br/wp-admin/admin-ajax.php',
 
       DIOGRANDE_DEBUG: false,
       DIOGRANDE_ALLOW_INSECURE_TLS: false,
