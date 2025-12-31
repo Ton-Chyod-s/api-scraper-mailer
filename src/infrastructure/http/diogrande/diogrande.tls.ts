@@ -29,6 +29,37 @@ export function findTlsCode(err: unknown): string | undefined {
   return undefined;
 }
 
+function debugLog(...args: unknown[]) {
+  if (!diograndeConfig.debug) return;
+  console.debug('[diogrande:tls]', ...args);
+}
+
+const PEM_BLOCK_RE = /-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g;
+
+function extractPemBlocks(pem: string): string[] {
+  const blocks = String(pem || '').match(PEM_BLOCK_RE) ?? [];
+  return blocks.map((b) => b.trim()).filter(Boolean);
+}
+
+function normalizePemChain(pem: string): string {
+  return extractPemBlocks(pem).join('\n\n').trim();
+}
+
+function isValidPemChain(pem: string): boolean {
+  const blocks = extractPemBlocks(pem);
+  if (blocks.length === 0) return false;
+
+  for (const b of blocks) {
+    try {
+      new X509Certificate(b);
+    } catch {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function derToPem(der: Buffer): string {
   const b64 = der.toString('base64');
   const lines = b64.match(/.{1,64}/g) ?? [];
@@ -64,7 +95,6 @@ function collectChainFromPeer(peer: tls.PeerCertificate): Buffer[] {
     out.push(buf);
   };
 
-  // leaf
   push(getRawBuffer(peer));
 
   let cur: tls.PeerCertificate | undefined = peer;
@@ -93,12 +123,6 @@ function extractCaIssuersUrls(infoAccess: string): string[] {
   return urls;
 }
 
-/**
- * Timeout do AIA fetch e allowlist de host.
- * Espera no diograndeConfig:
- * - aiaFetchTimeoutMs?: number
- * - aiaAllowedHosts?: string[]
- */
 type AbortSignalWithTimeout = typeof AbortSignal & {
   timeout?: (ms: number) => AbortSignal;
 };
@@ -123,7 +147,6 @@ function matchHost(pattern: string, host: string): boolean {
 
   if (p === h) return true;
 
-  // wildcard do tipo "*.example.com"
   if (p.startsWith('*.')) {
     const suffix = p.slice(1); // ".example.com"
     return h.endsWith(suffix) && h.length > suffix.length;
@@ -140,12 +163,11 @@ function isAllowedIssuerUrl(raw: string): boolean {
     return false;
   }
 
-  // trava protocolo
   if (u.protocol !== 'https:') return false;
   if (!u.hostname) return false;
 
   const allow = diograndeConfig.aiaAllowedHosts ?? [];
-  if (allow.length === 0) return true; // sem allowlist configurada, não bloqueia
+  if (allow.length === 0) return true;
 
   return allow.some((p) => matchHost(p, u.hostname));
 }
@@ -201,7 +223,16 @@ async function readCachePem(cachePath: string): Promise<string> {
   try {
     const abs = path.isAbsolute(cachePath) ? cachePath : path.join(process.cwd(), cachePath);
     const s = await fs.readFile(abs, 'utf8');
-    return String(s || '').trim();
+    const raw = String(s || '').trim();
+    const normalized = normalizePemChain(raw);
+
+    if (!normalized) return '';
+    if (!isValidPemChain(normalized)) {
+      debugLog('Cache PEM inválido, ignorando', { cachePath: abs });
+      return '';
+    }
+
+    return normalized;
   } catch {
     return '';
   }
@@ -210,7 +241,7 @@ async function readCachePem(cachePath: string): Promise<string> {
 async function writeCachePem(cachePath: string, pem: string) {
   const abs = path.isAbsolute(cachePath) ? cachePath : path.join(process.cwd(), cachePath);
   await ensureDirForFile(abs);
-  await fs.writeFile(abs, pem, 'utf8');
+  await fs.writeFile(abs, normalizePemChain(pem), 'utf8');
 }
 
 function getBaseCAs(): string[] {
@@ -237,6 +268,12 @@ function getBaseCAs(): string[] {
 
 async function discoverDiograndeChainPem(): Promise<string> {
   return new Promise((resolve, reject) => {
+    debugLog('Auto-discover CA (rejectUnauthorized=false)', {
+      host: diograndeConfig.host,
+      port: diograndeConfig.port,
+      cachePath: diograndeConfig.caCachePath,
+    });
+
     const socket = tls.connect(
       {
         host: diograndeConfig.host,
@@ -311,6 +348,7 @@ async function discoverDiograndeChainPem(): Promise<string> {
 
 export async function createDiograndeDispatcher(): Promise<Agent | undefined> {
   if (diograndeConfig.allowInsecureTls) {
+    debugLog('Criando dispatcher com TLS inseguro (rejectUnauthorized=false)');
     return new Agent({
       connect: {
         rejectUnauthorized: false,
@@ -322,9 +360,16 @@ export async function createDiograndeDispatcher(): Promise<Agent | undefined> {
   const baseCAs = getBaseCAs();
 
   if (diograndeConfig.pinnedCaPem) {
+    const pinned = normalizePemChain(diograndeConfig.pinnedCaPem);
+    if (!pinned || !isValidPemChain(pinned)) {
+      debugLog('DIOGRANDE_CA_PEM inválido, ignorando');
+      return undefined;
+    }
+
+    debugLog('Criando dispatcher com CA pinada (DIOGRANDE_CA_PEM)');
     return new Agent({
       connect: {
-        ca: [...baseCAs, diograndeConfig.pinnedCaPem],
+        ca: [...baseCAs, pinned],
         servername: diograndeConfig.host,
       },
     });
@@ -332,6 +377,7 @@ export async function createDiograndeDispatcher(): Promise<Agent | undefined> {
 
   const cached = await readCachePem(diograndeConfig.caCachePath);
   if (cached) {
+    debugLog('Criando dispatcher com CA do cache', { cachePath: diograndeConfig.caCachePath });
     return new Agent({
       connect: {
         ca: [...baseCAs, cached],
@@ -342,15 +388,26 @@ export async function createDiograndeDispatcher(): Promise<Agent | undefined> {
 
   if (diograndeConfig.autoDiscoverCa) {
     const discovered = (await discoverDiograndeChainPem()).trim();
-    if (discovered) {
-      await writeCachePem(diograndeConfig.caCachePath, discovered);
+    const normalized = normalizePemChain(discovered);
+
+    if (normalized && isValidPemChain(normalized)) {
+      if (diograndeConfig.cacheDiscoveredCa) {
+        await writeCachePem(diograndeConfig.caCachePath, normalized);
+        debugLog('CA auto-descoberta salva em cache', { cachePath: diograndeConfig.caCachePath });
+      } else {
+        debugLog('CA auto-descoberta usada sem persistir (cacheDiscoveredCa=false)');
+      }
+
+      debugLog('Criando dispatcher com CA auto-descoberta');
       return new Agent({
         connect: {
-          ca: [...baseCAs, discovered],
+          ca: [...baseCAs, normalized],
           servername: diograndeConfig.host,
         },
       });
     }
+
+    debugLog('Auto-discover não retornou PEM válido');
   }
 
   return undefined;

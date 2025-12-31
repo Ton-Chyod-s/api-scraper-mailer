@@ -2,6 +2,7 @@ import { AppError } from '@utils/app-error';
 import { FetchWithRetryOptions } from '@utils/fetch-with-retry';
 import {
   FetchPublicationsInputDTO,
+  OfficialJournalItemDTO,
   SiteDataDTO,
 } from '@domain/dtos/official-journals/search-official-journals.dto';
 import { diograndeConfig } from '@infrastructure/http/diogrande/diogrande.config';
@@ -17,8 +18,24 @@ type OfficialJournalsMunicipalityItem = {
 
 type AjaxPayload = {
   success?: boolean;
-  data?: OfficialJournalsMunicipalityItem[];
+  data?: unknown;
+  message?: unknown;
 };
+
+const MAX_RANGE_DAYS = (() => {
+  const raw = process.env.OFFICIAL_JOURNALS_MAX_RANGE_DAYS;
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 365;
+})();
+
+const DIOGRANDE_REFERER = (() => {
+  try {
+    const u = new URL(diograndeConfig.baseUrl);
+    return `${u.origin}/`;
+  } catch {
+    return 'https://diogrande.campogrande.ms.gov.br/';
+  }
+})();
 
 export class OfficialJournalsMunicipalityUseCase {
   constructor(private readonly client = new DiograndeHttpClient()) {}
@@ -34,17 +51,66 @@ export class OfficialJournalsMunicipalityUseCase {
     const text = await res.text();
     const payload = parseJsonOrThrow<AjaxPayload>(text, url);
 
-    const items = Array.isArray(payload.data) ? payload.data : [];
+    if (payload.success === false) {
+      if (Array.isArray(payload.data) && payload.data.length === 0) {
+        return toSiteDataDTO([]);
+      }
+
+      const message = typeof payload.message === 'string' ? payload.message : undefined;
+      throw new AppError({
+        statusCode: 502,
+        code: 'UPSTREAM_RESPONSE_ERROR',
+        message: message || 'Upstream respondeu success=false',
+        data: {
+          url,
+          success: payload.success,
+          dataType: typeof payload.data,
+          snippet: String(text || '').slice(0, 300),
+        },
+      });
+    }
+
+    const items = normalizeItems(payload.data);
     return toSiteDataDTO(items);
   }
 }
 
+function normalizeItems(data: unknown): OfficialJournalItemDTO[] {
+  if (!Array.isArray(data)) return [];
 
+  const out: OfficialJournalItemDTO[] = [];
+  for (const raw of data) {
+    if (!isMunicipalityItem(raw)) continue;
+
+    out.push({
+      numero: raw.numero,
+      dia: raw.dia,
+      arquivo: raw.arquivo,
+      descricao: raw.desctpd,
+      codigoDia: raw.codigodia,
+    });
+  }
+
+  return out;
+}
+
+function isMunicipalityItem(v: unknown): v is OfficialJournalsMunicipalityItem {
+  if (!v || typeof v !== 'object') return false;
+  const r = v as Record<string, unknown>;
+
+  return (
+    typeof r.numero === 'string' &&
+    typeof r.dia === 'string' &&
+    typeof r.arquivo === 'string' &&
+    typeof r.desctpd === 'string' &&
+    typeof r.codigodia === 'string'
+  );
+}
 
 function buildUrl(input: FetchPublicationsInputDTO): string {
   const params = new URLSearchParams({
     action: 'edicoes_json',
-    palavra: input.nome,
+    palavra: (input.nome ?? '').trim(),
     de: input.dataInicio,
     ate: input.dataFim,
   });
@@ -61,6 +127,10 @@ function buildFetchInit(input: FetchPublicationsInputDTO): FetchWithRetryOptions
     delayMs,
     headers: {
       accept: 'application/json,text/plain;q=0.9,*/*;q=0.8',
+      'accept-language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+      'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      referer: DIOGRANDE_REFERER,
     },
   };
 }
@@ -106,6 +176,20 @@ function validateInput(input: FetchPublicationsInputDTO) {
       { dataInicio: input.dataInicio, dataFim: input.dataFim },
     );
   }
+
+  const rangeDays = Math.floor((end.getTime() - start.getTime()) / 86_400_000) + 1;
+  if (rangeDays > MAX_RANGE_DAYS) {
+    throw AppError.badRequest(
+      `Intervalo de datas muito grande (máx ${MAX_RANGE_DAYS} dias)`,
+      'OFFICIAL_JOURNALS_DATE_RANGE_TOO_LARGE',
+      {
+        dataInicio: input.dataInicio,
+        dataFim: input.dataFim,
+        rangeDays,
+        maxRangeDays: MAX_RANGE_DAYS,
+      },
+    );
+  }
 }
 
 function isBrDate(v: string) {
@@ -136,24 +220,19 @@ function parseJsonOrThrow<T>(text: string, url: string): T {
   }
 }
 
-function toSiteDataDTO(items: OfficialJournalsMunicipalityItem[]): SiteDataDTO {
+function toSiteDataDTO(items: OfficialJournalItemDTO[]): SiteDataDTO {
   if (!items.length) {
     return {
       site: 'https://diogrande.campogrande.ms.gov.br/',
       mensagem: 'Nenhuma publicação encontrada.',
-      conteudos: {},
+      conteudos: [],
     };
   }
-
-  const conteudos: Record<string, string> = {};
-  items.forEach((item, index) => {
-    conteudos[String(index)] = `${item.desctpd} - ${item.dia} - ${item.arquivo}`;
-  });
 
   return {
     site: 'https://diogrande.campogrande.ms.gov.br/',
     mensagem: 'Diários oficiais encontrados.',
-    conteudos,
+    conteudos: items,
   };
 }
 

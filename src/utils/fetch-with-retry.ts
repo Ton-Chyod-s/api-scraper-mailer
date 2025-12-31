@@ -20,18 +20,25 @@ function hasStringHref(v: unknown): v is { href: string } {
 function getUrl(input: Parameters<typeof undiciFetch>[0]): string {
   if (typeof input === 'string') return input;
   if (input instanceof URL) return input.toString();
+  if (hasStringHref(input)) return input.href;
 
-  if (input && typeof input === 'object' && 'url' in input) {
-    const url = (input as Record<'url', unknown>).url;
+  if (input && typeof input === 'object') {
+    const directUrl = (input as unknown as { url?: unknown }).url;
+    if (typeof directUrl === 'string') return directUrl;
+    if (directUrl instanceof URL) return directUrl.toString();
+    if (hasStringHref(directUrl)) return directUrl.href;
 
-    if (typeof url === 'string') return url;
-    if (url instanceof URL) return url.toString();
-    if (hasStringHref(url)) return url.href;
+    const nested = (input as unknown as { request?: unknown }).request;
+    if (nested && typeof nested === 'object') {
+      const nestedUrl = (nested as unknown as { url?: unknown }).url;
+      if (typeof nestedUrl === 'string') return nestedUrl;
+      if (nestedUrl instanceof URL) return nestedUrl.toString();
+      if (hasStringHref(nestedUrl)) return nestedUrl.href;
+    }
   }
 
   return String(input);
 }
-
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

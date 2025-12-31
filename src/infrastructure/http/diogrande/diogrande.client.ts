@@ -1,7 +1,13 @@
 import { AppError } from '@utils/app-error';
 import { fetchWithRetry, FetchWithRetryOptions } from '@utils/fetch-with-retry';
 import { Agent } from 'undici';
+import { diograndeConfig } from './diogrande.config';
 import { createDiograndeDispatcher, findTlsCode } from './diogrande.tls';
+
+function debugLog(...args: unknown[]) {
+  if (!diograndeConfig.debug) return;
+  console.debug('[diogrande:http]', ...args);
+}
 
 export class DiograndeHttpClient {
   private dispatcherPromise?: Promise<Agent | undefined>;
@@ -23,6 +29,24 @@ export class DiograndeHttpClient {
 
       if (!tlsCode) throw err;
 
+      if (
+        (tlsCode === 'ERR_TLS_CERT_ALTNAME_INVALID' || tlsCode === 'CERT_HAS_EXPIRED') &&
+        !diograndeConfig.allowInsecureTls
+      ) {
+        throw new AppError({
+          statusCode: 502,
+          code: 'UPSTREAM_TLS_ERROR',
+          message:
+            tlsCode === 'ERR_TLS_CERT_ALTNAME_INVALID'
+              ? 'TLS falhou por hostname inválido (ALTNAME). CA customizada não resolve isso.'
+              : 'TLS falhou por certificado expirado. CA customizada não resolve isso.',
+          data: { url, tlsCode },
+          cause: err,
+        });
+      }
+
+      debugLog('TLS falhou, acionando fallback', { url, tlsCode });
+
       const dispatcher = await this.getDispatcher();
 
       if (!dispatcher) {
@@ -37,6 +61,13 @@ export class DiograndeHttpClient {
       }
 
       try {
+        debugLog('Retry com dispatcher customizado', {
+          url,
+          retries: 1,
+          cachePath: diograndeConfig.caCachePath,
+          hasPinned: Boolean(diograndeConfig.pinnedCaPem),
+          autoDiscover: diograndeConfig.autoDiscoverCa,
+        });
         return await fetchWithRetry(url, { ...init, dispatcher, retries: 1 });
       } catch (err2: unknown) {
         const tlsCode2 = findTlsCode(err2);

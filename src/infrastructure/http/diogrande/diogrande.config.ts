@@ -16,6 +16,8 @@ const toList = (v: string | undefined) =>
 
 const normalizePem = (pem: string) => pem.replace(/\\n/g, '\n').trim();
 
+const isProd = (process.env.NODE_ENV || '').trim().toLowerCase() === 'production';
+
 export const diograndeConfig = {
   host: process.env.DIOGRANDE_HOST?.trim() || 'diogrande.campogrande.ms.gov.br',
   port: toInt(process.env.DIOGRANDE_PORT, 443),
@@ -24,8 +26,13 @@ export const diograndeConfig = {
     process.env.DIOGRANDE_BASE_URL?.trim() ||
     'https://diogrande.campogrande.ms.gov.br/wp-admin/admin-ajax.php',
 
+  debug: toBool(process.env.DIOGRANDE_DEBUG, false),
+
   allowInsecureTls: toBool(process.env.DIOGRANDE_ALLOW_INSECURE_TLS, false),
-  autoDiscoverCa: toBool(process.env.DIOGRANDE_AUTO_DISCOVER_CA, true),
+
+  autoDiscoverCa: toBool(process.env.DIOGRANDE_AUTO_DISCOVER_CA, !isProd),
+
+  cacheDiscoveredCa: toBool(process.env.DIOGRANDE_CACHE_DISCOVERED_CA, !isProd),
 
   pinnedCaPem: process.env.DIOGRANDE_CA_PEM ? normalizePem(process.env.DIOGRANDE_CA_PEM) : '',
 
