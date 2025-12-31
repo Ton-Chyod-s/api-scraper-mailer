@@ -12,11 +12,8 @@ export const diograndeConfig = {
 
   allowInsecureTls: env.DIOGRANDE_ALLOW_INSECURE_TLS,
 
-  // Em produção, é mais seguro exigir CA pinada (DIOGRANDE_CA_PEM) ou cache pré-gerado.
-  // Se quiser auto-discover em produção, defina explicitamente DIOGRANDE_AUTO_DISCOVER_CA=true.
   autoDiscoverCa: env.DIOGRANDE_AUTO_DISCOVER_CA ?? !isProd,
 
-  // Evita "trust on first use" persistente em produção.
   cacheDiscoveredCa: env.DIOGRANDE_CACHE_DISCOVERED_CA ?? !isProd,
 
   pinnedCaPem: env.DIOGRANDE_CA_PEM ?? '',
