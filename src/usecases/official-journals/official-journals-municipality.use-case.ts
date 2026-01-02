@@ -96,57 +96,43 @@ function normalizeItemsStrict(
   rawText: string,
 ): OfficialJournalItemDTO[] {
   const { success, data } = payload;
+  const arr = Array.isArray(data) ? data : null;
 
-  if (success === true) {
-    if (!Array.isArray(data)) {
-      throw new AppError({
-        statusCode: 502,
-        code: 'UPSTREAM_RESPONSE_SHAPE_INVALID',
-        message: 'Resposta inesperada do upstream (data não é array com success=true)',
-        data: {
-          url,
-          success,
-          dataType: typeof data,
-          snippet: String(rawText || '').slice(0, 300),
-        },
-      });
-    }
-    return normalizeItems(data);
+  const shapeError = (msg: string): never => {
+    throw new AppError({
+      statusCode: 502,
+      code: 'UPSTREAM_RESPONSE_SHAPE_INVALID',
+      message: msg,
+      data: {
+        url,
+        success,
+        dataType: typeof data,
+        snippet: String(rawText ?? '').slice(0, 300),
+      },
+    });
+  };
+
+  if (success === true && !arr) {
+    shapeError('Resposta inesperada do upstream (data não é array com success=true)');
   }
 
-  if (data == null) return [];
-  if (Array.isArray(data)) return normalizeItems(data);
+  if (!arr) {
+    return [];
+  }
 
-  throw new AppError({
-    statusCode: 502,
-    code: 'UPSTREAM_RESPONSE_SHAPE_INVALID',
-    message: 'Resposta inesperada do upstream (data inválida)',
-    data: {
-      url,
-      success,
-      dataType: typeof data,
-      snippet: String(rawText || '').slice(0, 300),
-    },
-  });
+  return normalizeItems(arr);
 }
 
-function normalizeItems(data: unknown): OfficialJournalItemDTO[] {
-  if (!Array.isArray(data)) return [];
-
-  const out: OfficialJournalItemDTO[] = [];
-  for (const raw of data) {
-    if (!isMunicipalityItem(raw)) continue;
-
-    out.push({
-      numero: raw.numero,
-      dia: raw.dia,
-      arquivo: raw.arquivo,
-      descricao: raw.desctpd,
-      codigoDia: raw.codigodia,
-    });
-  }
-
-  return out;
+function normalizeItems(data: unknown[]): OfficialJournalItemDTO[] {
+  return data
+    .filter(isMunicipalityItem)
+    .map((it) => ({
+      numero: it.numero,
+      dia: it.dia,
+      arquivo: it.arquivo,
+      descricao: it.desctpd,
+      codigoDia: it.codigodia,
+    }));
 }
 
 function isMunicipalityItem(v: unknown): v is OfficialJournalsMunicipalityDto {
