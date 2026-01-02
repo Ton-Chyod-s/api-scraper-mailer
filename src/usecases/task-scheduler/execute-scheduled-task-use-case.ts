@@ -11,7 +11,6 @@ export class ExecuteScheduledTaskUseCase {
   ) {}
 
   async execute(taskName: string): Promise<void> {
-    // Proteção contra execução duplicada: usa lock no Postgres + verificação 1x/dia
     await this.taskLogRepository.runOncePerDay(taskName, TZ, this.taskRunner);
   }
 }

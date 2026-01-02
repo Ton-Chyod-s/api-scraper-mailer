@@ -42,7 +42,6 @@ export class SendDailyEmailUseCase {
           html: `<p>Olá, ${user.name}.</p><p>Rodou às 08:00 MS.</p>`,
         });
 
-        // Só registra no banco quando o mailer confirmou envio (ou ao menos aceitação pelo SMTP).
         await this.taskLogRepo.create(taskName, user.id, new Date());
         console.log(`[Cron] E-mail enviado e log registrado para ${to} (userId=${user.id})`);
       } catch (err: unknown) {
@@ -51,8 +50,6 @@ export class SendDailyEmailUseCase {
       }
     }
 
-    // Não lança erro aqui: o agendador roda várias vezes ao dia e vai tentar novamente
-    // apenas para quem ainda não tiver log de envio no dia.
     if (errors.length > 0) {
       console.error(`[Cron] ${errors.length} usuário(s) ficaram sem e-mail nesta rodada.`);
     }

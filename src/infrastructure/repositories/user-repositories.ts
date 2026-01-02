@@ -10,6 +10,13 @@ function normalizeRole(role: unknown): UserRole {
   return role === 'ADMIN' || role === 'USER' ? (role as UserRole) : 'USER';
 }
 
+export type UserListItem = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+};
+
 export class PrismaUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     const user = await prisma.user.findUnique({ where: { email } });
