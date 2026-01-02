@@ -3,6 +3,9 @@ model TaskLog {
   taskName   String
   executedAt DateTime @default(now())
 
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([taskName])
   @@index([executedAt])
 }

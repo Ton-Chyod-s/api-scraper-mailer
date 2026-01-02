@@ -10,6 +10,8 @@ model User {
   passwordHash String
   role         Role   @default(USER)
 
+  taskLog TaskLog[]
+
   officialJournalsMunicipality OfficialJournalMunicipality[]
 
   userSources UserSource[]
