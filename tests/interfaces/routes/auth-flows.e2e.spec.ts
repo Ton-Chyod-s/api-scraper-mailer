@@ -90,6 +90,16 @@ jest.mock('@infrastructure/repositories/user-repositories', () => {
       return user;
     }
 
+    async findAll() {
+      const store = getStore();
+      return Array.from(store.usersById.values()).map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+      }));
+    }
+
     async updatePasswordHash(userId: string, passwordHash: string) {
       const store = getStore();
       const current = store.usersById.get(userId);

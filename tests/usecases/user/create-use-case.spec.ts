@@ -15,6 +15,7 @@ function makeRepoMock(): RepoMock {
     findByEmail: jest.fn(),
     findById: jest.fn(),
     create: jest.fn(),
+    findAll: jest.fn(),
     updatePasswordHash: jest.fn(),
   };
 }

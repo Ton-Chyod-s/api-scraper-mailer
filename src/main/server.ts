@@ -3,6 +3,7 @@ import './instrument';
 import { createApp } from './app';
 import { env } from '@config/env';
 import { prisma } from '@infrastructure/prisma/client';
+import { scheduleDailyTask } from './jobs/scheduler';
 
 const app = createApp();
 const port = env.PORT || 3000;
@@ -14,6 +15,10 @@ const server = app.listen(port, () => {
   if (env.NODE_ENV !== 'production') {
     console.log(`Swagger UI: ${baseUrl}/api/docs`);
     console.log(`OpenAPI: ${baseUrl}/api/openapi.yaml`);
+  }
+
+  if (env.NODE_ENV !== 'test') {
+    scheduleDailyTask();
   }
 });
 

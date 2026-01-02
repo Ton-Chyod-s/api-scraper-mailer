@@ -12,7 +12,7 @@ import { validateInput } from '@utils/official-journals/validate-input';
 import { parseJsonOrThrow } from '@utils/official-journals/parse-json';
 import { siteData } from '@utils/official-journals/site-data';
 import { buildFetchInit } from '@utils/official-journals/build-fetchInit';
-import { formatBrDateUtc, parseBrDateToUTC } from '@utils/official-journals/date-time';
+import { formatBrDateInZone, parseBrDateToUTC } from '@utils/date/date-time';
 
 const DOE_REFERER = 'https://www.diariooficial.ms.gov.br/';
 
@@ -177,7 +177,10 @@ function normalizeItems(
   };
 
   const stripMark = (v: string): string =>
-    v.replace(/<\/?mark>/gi, '').replace(/\s+/g, ' ').trim();
+    v
+      .replace(/<\/?mark>/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
 
   const out: OfficialJournalItemDTO[] = [];
 
@@ -213,7 +216,9 @@ function normalizeItems(
 
     const descricaoBase = (descricao ?? nomeArquivo ?? '').trim();
 
-    const dia = formatBrDateUtc(dataPublicacao);
+    const dia = dataPublicacao
+      ? formatBrDateInZone(new Date(dataPublicacao), 'America/Campo_Grande')
+      : '';
 
     const arquivo = toAbs(siteBase, caminhoArquivo);
 
@@ -230,8 +235,6 @@ function normalizeItems(
 
   return out;
 }
-
-
 
 if (require.main === module) {
   (async () => {

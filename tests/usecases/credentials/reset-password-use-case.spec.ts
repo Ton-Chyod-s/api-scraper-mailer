@@ -15,6 +15,7 @@ describe('ResetPasswordUseCase', () => {
       findByEmail: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
+      findAll: jest.fn(),
       updatePasswordHash: jest.fn(),
     };
 
@@ -54,6 +55,7 @@ describe('ResetPasswordUseCase', () => {
       findByEmail: jest.fn(),
       findById: jest.fn().mockResolvedValue(user),
       create: jest.fn(),
+      findAll: jest.fn(),
       updatePasswordHash: jest.fn().mockResolvedValue(undefined),
     };
 

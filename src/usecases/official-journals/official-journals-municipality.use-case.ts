@@ -124,15 +124,13 @@ function normalizeItemsStrict(
 }
 
 function normalizeItems(data: unknown[]): OfficialJournalItemDTO[] {
-  return data
-    .filter(isMunicipalityItem)
-    .map((it) => ({
-      numero: it.numero,
-      dia: it.dia,
-      arquivo: it.arquivo,
-      descricao: it.desctpd,
-      codigoDia: it.codigodia,
-    }));
+  return data.filter(isMunicipalityItem).map((it) => ({
+    numero: it.numero,
+    dia: it.dia,
+    arquivo: it.arquivo,
+    descricao: it.desctpd,
+    codigoDia: it.codigodia,
+  }));
 }
 
 function isMunicipalityItem(v: unknown): v is OfficialJournalsMunicipalityDto {
@@ -158,8 +156,6 @@ function buildUrl(input: FetchPublicationsInputDTO): string {
 
   return `${diograndeConfig.baseUrl}?${params.toString()}`;
 }
-
-
 
 if (require.main === module) {
   (async () => {

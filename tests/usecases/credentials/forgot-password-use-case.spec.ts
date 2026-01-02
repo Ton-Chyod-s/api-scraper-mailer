@@ -22,6 +22,7 @@ describe('ForgotPasswordUseCase', () => {
       findByEmail: jest.fn().mockResolvedValue(null),
       findById: jest.fn(),
       create: jest.fn(),
+      findAll: jest.fn(),
       updatePasswordHash: jest.fn(),
     };
 
@@ -59,6 +60,7 @@ describe('ForgotPasswordUseCase', () => {
       findByEmail: jest.fn().mockResolvedValue(user),
       findById: jest.fn(),
       create: jest.fn(),
+      findAll: jest.fn(),
       updatePasswordHash: jest.fn(),
     };
 

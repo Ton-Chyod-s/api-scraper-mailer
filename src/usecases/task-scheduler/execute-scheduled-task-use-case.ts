@@ -1,0 +1,17 @@
+import { TaskLogRepository } from '@domain/repositories/task-log-repository';
+
+type TaskRunner = () => Promise<void> | void;
+
+const TZ = 'America/Campo_Grande';
+
+export class ExecuteScheduledTaskUseCase {
+  constructor(
+    private readonly taskLogRepository: TaskLogRepository,
+    private readonly taskRunner: TaskRunner,
+  ) {}
+
+  async execute(taskName: string): Promise<void> {
+    // Proteção contra execução duplicada: usa lock no Postgres + verificação 1x/dia
+    await this.taskLogRepository.runOncePerDay(taskName, TZ, this.taskRunner);
+  }
+}
