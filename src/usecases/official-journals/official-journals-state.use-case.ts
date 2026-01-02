@@ -9,10 +9,10 @@ import {
 import { createTiming } from '@utils/timing';
 import { StateResponse } from '@domain/dtos/official-journals/official-journals-state.dto';
 import { validateInput } from '@utils/official-journals/validate-input';
-import { parseBrDateToUTC } from '@utils/official-journals/parse-br-date';
 import { parseJsonOrThrow } from '@utils/official-journals/parse-json';
 import { siteData } from '@utils/official-journals/site-data';
 import { buildFetchInit } from '@utils/official-journals/build-fetchInit';
+import { formatBrDateUtc, parseBrDateToUTC } from '@utils/official-journals/date-time';
 
 const DOE_REFERER = 'https://www.diariooficial.ms.gov.br/';
 
@@ -76,7 +76,6 @@ async function fetchAllPages(
     totalPages = parsed.totalDePaginas || 1;
     t.mark(`page_${page}`);
 
-    // short-circuit: se a página já tem itens mais antigos que o início do range, para de paginar
     if (startMs !== null && endMs !== null) {
       let oldest: number | null = null;
 
@@ -214,7 +213,7 @@ function normalizeItems(
 
     const descricaoBase = (descricao ?? nomeArquivo ?? '').trim();
 
-    const dia = dataPublicacao ? new Date(dataPublicacao).toLocaleDateString('pt-BR') : '';
+    const dia = formatBrDateUtc(dataPublicacao);
 
     const arquivo = toAbs(siteBase, caminhoArquivo);
 
@@ -231,6 +230,8 @@ function normalizeItems(
 
   return out;
 }
+
+
 
 if (require.main === module) {
   (async () => {

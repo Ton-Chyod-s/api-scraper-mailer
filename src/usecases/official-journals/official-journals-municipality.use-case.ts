@@ -27,7 +27,7 @@ const DIOGRANDE_REFERER = (() => {
 })();
 
 export class OfficialJournalsMunicipalityUseCase {
-  private readonly site = 'https://diogrande.campogrande.ms.gov.br/';
+  private readonly site = DIOGRANDE_REFERER;
 
   constructor(private readonly client = new DiograndeHttpClient()) {}
 
@@ -56,7 +56,7 @@ export class OfficialJournalsMunicipalityUseCase {
     if (payload.success === false) {
       t.mark('upstreamCheck');
 
-      if (Array.isArray(payload.data) && payload.data.length === 0) {
+      if (payload.data == null || (Array.isArray(payload.data) && payload.data.length === 0)) {
         const out = siteData(this.site, []);
         t.mark('buildOutput');
         t.end({ url, success: payload.success, empty: true });
@@ -79,7 +79,7 @@ export class OfficialJournalsMunicipalityUseCase {
       });
     }
 
-    const items = normalizeItems(payload.data);
+    const items = normalizeItemsStrict(payload, url, text);
     t.mark('normalize');
 
     const out = siteData(this.site, items);
@@ -88,6 +88,46 @@ export class OfficialJournalsMunicipalityUseCase {
     t.end({ url, items: items.length });
     return out;
   }
+}
+
+function normalizeItemsStrict(
+  payload: AjaxPayloadDto,
+  url: string,
+  rawText: string,
+): OfficialJournalItemDTO[] {
+  const { success, data } = payload;
+
+  if (success === true) {
+    if (!Array.isArray(data)) {
+      throw new AppError({
+        statusCode: 502,
+        code: 'UPSTREAM_RESPONSE_SHAPE_INVALID',
+        message: 'Resposta inesperada do upstream (data não é array com success=true)',
+        data: {
+          url,
+          success,
+          dataType: typeof data,
+          snippet: String(rawText || '').slice(0, 300),
+        },
+      });
+    }
+    return normalizeItems(data);
+  }
+
+  if (data == null) return [];
+  if (Array.isArray(data)) return normalizeItems(data);
+
+  throw new AppError({
+    statusCode: 502,
+    code: 'UPSTREAM_RESPONSE_SHAPE_INVALID',
+    message: 'Resposta inesperada do upstream (data inválida)',
+    data: {
+      url,
+      success,
+      dataType: typeof data,
+      snippet: String(rawText || '').slice(0, 300),
+    },
+  });
 }
 
 function normalizeItems(data: unknown): OfficialJournalItemDTO[] {

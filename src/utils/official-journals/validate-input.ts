@@ -1,8 +1,8 @@
 import { env } from '@config/env';
 import { FetchPublicationsInputDTO } from '@domain/dtos/official-journals/search-official-journals.dto';
 import { AppError } from '@utils/app-error';
-import { isBrDate } from './is-br-date';
-import { parseBrDateToUTC } from './parse-br-date';
+import { isBrDate, parseBrDateToUTC } from './date-time';
+
 
 const MAX_RANGE_DAYS = env.OFFICIAL_JOURNALS_MAX_RANGE_DAYS;
 
