@@ -7,10 +7,7 @@ import {
   SiteDataDTO,
 } from '@domain/dtos/official-journals/search-official-journals.dto';
 import { createTiming } from '@utils/timing';
-import {
-  OfficialJournalsStateItem,
-  StateResponse,
-} from '@domain/dtos/official-journals/official-journals-state.dto';
+import { StateResponse } from '@domain/dtos/official-journals/official-journals-state.dto';
 import { validateInput } from '@utils/official-journals/validate-input';
 import { parseBrDateToUTC } from '@utils/official-journals/parse-br-date';
 import { parseJsonOrThrow } from '@utils/official-journals/parse-json';
@@ -60,6 +57,7 @@ async function fetchAllPages(
 
   const start = parseBrDateToUTC(input.dataInicio);
   const end = parseBrDateToUTC(input.dataFim);
+  const startMs = start ? start.getTime() : null;
   const endMs = end ? end.getTime() + (24 * 60 * 60 * 1000 - 1) : null;
 
   const out: unknown[] = [];
@@ -78,9 +76,23 @@ async function fetchAllPages(
     totalPages = parsed.totalDePaginas || 1;
     t.mark(`page_${page}`);
 
-    if (start && endMs !== null) {
-      const lastDateMs = findOldestDateMsInPage(parsed.paginasDiario);
-      if (lastDateMs !== null && lastDateMs < start.getTime()) break;
+    // short-circuit: se a página já tem itens mais antigos que o início do range, para de paginar
+    if (startMs !== null && endMs !== null) {
+      let oldest: number | null = null;
+
+      for (const raw of parsed.paginasDiario) {
+        if (!raw || typeof raw !== 'object') continue;
+
+        const s = (raw as Record<string, unknown>).dataPublicacao;
+        if (typeof s !== 'string') continue;
+
+        const ms = new Date(s).getTime();
+        if (Number.isNaN(ms)) continue;
+
+        if (oldest === null || ms < oldest) oldest = ms;
+      }
+
+      if (oldest !== null && oldest < startMs) break;
     }
 
     page += 1;
@@ -105,12 +117,8 @@ function buildUrl(
   return `${baseUrl}?${params.toString()}`;
 }
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
 function parseStateResponse(payload: unknown, url: string): StateResponse {
-  if (!isRecord(payload)) {
+  if (!payload || typeof payload !== 'object') {
     throw new AppError({
       statusCode: 502,
       code: 'UPSTREAM_RESPONSE_SHAPE_INVALID',
@@ -119,9 +127,11 @@ function parseStateResponse(payload: unknown, url: string): StateResponse {
     });
   }
 
-  const paginaAtual = payload.paginaAtual;
-  const totalDePaginas = payload.totalDePaginas;
-  const paginasDiario = payload.paginasDiario;
+  const p = payload as Record<string, unknown>;
+
+  const paginaAtual = p.paginaAtual;
+  const totalDePaginas = p.totalDePaginas;
+  const paginasDiario = p.paginasDiario;
 
   if (
     typeof paginaAtual !== 'number' ||
@@ -141,8 +151,7 @@ function parseStateResponse(payload: unknown, url: string): StateResponse {
     });
   }
 
-  const totalDeRegistros =
-    typeof payload.totalDeRegistros === 'number' ? payload.totalDeRegistros : undefined;
+  const totalDeRegistros = typeof p.totalDeRegistros === 'number' ? p.totalDeRegistros : undefined;
 
   return { paginaAtual, totalDePaginas, totalDeRegistros, paginasDiario };
 }
@@ -155,36 +164,59 @@ function normalizeItems(
 ): OfficialJournalItemDTO[] {
   const start = parseBrDateToUTC(dataInicio);
   const end = parseBrDateToUTC(dataFim);
+  const startMs = start ? start.getTime() : null;
   const endMs = end ? end.getTime() + (24 * 60 * 60 * 1000 - 1) : null;
+
+  const toAbs = (base: string, maybeLink: string): string => {
+    const link = (maybeLink ?? '').trim();
+    if (!link) return '';
+    try {
+      return new URL(link, base).toString();
+    } catch {
+      return '';
+    }
+  };
+
+  const stripMark = (v: string): string =>
+    v.replace(/<\/?mark>/gi, '').replace(/\s+/g, ' ').trim();
 
   const out: OfficialJournalItemDTO[] = [];
 
   for (const raw of data) {
-    const item = toStateItem(raw);
-    if (!item) continue;
+    if (!raw || typeof raw !== 'object') continue;
+    const o = raw as Record<string, unknown>;
 
-    if (start && endMs !== null && item.dataPublicacao) {
-      const d = new Date(item.dataPublicacao);
-      if (!Number.isNaN(d.getTime())) {
-        const ms = d.getTime();
-        if (ms < start.getTime()) continue;
+    const dataPublicacao = typeof o.dataPublicacao === 'string' ? o.dataPublicacao : undefined;
+    const caminhoArquivo = typeof o.caminhoArquivo === 'string' ? o.caminhoArquivo : '';
+    const descricao = typeof o.descricao === 'string' ? o.descricao : undefined;
+    const nomeArquivo = typeof o.nomeArquivo === 'string' ? o.nomeArquivo : undefined;
+    const numeroRaw = o.numero;
+
+    if (startMs !== null && endMs !== null && dataPublicacao) {
+      const ms = new Date(dataPublicacao).getTime();
+      if (!Number.isNaN(ms)) {
+        if (ms < startMs) continue;
         if (ms > endMs) continue;
       }
     }
 
-    const numero = item.numero !== undefined ? String(item.numero) : '';
-    const descricaoBase = (item.descricao ?? item.nomeArquivo ?? '').trim();
-    const dia = item.dataPublicacao
-      ? new Date(item.dataPublicacao).toLocaleDateString('pt-BR')
-      : '';
+    let highlight = '';
+    const hi = o.hiHighlight;
+    if (hi && typeof hi === 'object') {
+      const texto = (hi as Record<string, unknown>).texto;
+      if (Array.isArray(texto)) {
+        highlight = stripMark(texto.filter((x): x is string => typeof x === 'string').join(' '));
+      }
+    }
 
-    const arquivo = toAbsoluteLink(siteBase, item.caminhoArquivo ?? '');
+    const numero =
+      typeof numeroRaw === 'string' || typeof numeroRaw === 'number' ? String(numeroRaw) : '';
 
-    const highlight = Array.isArray(item.hiHighlight?.texto)
-      ? sanitizeHighlight(
-          item.hiHighlight.texto.filter((x): x is string => typeof x === 'string').join(' '),
-        )
-      : '';
+    const descricaoBase = (descricao ?? nomeArquivo ?? '').trim();
+
+    const dia = dataPublicacao ? new Date(dataPublicacao).toLocaleDateString('pt-BR') : '';
+
+    const arquivo = toAbs(siteBase, caminhoArquivo);
 
     out.push({
       numero: numero || dia || 'N/D',
@@ -198,59 +230,6 @@ function normalizeItems(
   }
 
   return out;
-}
-
-function toStateItem(v: unknown): OfficialJournalsStateItem | null {
-  if (!isRecord(v)) return null;
-
-  const hi = v.hiHighlight;
-  const highlightObj = isRecord(hi) ? hi : null;
-  const texto = highlightObj ? highlightObj.texto : undefined;
-
-  return {
-    numero: typeof v.numero === 'string' || typeof v.numero === 'number' ? v.numero : undefined,
-    descricao: typeof v.descricao === 'string' ? v.descricao : undefined,
-    pagina: typeof v.pagina === 'number' ? v.pagina : undefined,
-    caminhoArquivo: typeof v.caminhoArquivo === 'string' ? v.caminhoArquivo : undefined,
-    nomeArquivo: typeof v.nomeArquivo === 'string' ? v.nomeArquivo : undefined,
-    dataPublicacao: typeof v.dataPublicacao === 'string' ? v.dataPublicacao : undefined,
-    hiHighlight:
-      highlightObj && Array.isArray(texto)
-        ? { texto: texto.filter((x): x is string => typeof x === 'string') }
-        : null,
-  };
-}
-
-function sanitizeHighlight(v: string): string {
-  return v
-    .replace(/<\/?mark>/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function toAbsoluteLink(baseUrl: string, maybeLink: string): string {
-  const link = (maybeLink ?? '').trim();
-  if (!link) return '';
-  if (/^https?:\/\//i.test(link)) return link;
-  if (link.startsWith('/')) return `${baseUrl}${link}`;
-  return `${baseUrl}/${link}`;
-}
-
-function findOldestDateMsInPage(pageItems: unknown[]): number | null {
-  let oldest: number | null = null;
-
-  for (const raw of pageItems) {
-    const item = toStateItem(raw);
-    if (!item?.dataPublicacao) continue;
-
-    const d = new Date(item.dataPublicacao);
-    if (Number.isNaN(d.getTime())) continue;
-
-    const ms = d.getTime();
-    if (oldest === null || ms < oldest) oldest = ms;
-  }
-
-  return oldest;
 }
 
 if (require.main === module) {
