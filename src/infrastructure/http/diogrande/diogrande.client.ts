@@ -1,5 +1,5 @@
 import { AppError } from '@utils/app-error';
-import { fetchWithRetry, FetchWithRetryOptions } from '@utils/fetch-with-retry';
+import { fetchWithRetry, FetchWithRetryOptions } from '@utils/request/fetch-with-retry';
 import { Agent } from 'undici';
 import { diograndeConfig } from './diogrande.config';
 import { createDiograndeDispatcher, findTlsCode } from './diogrande.tls';

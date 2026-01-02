@@ -1,5 +1,5 @@
 import { AppError } from '@utils/app-error';
-import { fetchWithRetry } from '@utils/fetch-with-retry';
+import { fetchWithRetry } from '@utils/request/fetch-with-retry';
 
 jest.mock('undici', () => {
   const actual = jest.requireActual('undici');

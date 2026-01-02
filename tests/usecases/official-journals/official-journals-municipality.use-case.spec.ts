@@ -1,4 +1,4 @@
-import type { FetchWithRetryOptions } from '@utils/fetch-with-retry';
+import type { FetchWithRetryOptions } from '@utils/request/fetch-with-retry';
 import type { FetchPublicationsInputDTO } from '@domain/dtos/official-journals/search-official-journals.dto';
 import { OfficialJournalsMunicipalityUseCase } from '@usecases/official-journals/official-journals-municipality.use-case';
 import { DiograndeHttpClient } from '@infrastructure/http/diogrande/diogrande.client';

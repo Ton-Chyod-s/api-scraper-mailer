@@ -1,6 +1,6 @@
 import { AppError } from '@utils/app-error';
 
-jest.mock('@utils/fetch-with-retry', () => ({
+jest.mock('@utils/request/fetch-with-retry', () => ({
   fetchWithRetry: jest.fn(),
 }));
 
@@ -19,7 +19,7 @@ jest.mock('@infrastructure/http/diogrande/diogrande.config', () => ({
   },
 }));
 
-import { fetchWithRetry } from '@utils/fetch-with-retry';
+import { fetchWithRetry } from '@utils/request/fetch-with-retry';
 import { diograndeConfig } from '@infrastructure/http/diogrande/diogrande.config';
 import {
   createDiograndeDispatcher,
