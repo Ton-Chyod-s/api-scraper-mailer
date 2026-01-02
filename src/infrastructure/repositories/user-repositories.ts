@@ -6,6 +6,13 @@ function normalizeRole(role: unknown): UserRole {
   return role === 'ADMIN' || role === 'USER' ? (role as UserRole) : 'USER';
 }
 
+export type UserListItem = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+};
+
 export class PrismaUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     const user = await prisma.user.findUnique({ where: { email } });
@@ -55,6 +62,19 @@ export class PrismaUserRepository implements IUserRepository {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
+  }
+
+  async findAll(): Promise<UserListItem[]> {
+    const users = await prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true },
+    });
+
+    return users.map((user: (typeof users)[number]) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: normalizeRole(user.role),
+    }));
   }
 
   async updatePasswordHash(userId: string, passwordHash: string): Promise<void> {
