@@ -173,6 +173,8 @@ function buildUrl(input: FetchPublicationsInputDTO): string {
   return `${diograndeConfig.baseUrl}?${params.toString()}`;
 }
 
+
+
 if (require.main === module) {
   (async () => {
     const client = new DiograndeHttpClient();
