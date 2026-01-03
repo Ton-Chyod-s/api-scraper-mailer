@@ -28,9 +28,10 @@ export class PrepareSendEmailUseCase {
         delayMs: 150,
       });
 
-
-
       
+
+
+
       console.log("User:", user.email, "Result:", resultOjM);
 
     }

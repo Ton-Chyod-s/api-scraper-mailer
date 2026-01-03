@@ -1,6 +1,6 @@
 import { prisma } from '../prisma/client';
 import { env } from '@config/env';
-import { TaskLogRepository } from '@domain/repositories/task-log-repository';
+import { ITaskLogRepository } from '@domain/repositories/task-log-repository';
 import { isSameZonedDay } from '@utils/date/date-time';
 import { Prisma } from '@prisma/client';
 
@@ -16,7 +16,7 @@ function fnv1a64ToBigInt(input: string): bigint {
   return BigInt.asIntN(64, hash);
 }
 
-export class PrismaTaskLogRepository implements TaskLogRepository {
+export class PrismaITaskLogRepository implements ITaskLogRepository {
   private cachedSystemUserId: string | null = null;
 
   private async getSystemUserId(): Promise<string> {

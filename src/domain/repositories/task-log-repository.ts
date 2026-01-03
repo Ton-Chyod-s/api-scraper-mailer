@@ -1,4 +1,4 @@
-export interface TaskLogRepository {
+export interface ITaskLogRepository {
   getLastExecution(taskName: string, userId?: string): Promise<Date | null>;
 
   create(taskName: string, userId?: string, executedAt?: Date): Promise<void>;

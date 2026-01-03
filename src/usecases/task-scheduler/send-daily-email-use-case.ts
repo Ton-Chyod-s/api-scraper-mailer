@@ -1,6 +1,6 @@
 import { IMailerService } from '@domain/services/mailer-service';
 import type { IUserRepository } from '@domain/repositories/user-repository';
-import type { TaskLogRepository } from '@domain/repositories/task-log-repository';
+import type { ITaskLogRepository } from '@domain/repositories/task-log-repository';
 import { isSameZonedDay } from '@utils/date/date-time';
 
 const TZ = 'America/Campo_Grande';
@@ -9,7 +9,7 @@ export class SendDailyEmailUseCase {
   constructor(
     private readonly mailer: IMailerService,
     private readonly userRepo: IUserRepository,
-    private readonly taskLogRepo: TaskLogRepository,
+    private readonly taskLogRepo: ITaskLogRepository,
   ) {}
 
   async execute(taskName: string): Promise<void> {

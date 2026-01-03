@@ -2,7 +2,7 @@ import { env } from '@config/env';
 import { NodemailerService } from '@infrastructure/services/node-mailer-service';
 import { ConsoleMailerService } from '@infrastructure/services/console-mailer-service';
 import { PrismaUserRepository } from '@infrastructure/repositories/user-repositories';
-import { PrismaTaskLogRepository } from '@infrastructure/repositories/task-log-repository';
+import { PrismaITaskLogRepository } from '@infrastructure/repositories/task-log-repository';
 import { SendDailyEmailUseCase } from '@usecases/task-scheduler/send-daily-email-use-case';
 
 export function makeSendDailyEmailUseCase() {
@@ -10,7 +10,7 @@ export function makeSendDailyEmailUseCase() {
   const mailer = hasSmtp ? new NodemailerService() : new ConsoleMailerService();
 
   const userRepo = new PrismaUserRepository();
-  const taskLogRepo = new PrismaTaskLogRepository();
+  const taskLogRepo = new PrismaITaskLogRepository();
 
   return new SendDailyEmailUseCase(mailer, userRepo, taskLogRepo);
 }
