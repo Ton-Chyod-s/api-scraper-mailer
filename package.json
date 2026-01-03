@@ -23,7 +23,10 @@
     "docs": "docsify serve docs",
     "db:seed": "prisma db seed",
     "check": "npm run lint && npm run format:check && npm run openapi:validate && npm test",
-    "ts": "node -r ts-node/register -r tsconfig-paths/register"
+    "ts": "node -r ts-node/register -r tsconfig-paths/register",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^12.1.0",
