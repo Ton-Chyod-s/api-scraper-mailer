@@ -2,20 +2,13 @@ import { prisma } from '../prisma/client';
 import {
   IUserRepository,
   CreateUserData,
-  type UserListItem,
+  UserListItem,
 } from '@domain/repositories/user-repository';
 import { User, type UserRole } from '@domain/entities/user';
 
 function normalizeRole(role: unknown): UserRole {
   return role === 'ADMIN' || role === 'USER' ? (role as UserRole) : 'USER';
 }
-
-export type UserListItem = {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-};
 
 export class PrismaUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
