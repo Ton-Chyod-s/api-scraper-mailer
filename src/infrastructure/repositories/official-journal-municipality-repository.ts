@@ -3,8 +3,9 @@ import { randomUUID } from 'node:crypto';
 import type { OfficialJournalMunicipality } from '@prisma/client';
 import { parseBrDateToUTC } from '@utils/date/date-time';
 import { CreateOfficialJournalMunicipalityInput } from '@domain/dtos/official-journals/official-journals-municipality.dto';
+import { IOfficialJournalMunicipalityRepository } from '@domain/repositories/official-journal-municipality-repository';
 
-export class PrismaOfficialJournalMunicipalityRepository {
+export class PrismaOfficialJournalMunicipalityRepository implements IOfficialJournalMunicipalityRepository {
   async create(
     input: CreateOfficialJournalMunicipalityInput,
   ): Promise<OfficialJournalMunicipality> {
