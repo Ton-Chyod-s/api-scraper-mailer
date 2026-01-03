@@ -2,18 +2,7 @@ import { prisma } from '../prisma/client';
 import { randomUUID } from 'node:crypto';
 import type { OfficialJournalMunicipality } from '@prisma/client';
 import { parseBrDateToUTC } from '@utils/date/date-time';
-
-export type CreateOfficialJournalMunicipalityInput = {
-  id?: string;
-  user_id: string;
-  numero: string;
-  dia: Date | string;
-  arquivo: string;
-  descricao?: string | null;
-  codigo_dia: string;
-  source_site?: string;
-  fetched_at?: Date;
-};
+import { CreateOfficialJournalMunicipalityInput } from '@domain/dtos/official-journals/official-journals-municipality.dto';
 
 export class PrismaOfficialJournalMunicipalityRepository {
   async create(
