@@ -28,15 +28,30 @@ export class PrismaOfficialJournalMunicipalityRepository implements IOfficialJou
 
     const result = await prisma.officialJournalMunicipality.createMany({
       data,
-      skipDuplicates: true, // depende do @@unique no schema
+      skipDuplicates: true,
     });
 
     return result.count;
   }
 
-  async findAllByUserId(userId: string): Promise<OfficialJournalMunicipality[]> {
+  async findAllByUserIdInRange(
+    userId: string,
+    start: Date,
+    end: Date,
+  ): Promise<OfficialJournalMunicipality[]> {
+    const startDay = new Date(
+      Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), 0, 0, 0, 0),
+    );
+
+    const endDay = new Date(
+      Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate(), 23, 59, 59, 999),
+    );
+
     return prisma.officialJournalMunicipality.findMany({
-      where: { userId },
+      where: {
+        userId,
+        dia: { gte: startDay, lte: endDay },
+      },
       orderBy: [{ dia: 'desc' }, { fetchedAt: 'desc' }],
     });
   }

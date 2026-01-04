@@ -3,6 +3,10 @@ import type { CreateOfficialJournalMunicipalityInput } from '@domain/dtos/offici
 
 export interface IOfficialJournalMunicipalityRepository {
   createMany(inputs: CreateOfficialJournalMunicipalityInput[]): Promise<number>;
-  findAllByUserId(userId: string): Promise<OfficialJournalMunicipality[]>;
+  findAllByUserIdInRange(
+    userId: string,
+    start: Date,
+    end: Date,
+  ): Promise<OfficialJournalMunicipality[]>;
   existsForUserOnDay(userId: string, day: Date): Promise<boolean>;
 }

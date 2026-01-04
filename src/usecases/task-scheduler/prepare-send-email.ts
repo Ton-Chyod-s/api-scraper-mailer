@@ -32,6 +32,18 @@ export class PrepareSendEmailUseCase {
       return;
     }
 
+    const anoVigente = diaAlvoStr.split('/')[2];
+    const inicioAnoStr = `01/01/${anoVigente}`;
+    const fimAnoStr = `31/12/${anoVigente}`;
+
+    const inicioAnoDate = parseBrDateToUTC(inicioAnoStr);
+    const fimAnoDate = parseBrDateToUTC(fimAnoStr);
+
+    if (!inicioAnoDate || !fimAnoDate) {
+      console.log('Intervalo do ano inválido:', { inicioAnoStr, fimAnoStr });
+      return;
+    }
+
     for (const user of users) {
       try {
         const jaTemNoBanco = await this.officialJournalMunicipalityRepository.existsForUserOnDay(
@@ -76,8 +88,14 @@ export class PrepareSendEmailUseCase {
           );
         }
 
-        const historico = await this.officialJournalMunicipalityRepository.findAllByUserId(user.id);
-        console.log('User:', user.email, 'Total no banco:', historico.length);
+        const historicoAno =
+          await this.officialJournalMunicipalityRepository.findAllByUserIdInRange(
+            user.id,
+            inicioAnoDate,
+            fimAnoDate,
+          );
+
+        console.log('User:', user.email, 'Total no banco (ano vigente):', historicoAno.length);
       } catch (e) {
         console.error('Erro ao processar user:', user.email, e);
       }
