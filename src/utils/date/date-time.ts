@@ -69,7 +69,7 @@ export function isSameZonedDay(a: Date, b: Date, timeZone: string): boolean {
 }
 
 export function parseIsoDateToUTC(v: string): Date {
-  const [yyyy, mm, dd] = v.split("-").map(Number);
+  const [yyyy, mm, dd] = v.split('-').map(Number);
   if (!yyyy || !mm || !dd) throw new Error(`Data ISO inválida: ${v}`);
   return new Date(Date.UTC(yyyy, mm - 1, dd));
 }

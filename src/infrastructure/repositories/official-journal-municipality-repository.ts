@@ -11,9 +11,7 @@ export class PrismaOfficialJournalMunicipalityRepository implements IOfficialJou
   ): Promise<OfficialJournalMunicipality> {
     const dia = typeof input.dia === 'string' ? parseBrDateToUTC(input.dia) : input.dia;
 
-    if (!dia) {
-      throw new Error(`Data inválida: ${input.dia}`);
-    }
+    if (!dia) throw new Error(`Data inválida: ${input.dia}`);
 
     return prisma.officialJournalMunicipality.create({
       data: {
@@ -27,6 +25,41 @@ export class PrismaOfficialJournalMunicipalityRepository implements IOfficialJou
         sourceSite: input.source_site ?? 'diogrande',
         fetchedAt: input.fetched_at ?? new Date(),
       },
+    });
+  }
+
+  async createMany(inputs: CreateOfficialJournalMunicipalityInput[]): Promise<number> {
+    if (inputs.length === 0) return 0;
+
+    const data = inputs.map((input) => {
+      const dia = typeof input.dia === 'string' ? parseBrDateToUTC(input.dia) : input.dia;
+      if (!dia) throw new Error(`Data inválida: ${input.dia}`);
+
+      return {
+        id: input.id ?? randomUUID(),
+        userId: input.user_id,
+        numero: input.numero,
+        dia,
+        arquivo: input.arquivo,
+        descricao: input.descricao ?? null,
+        codigoDia: input.codigo_dia,
+        sourceSite: input.source_site ?? 'diogrande',
+        fetchedAt: input.fetched_at ?? new Date(),
+      };
+    });
+
+    const result = await prisma.officialJournalMunicipality.createMany({
+      data,
+      skipDuplicates: true, // depende do @@unique no schema
+    });
+
+    return result.count;
+  }
+
+  async findAllByUserId(userId: string): Promise<OfficialJournalMunicipality[]> {
+    return prisma.officialJournalMunicipality.findMany({
+      where: { userId },
+      orderBy: [{ dia: 'desc' }, { fetchedAt: 'desc' }],
     });
   }
 }
