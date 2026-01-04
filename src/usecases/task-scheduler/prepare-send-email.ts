@@ -6,6 +6,34 @@ import { PrismaUserRepository } from '@infrastructure/repositories/user-reposito
 import { OfficialJournalsMunicipalityUseCase } from '@usecases/official-journals/official-journals-municipality.use-case';
 import { OfficialJournalsStateUseCase } from '@usecases/official-journals/official-journals-state.use-case';
 import { parseBrDateToUTC, parseIsoDateToUTC } from '@utils/date/date-time';
+import type { OfficialJournalMunicipality } from '@prisma/client';
+
+type UserListItem = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+type FetchedDiaryItem = {
+  numero: string;
+  dia: Date;
+  arquivo: string;
+  descricao: string | null;
+  codigoDia: string;
+};
+
+type PerUserResult = {
+  user: UserListItem;
+  fetched: FetchedDiaryItem[];
+  inserted: number;
+  fromDbYear: OfficialJournalMunicipality[];
+};
+
+type PrepareResult = {
+  diaAlvoStr: string;
+  anoVigente: string;
+  results: PerUserResult[];
+};
 
 export class PrepareSendEmailUseCase {
   constructor(
@@ -15,11 +43,11 @@ export class PrepareSendEmailUseCase {
     private readonly officialJournalMunicipalityRepository: IOfficialJournalMunicipalityRepository,
   ) {}
 
-  async execute(): Promise<void> {
-    const users = await this.userRepository.findAll();
+  async execute(): Promise<PrepareResult> {
+    const users = (await this.userRepository.findAll()) as UserListItem[];
     if (users.length === 0) {
       console.log('Nenhum usuário encontrado para enviar email.');
-      return;
+      return { diaAlvoStr: '', anoVigente: '', results: [] };
     }
 
     const diaAlvoStr = new Date().toLocaleDateString('pt-BR', {
@@ -29,7 +57,7 @@ export class PrepareSendEmailUseCase {
     const diaAlvoDate = parseBrDateToUTC(diaAlvoStr);
     if (!diaAlvoDate) {
       console.log('Dia alvo inválido:', diaAlvoStr);
-      return;
+      return { diaAlvoStr, anoVigente: '', results: [] };
     }
 
     const anoVigente = diaAlvoStr.split('/')[2];
@@ -41,11 +69,36 @@ export class PrepareSendEmailUseCase {
 
     if (!inicioAnoDate || !fimAnoDate) {
       console.log('Intervalo do ano inválido:', { inicioAnoStr, fimAnoStr });
-      return;
+      return { diaAlvoStr, anoVigente, results: [] };
     }
+
+    const results = await this.dateOfficialJournalMunicipality(
+      users,
+      diaAlvoStr,
+      diaAlvoDate,
+      inicioAnoDate,
+      fimAnoDate,
+    );
+
+    console.log('Processamento concluído para o dia:', results);
+
+    return { diaAlvoStr, anoVigente, results };
+  }
+
+  private async dateOfficialJournalMunicipality(
+    users: UserListItem[],
+    diaAlvoStr: string,
+    diaAlvoDate: Date,
+    inicioAnoDate: Date,
+    fimAnoDate: Date,
+  ): Promise<PerUserResult[]> {
+    const out: PerUserResult[] = [];
 
     for (const user of users) {
       try {
+        let fetched: FetchedDiaryItem[] = [];
+        let inserted = 0;
+
         const jaTemNoBanco = await this.officialJournalMunicipalityRepository.existsForUserOnDay(
           user.id,
           diaAlvoDate,
@@ -61,19 +114,29 @@ export class PrepareSendEmailUseCase {
           });
 
           const conteudos = resultOjM?.conteudos ?? [];
+
           if (conteudos.length > 0) {
-            const rows = conteudos.map((item) => ({
-              user_id: user.id,
+            fetched = conteudos.map((item) => ({
               numero: item.numero,
               dia: parseIsoDateToUTC(item.dia),
               arquivo: item.arquivo,
               descricao: item.descricao ?? null,
+              codigoDia: item.codigoDia,
+            }));
+
+            const rows = fetched.map((item) => ({
+              user_id: user.id,
+              numero: item.numero,
+              dia: item.dia,
+              arquivo: item.arquivo,
+              descricao: item.descricao,
               codigo_dia: item.codigoDia,
               source_site: 'diogrande',
               fetched_at: new Date(),
             }));
 
-            const inserted = await this.officialJournalMunicipalityRepository.createMany(rows);
+            inserted = await this.officialJournalMunicipalityRepository.createMany(rows);
+
             console.log('User:', user.email, 'Inseridos novos:', inserted, 'Dia:', diaAlvoStr);
           } else {
             console.log('User:', user.email, 'Sem conteúdos no dia', diaAlvoStr);
@@ -88,18 +151,20 @@ export class PrepareSendEmailUseCase {
           );
         }
 
-        const historicoAno =
-          await this.officialJournalMunicipalityRepository.findAllByUserIdInRange(
-            user.id,
-            inicioAnoDate,
-            fimAnoDate,
-          );
+        const fromDbYear = await this.officialJournalMunicipalityRepository.findAllByUserIdInRange(
+          user.id,
+          inicioAnoDate,
+          fimAnoDate,
+        );
 
-        console.log('User:', user.email, 'Total no banco (ano vigente):', historicoAno.length);
+        out.push({ user, fetched, inserted, fromDbYear });
       } catch (e) {
         console.error('Erro ao processar user:', user.email, e);
+        out.push({ user, fetched: [], inserted: 0, fromDbYear: [] });
       }
     }
+
+    return out;
   }
 }
 
