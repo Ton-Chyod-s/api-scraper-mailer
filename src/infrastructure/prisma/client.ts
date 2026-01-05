@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { env } from '@config/env';
 
+const prismaQueryLog = process.env.PRISMA_QUERY_LOG === 'true';
+
 if (!env.DATABASE_URL) {
   throw new Error('DATABASE_URL não definida');
 }
@@ -14,8 +16,13 @@ const adapter = new PrismaPg({
 const isDev = env.NODE_ENV === 'development';
 const isTest = env.NODE_ENV === 'test';
 
+
 export const prisma = new PrismaClient({
   adapter,
-  log: isTest ? [] : isDev ? ['query', 'warn', 'error'] : ['error'],
+  log: isTest
+    ? []
+    : isDev
+      ? (prismaQueryLog ? ['query', 'warn', 'error'] : ['warn', 'error'])
+      : ['error'],
   errorFormat: isDev ? 'pretty' : 'minimal',
 });
