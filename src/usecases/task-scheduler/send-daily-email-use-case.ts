@@ -2,6 +2,7 @@ import { IMailerService } from '@domain/services/mailer-service';
 import type { IUserRepository } from '@domain/repositories/user-repository';
 import type { ITaskLogRepository } from '@domain/repositories/task-log-repository';
 import { isSameZonedDay } from '@utils/date/date-time';
+import { PrepareSendEmailUseCase } from '@usecases/prepare-send-email/prepare-send-email.use-case';
 
 const TZ = 'America/Campo_Grande';
 
@@ -10,6 +11,7 @@ export class SendDailyEmailUseCase {
     private readonly mailer: IMailerService,
     private readonly userRepo: IUserRepository,
     private readonly taskLogRepo: ITaskLogRepository,
+    private readonly prepareSendEmailUseCase: PrepareSendEmailUseCase,
   ) {}
 
   async execute(taskName: string): Promise<void> {
@@ -21,37 +23,67 @@ export class SendDailyEmailUseCase {
       return;
     }
 
+    const eligibleUserIds = new Set<string>();
     const errors: Array<{ userId: string; email: string; err: unknown }> = [];
 
     for (const user of users) {
+      const to = String(user.email ?? '').trim();
+      if (!to) {
+        errors.push({
+          userId: user.id,
+          email: String(user.email ?? ''),
+          err: new Error('Empty email'),
+        });
+        continue;
+      }
+
+      const lastExecutedAt = await this.taskLogRepo.getLastExecution(taskName, user.id);
+      if (!lastExecutedAt || !isSameZonedDay(lastExecutedAt, now, TZ)) {
+        eligibleUserIds.add(user.id);
+      }
+    }
+
+    if (eligibleUserIds.size === 0) {
+      console.log('[Cron] Todos os usuários já receberam hoje. Nada para fazer.');
+      return;
+    }
+
+    const result = await this.prepareSendEmailUseCase.execute();
+    const emails = result.emails ?? [];
+
+    for (const payload of emails) {
+      const userId = payload.user.id;
+      if (!eligibleUserIds.has(userId)) continue;
+
+      const to = String(payload.user.email ?? '').trim();
+      if (!to) {
+        errors.push({
+          userId,
+          email: String(payload.user.email ?? ''),
+          err: new Error('Empty email'),
+        });
+        continue;
+      }
+
       try {
-        const to = String(user.email ?? '').trim();
-        if (!to) {
-          throw new Error('E-mail do usuário vazio');
-        }
+        console.log(`[Cron] Enviando e-mail para ${to} (userId=${userId})`);
 
-        const lastExecutedAt = await this.taskLogRepo.getLastExecution(taskName, user.id);
-        if (lastExecutedAt && isSameZonedDay(lastExecutedAt, now, TZ)) {
-          continue;
-        }
-
-        console.log(`[Cron] Enviando e-mail para ${to} (userId=${user.id})`);
         await this.mailer.sendMail({
           to,
           subject: 'Minha tarefa diária',
-          html: `<p>Olá, ${user.name}.</p><p>Rodou às 08:00 MS.</p>`,
+          html: payload.html,
         });
 
-        await this.taskLogRepo.create(taskName, user.id, new Date());
-        console.log(`[Cron] E-mail enviado e log registrado para ${to} (userId=${user.id})`);
+        await this.taskLogRepo.create(taskName, userId, now);
+        console.log(`[Cron] E-mail enviado e log registrado para ${to} (userId=${userId})`);
       } catch (err: unknown) {
-        errors.push({ userId: user.id, email: user.email, err });
-        console.error(`[Cron] Falha ao enviar e-mail para ${user.email} (userId=${user.id})`, err);
+        errors.push({ userId, email: to, err });
+        console.error(`[Cron] Falha ao enviar e-mail para ${to} (userId=${userId})`, err);
       }
     }
 
     if (errors.length > 0) {
-      console.error(`[Cron] ${errors.length} usuário(s) ficaram sem e-mail nesta rodada.`);
+      console.error(`[Cron] ${errors.length} erro(s) nesta rodada.`);
     }
   }
 }

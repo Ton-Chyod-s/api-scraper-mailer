@@ -44,3 +44,28 @@ export type BuildOfficialJournalContext =
       anoVigente: string;
       reason: string;
     };
+
+export type PerUserEmailPayload = {
+  user: UserListItem;
+  diaAlvoStr: string;
+  anoVigente: string;
+  municipal: {
+    fetched: FetchedDiaryItem[];
+    inserted: number;
+    fromDbYear: OfficialJournalMunicipality[];
+  };
+  estadual: {
+    fetched: FetchedDiaryItem[];
+  };
+  html: string;
+};
+
+export type BuildContextResult =
+  | (BuildOfficialJournalContext & { ok: true })
+  | { ok: false; reason: string; users: UserListItem[]; diaAlvoStr: string; anoVigente: string };
+
+export type MunicipalityFetchResult = {
+  fetched: FetchedDiaryItem[];
+  inserted: number;
+  fromDbYear: OfficialJournalMunicipality[];
+};
