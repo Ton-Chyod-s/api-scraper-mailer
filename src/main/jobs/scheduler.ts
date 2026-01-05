@@ -32,7 +32,7 @@ export function scheduleDailyTask(): void {
   if (isScheduled) return;
   isScheduled = true;
 
-  cron.schedule('0 */15 8-23 * * *', async () => runTaskSafely('a cada 15min (08:00-23:00 MS)'), {
+  cron.schedule('0 */15 8-17 * * *', async () => runTaskSafely('a cada 15min (08:00-17:00 MS)'), {
     timezone: timeZone,
   });
 
