@@ -3,7 +3,7 @@ import { RegisterRequestDTO } from '@domain/dtos/user/register-request-dto';
 
 export type CreateUserData = Omit<RegisterRequestDTO, 'password'> & { passwordHash: string };
 
-export type UserListItem = {
+export type UserListItemRepository = {
   id: string;
   name: string;
   email: string;
@@ -15,7 +15,7 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   create(data: CreateUserData): Promise<User>;
 
-  findAll(): Promise<UserListItem[]>;
+  findAll(): Promise<UserListItemRepository[]>;
 
   updatePasswordHash(userId: string, passwordHash: string): Promise<void>;
 }

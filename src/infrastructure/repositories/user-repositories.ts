@@ -2,7 +2,7 @@ import { prisma } from '../prisma/client';
 import {
   IUserRepository,
   CreateUserData,
-  UserListItem,
+  UserListItemRepository,
 } from '@domain/repositories/user-repository';
 import { User, type UserRole } from '@domain/entities/user';
 
@@ -61,7 +61,7 @@ export class PrismaUserRepository implements IUserRepository {
     });
   }
 
-  async findAll(): Promise<UserListItem[]> {
+  async findAll(): Promise<UserListItemRepository[]> {
     const users = await prisma.user.findMany({
       select: { id: true, name: true, email: true, role: true },
     });
