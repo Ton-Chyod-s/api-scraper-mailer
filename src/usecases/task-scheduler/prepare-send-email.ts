@@ -26,7 +26,7 @@ export class PrepareSendEmailUseCase {
 
     const { users, diaAlvoStr, diaAlvoDate, inicioAnoDate, fimAnoDate, anoVigente } = ctx;
 
-    const results = await this.dateOfficialJournalMunicipality(
+    const resultsOjm = await this.fetchOfficialJournalMunicipality(
       users,
       diaAlvoStr,
       diaAlvoDate,
@@ -34,7 +34,15 @@ export class PrepareSendEmailUseCase {
       fimAnoDate,
     );
 
-    return { diaAlvoStr, anoVigente, results };
+    const resultsOjs = await this.fetchOfficialJournalStateOnlyApiYear(
+      users,
+      anoVigente,
+    );
+
+
+    console.log(resultsOjm, resultsOjs)
+
+    return { diaAlvoStr, anoVigente, results: resultsOjm };
 
 
     
@@ -89,7 +97,7 @@ export class PrepareSendEmailUseCase {
     };
   }
 
-  private async dateOfficialJournalMunicipality(
+  private async fetchOfficialJournalMunicipality(
     users: UserListItem[],
     diaAlvoStr: string,
     diaAlvoDate: Date,
@@ -170,6 +178,63 @@ export class PrepareSendEmailUseCase {
 
     return out;
   }
+
+  private isNotNull<T>(v: T | null): v is T {
+    return v !== null;
+  }
+
+  private async fetchOfficialJournalStateOnlyApiYear(
+    users: UserListItem[],
+    anoAlvo: string,
+  ): Promise<PerUserResult[]> {
+    const out: PerUserResult[] = [];
+
+    const dataInicio = `01/01/${anoAlvo}`;
+    const dataFim = `31/12/${anoAlvo}`;
+
+    for (const user of users) {
+      try {
+        const resultOjS = await this.officialJournalsStateUseCase.execute({
+          nome: user.name,
+          dataInicio,
+          dataFim,
+          retries: 2,
+          delayMs: 150,
+        });
+
+        const conteudos = resultOjS?.conteudos ?? [];
+
+        const fetched: FetchedDiaryItem[] = conteudos
+          .map((item): FetchedDiaryItem | null => {
+            const dia = parseBrDateToUTC(item.dia);
+            if (!dia) return null;
+
+            return {
+              numero: item.numero,
+              dia,
+              arquivo: item.arquivo,
+              descricao: item.descricao ?? null,
+              codigoDia: item.codigoDia ?? '',
+            };
+          })
+          .filter(this.isNotNull);
+
+        out.push({
+          user,
+          fetched,
+          inserted: 0,
+          fromDbYear: [],
+        });
+      } catch (e) {
+        console.error('Erro ao processar STATE user:', user.email, e);
+        out.push({ user, fetched: [], inserted: 0, fromDbYear: [] });
+      }
+    }
+
+    return out;
+  }
+
+
 
 }
 
