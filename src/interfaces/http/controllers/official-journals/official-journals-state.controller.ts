@@ -1,79 +1,106 @@
-import { FetchPublicationsInputDTO } from '@domain/dtos/official-journals/search-official-journals.dto';
+import { FetchPublicationsInputDTO, SiteDataDTO } from '@domain/dtos/official-journals/search-official-journals.dto';
 import { OfficialJournalsStateUseCase } from '@usecases/official-journals/official-journals-state.use-case';
 import { z, ZodError } from 'zod';
 import { errorMessages, httpStatusCodes } from '@utils/httpConstants';
+import { AppError } from '@utils/app-error';
+import { isBrDate, parseBrDateToUTC, parseIsoDateToUTC } from '@utils/date/date-time';
 
 const YYYY_MM_DD = /^\d{4}-\d{2}-\d{2}$/;
 
-const validationDTO = z
+function formatZodError(err: ZodError) {
+  return err.issues.map((i) => `${i.path.join('.') || 'root'} - ${i.message}`).join('; ');
+}
+
+const dateField = (fieldName: string) =>
+  z
+    .string()
+    .trim()
+    .min(1, `${fieldName} is required`)
+    .refine((s) => isBrDate(s) || YYYY_MM_DD.test(s), `${fieldName} must be DD/MM/YYYY or YYYY-MM-DD`)
+    .transform((s) => {
+      const v = s.trim();
+      if (isBrDate(v)) return v;
+
+      const d = parseIsoDateToUTC(v);
+      const dd = String(d.getUTCDate()).padStart(2, '0');
+      const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const yyyy = d.getUTCFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    });
+
+const validationDTO: z.ZodType<FetchPublicationsInputDTO> = z
   .object({
-    name: z
-      .string()
-      .trim()
-      .min(2, 'name must have at least 2 characters')
-      .max(200, 'name is too long'),
-    dataInicio: z
-      .string()
-      .trim()
-      .regex(YYYY_MM_DD, 'dataInicio must be in YYYY-MM-DD format')
-      .optional(),
-    dataFim: z.string().trim().regex(YYYY_MM_DD, 'dataFim must be in YYYY-MM-DD format').optional(),
-    retries: z.coerce.number().int().min(1).default(3),
-    delayMs: z.coerce.number().int().min(1).max(100).default(25),
+    nome: z.string().trim().min(2).max(200).optional(),
+    name: z.string().trim().min(2).max(200).optional(),
+
+    dataInicio: dateField('dataInicio'),
+    dataFim: dateField('dataFim'),
+
+    retries: z.coerce.number().int().min(1).optional(),
+    delayMs: z.coerce.number().int().min(1).max(1000).optional(),
   })
   .superRefine((val, ctx) => {
-    if (val.dataInicio && val.dataFim && val.dataInicio > val.dataFim) {
+    const nomeFinal = (val.nome ?? val.name ?? '').trim();
+    if (nomeFinal.length < 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['nome'],
+        message: 'nome (or name) is required and must have at least 2 characters',
+      });
+      return;
+    }
+
+    const start = parseBrDateToUTC(val.dataInicio);
+    const end = parseBrDateToUTC(val.dataFim);
+
+    if (!start) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['dataInicio'],
+        message: 'dataInicio is not a valid date',
+      });
+      return;
+    }
+
+    if (!end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['dataFim'],
+        message: 'dataFim is not a valid date',
+      });
+      return;
+    }
+
+    if (start.getTime() > end.getTime()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['dataFim'],
         message: 'dataFim must be greater than or equal to dataInicio',
       });
     }
-  });
-
-function formatZodError(err: ZodError) {
-  return err.issues.map((i) => `${i.path.join('.') || 'root'} - ${i.message}`).join('; ');
-}
-
-class HttpError extends Error {
-  constructor(
-    public readonly statusCode: number,
-    message: string,
-    public readonly details?: unknown,
-  ) {
-    super(message);
-    this.name = 'HttpError';
-  }
-}
+  })
+  .transform((val): FetchPublicationsInputDTO => ({
+    nome: (val.nome ?? val.name ?? '').trim(),
+    dataInicio: val.dataInicio,
+    dataFim: val.dataFim,
+    retries: val.retries,
+    delayMs: val.delayMs,
+  }));
 
 export class OfficialJournalsStateController {
   constructor(private readonly useCase: OfficialJournalsStateUseCase) {}
 
-  async handle(input: FetchPublicationsInputDTO) {
-    let validated: z.infer<typeof validationDTO>;
-
-    try {
-      validated = validationDTO.parse(input);
-    } catch (e) {
-      if (e instanceof ZodError) {
-        throw new HttpError(
-          httpStatusCodes.BAD_REQUEST,
-          `Invalid request body: ${formatZodError(e)}`,
-        );
-      }
-      throw new HttpError(
-        httpStatusCodes.INTERNAL_SERVER_ERROR,
-        errorMessages.GENERAL.UNEXPECTED_ERROR,
-        e,
-      );
+  async handle(input: unknown) {
+    const parsed = validationDTO.safeParse(input);
+    if (!parsed.success) {
+      throw AppError.badRequest(`Invalid request body: ${formatZodError(parsed.error)}`, 'BAD_REQUEST');
     }
 
     try {
-      const result = await this.useCase.execute(validated as unknown as FetchPublicationsInputDTO);
+      const result: SiteDataDTO = await this.useCase.execute(parsed.data);
 
-      const isEmptyArray = Array.isArray(result) && result.length === 0;
-      if (!result || isEmptyArray) {
-        throw new HttpError(httpStatusCodes.NOT_FOUND, errorMessages.AUTH.USER_NOT_FOUND);
+      if (result.conteudos.length === 0) {
+        throw AppError.notFound(errorMessages.AUTH.USER_NOT_FOUND, 'NOT_FOUND');
       }
 
       return {
@@ -82,13 +109,14 @@ export class OfficialJournalsStateController {
         data: result,
       };
     } catch (e) {
-      if (e instanceof HttpError) throw e;
+      if (e instanceof AppError) throw e;
 
-      throw new HttpError(
-        httpStatusCodes.INTERNAL_SERVER_ERROR,
-        errorMessages.GENERAL.SERVER_ERROR,
-        e,
-      );
+      throw new AppError({
+        statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: errorMessages.GENERAL.SERVER_ERROR,
+        cause: e,
+      });
     }
   }
 }
