@@ -1,5 +1,8 @@
 import { OfficialJournalsMunicipalityUseCase } from '@usecases/official-journals/official-journals-municipality.use-case';
-import { FetchPublicationsInputDTO, SiteDataDTO } from '@domain/dtos/official-journals/search-official-journals.dto';
+import {
+  FetchPublicationsInputDTO,
+  SiteDataDTO,
+} from '@domain/dtos/official-journals/search-official-journals.dto';
 import { z, ZodError } from 'zod';
 import { errorMessages, httpStatusCodes } from '@utils/httpConstants';
 import { AppError } from '@utils/app-error';
@@ -15,7 +18,11 @@ const dateField = (fieldName: string) =>
 
 const validationDTO: z.ZodType<FetchPublicationsInputDTO> = z
   .object({
-    nome: z.string().trim().min(2, 'nome must have at least 2 characters').max(200, 'nome is too long'),
+    nome: z
+      .string()
+      .trim()
+      .min(2, 'nome must have at least 2 characters')
+      .max(200, 'nome is too long'),
     dataInicio: dateField('dataInicio'),
     dataFim: dateField('dataFim'),
     retries: z.coerce.number().int().min(1).optional(),
@@ -49,7 +56,10 @@ export class OfficialJournalsMunicipalityController {
   async handle(input: FetchPublicationsInputDTO) {
     const parsed = validationDTO.safeParse(input);
     if (!parsed.success) {
-      throw AppError.badRequest(`Invalid request body: ${formatZodError(parsed.error)}`, 'BAD_REQUEST');
+      throw AppError.badRequest(
+        `Invalid request body: ${formatZodError(parsed.error)}`,
+        'BAD_REQUEST',
+      );
     }
 
     try {

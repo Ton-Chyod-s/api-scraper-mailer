@@ -1,4 +1,7 @@
-import { FetchPublicationsInputDTO, SiteDataDTO } from '@domain/dtos/official-journals/search-official-journals.dto';
+import {
+  FetchPublicationsInputDTO,
+  SiteDataDTO,
+} from '@domain/dtos/official-journals/search-official-journals.dto';
 import { OfficialJournalsStateUseCase } from '@usecases/official-journals/official-journals-state.use-case';
 import { z, ZodError } from 'zod';
 import { errorMessages, httpStatusCodes } from '@utils/httpConstants';
@@ -16,7 +19,10 @@ const dateField = (fieldName: string) =>
     .string()
     .trim()
     .min(1, `${fieldName} is required`)
-    .refine((s) => isBrDate(s) || YYYY_MM_DD.test(s), `${fieldName} must be DD/MM/YYYY or YYYY-MM-DD`)
+    .refine(
+      (s) => isBrDate(s) || YYYY_MM_DD.test(s),
+      `${fieldName} must be DD/MM/YYYY or YYYY-MM-DD`,
+    )
     .transform((s) => {
       const v = s.trim();
       if (isBrDate(v)) return v;
@@ -79,13 +85,15 @@ const validationDTO: z.ZodType<FetchPublicationsInputDTO> = z
       });
     }
   })
-  .transform((val): FetchPublicationsInputDTO => ({
-    nome: (val.nome ?? val.name ?? '').trim(),
-    dataInicio: val.dataInicio,
-    dataFim: val.dataFim,
-    retries: val.retries,
-    delayMs: val.delayMs,
-  }));
+  .transform(
+    (val): FetchPublicationsInputDTO => ({
+      nome: (val.nome ?? val.name ?? '').trim(),
+      dataInicio: val.dataInicio,
+      dataFim: val.dataFim,
+      retries: val.retries,
+      delayMs: val.delayMs,
+    }),
+  );
 
 export class OfficialJournalsStateController {
   constructor(private readonly useCase: OfficialJournalsStateUseCase) {}
@@ -93,7 +101,10 @@ export class OfficialJournalsStateController {
   async handle(input: unknown) {
     const parsed = validationDTO.safeParse(input);
     if (!parsed.success) {
-      throw AppError.badRequest(`Invalid request body: ${formatZodError(parsed.error)}`, 'BAD_REQUEST');
+      throw AppError.badRequest(
+        `Invalid request body: ${formatZodError(parsed.error)}`,
+        'BAD_REQUEST',
+      );
     }
 
     try {
