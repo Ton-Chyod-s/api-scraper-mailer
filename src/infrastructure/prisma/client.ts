@@ -16,13 +16,14 @@ const adapter = new PrismaPg({
 const isDev = env.NODE_ENV === 'development';
 const isTest = env.NODE_ENV === 'test';
 
-
 export const prisma = new PrismaClient({
   adapter,
   log: isTest
     ? []
     : isDev
-      ? (prismaQueryLog ? ['query', 'warn', 'error'] : ['warn', 'error'])
+      ? prismaQueryLog
+        ? ['query', 'warn', 'error']
+        : ['warn', 'error']
       : ['error'],
   errorFormat: isDev ? 'pretty' : 'minimal',
 });
