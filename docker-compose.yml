@@ -26,7 +26,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      NODE_ENV: development
+      NODE_ENV: ${NODE_ENV:-production}
       PORT: 3000
 
       # Dentro do compose, o host do Postgres é "db".
@@ -49,7 +49,7 @@ services:
       DEBUG_ROUTES_ENABLED: ${DEBUG_ROUTES_ENABLED:-false}
 
       # Sentry opcional
-      SENTRY_DSN: ''
+      SENTRY_DSN: ${SENTRY_DSN:-}
       SENTRY_TRACES_SAMPLE_RATE: ${SENTRY_TRACES_SAMPLE_RATE:-0}
 
       # Seed admin (opcional)
