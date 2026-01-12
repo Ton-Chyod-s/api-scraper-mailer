@@ -46,7 +46,7 @@ services:
       TRUST_PROXY: ${TRUST_PROXY:-0}
 
       # Sentry opcional
-      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_DSN: ${SENTRY_DSN:?Defina SENTRY_DSN no .env do docker compose}
       SENTRY_TRACES_SAMPLE_RATE: ${SENTRY_TRACES_SAMPLE_RATE:-0}
 
       # Seed admin (opcional)
