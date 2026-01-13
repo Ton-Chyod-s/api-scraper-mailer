@@ -56,7 +56,7 @@ Este repositório foi pensado como **codebase base** para futuros projetos Web (
 Se você prefere não instalar Postgres localmente, use o Docker Compose:
 
 ```bash
-docker compose up --build
+docker-compose up -d --build
 ```
 
 Isso sobe o Postgres e a API em modo dev, aplicando migrations e rodando o seed automaticamente.
