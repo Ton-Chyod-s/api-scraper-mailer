@@ -18,10 +18,8 @@ if (env.NODE_ENV === 'development') {
 router.use(authRoutes);
 router.use(adminRoutes);
 
-// if (env.NODE_ENV === 'development' && env.DEBUG_ROUTES_ENABLED) {
-//   router.use(debugRoutes);
-// }
-
-router.use(debugRoutes);
+if (env.NODE_ENV === 'development' && env.DEBUG_ROUTES_ENABLED) {
+  router.use(debugRoutes);
+}
 
 export default router;

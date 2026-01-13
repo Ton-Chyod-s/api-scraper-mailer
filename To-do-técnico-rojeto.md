@@ -11,7 +11,7 @@
 - Ideal: exigir autenticação (ADMIN) mesmo em development.
 
 Checklist:
-- [ ] Reativar condição de debug routes.
+- [x] Reativar condição de debug routes.
 - [ ] (Opcional) Proteger com `authMiddleware` + role ADMIN.
 - [ ] Adicionar teste garantindo que debug routes não existem em produção.
 

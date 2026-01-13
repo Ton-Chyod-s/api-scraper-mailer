@@ -26,8 +26,6 @@ const authLimiter = rateLimit({
 });
 
 const logoutController = new LogoutController();
-// Controllers que dependem de banco de dados (Prisma) são carregados sob demanda.
-// Isso evita que testes (ex: rotas que não usam DB) travem ao importar o módulo.
 
 let _registerController:
   | import('@interfaces/http/controllers/user/register-controller').RegisterController
@@ -116,7 +114,6 @@ router.post('/auth/login', authLimiter, async (req, res, next) => {
   return controller.handle(req, res, next);
 });
 
-// (app/CLI)
 router.post('/auth/token', authLimiter, async (req, res, next) => {
   const controller = await getLoginTokenController();
   return controller.handle(req, res, next);
@@ -143,7 +140,6 @@ router.get('/auth/me', authMiddleware, async (req, res, next) => {
       .json(createResponse(401, 'Unauthorized', undefined, undefined, 'UNAUTHORIZED'));
   }
 
-  // Busca dados completos do usuário (inclui role).
   const { PrismaUserRepository } = await import('@infrastructure/repositories/user-repositories');
   const userRepo = new PrismaUserRepository();
 
