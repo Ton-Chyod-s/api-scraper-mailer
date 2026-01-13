@@ -3,6 +3,7 @@
 ## P0 (crítico, fazer primeiro)
 
 ### 1) Proteger ou desabilitar as rotas de debug em produção
+**Branch:** `fix/p0-01-guard-debug-routes-prod`  
 **Problema:** `debugRoutes` está montado sempre, inclusive em produção. Isso expõe `/api/debug-sentry` e pode gerar spam de eventos no Sentry e superfície desnecessária.  
 **Onde:** `src/interfaces/http/routes/index.ts`  
 **Ajuste:**
@@ -18,6 +19,7 @@ Checklist:
 ---
 
 ### 2) Corrigir parsing de data do Diogrande no fluxo municipal
+**Branch:** `fix/p0-02-parse-br-date-diogrande`  
 **Problema:** o Diogrande retorna `dia` em formato BR `DD/MM/AAAA`, mas o preparo do e-mail usa parser ISO e isso pode quebrar o job.  
 **Onde:** `src/usecases/prepare-send-email/fetch-municipality-for-user.ts`  
 **Ajuste:**
@@ -32,6 +34,7 @@ Checklist:
 ---
 
 ### 3) Evitar “envio fantasma” em produção sem SMTP
+**Branch:** `fix/p0-03-require-smtp-in-prod`  
 **Problema:** quando `SMTP_HOST` não está definido, o factory usa `ConsoleMailerService`. Em produção esse service pode não enviar nem logar, e mesmo assim o fluxo pode registrar `TaskLog`, marcando como “enviado” sem enviar.  
 **Onde:** 
 - `src/interfaces/http/factories/jobs/send-daily-email-factory.ts`
@@ -50,6 +53,7 @@ Checklist:
 ## P1 (alto, robustez do scheduler e idempotência)
 
 ### 4) Usar o executor com lock diário no scheduler (evitar duplicação entre instâncias)
+**Branch:** `feat/p1-04-scheduler-run-once-per-day-lock`  
 **Problema:** existe `runOncePerDay` com advisory lock no repo, mas o scheduler chama o use case direto, o que pode duplicar execução em múltiplas instâncias.  
 **Onde:** `src/main/jobs/scheduler.ts` e factory do executor  
 **Ajuste:**
@@ -63,6 +67,7 @@ Checklist:
 ---
 
 ### 5) Mitigar duplicação por usuário em concorrência
+**Branch:** `feat/p1-05-idempotency-tasklog-unique-upsert`  
 **Problema:** a regra “já enviou hoje” é read-then-write, duas instâncias podem passar no check e enviar duas vezes para o mesmo usuário.  
 **Onde:** `src/infrastructure/repositories/prisma-task-log-repository.ts` e model Prisma `TaskLog`  
 **Ajuste sugerido (escolher uma):**
@@ -76,6 +81,7 @@ Checklist:
 ---
 
 ### 6) Ajustar “execução imediata ao subir” para respeitar janela
+**Branch:** `fix/p1-06-startup-run-respects-time-window`  
 **Problema:** ao subir o serviço, se já passou de 08:00, executa imediato, mesmo fora da janela 08:00–17:00.  
 **Onde:** `src/main/jobs/scheduler.ts`  
 **Ajuste:**
@@ -90,6 +96,7 @@ Checklist:
 ## P2 (médio, consistência e manutenção)
 
 ### 7) Remover acoplamento do domínio com Prisma
+**Branch:** `refactor/p2-07-decouple-domain-from-prisma`  
 **Problema:** interfaces do domínio e alguns use cases importam tipos do Prisma, reduz isolamento de camadas.  
 **Onde:** 
 - `src/domain/repositories/*`
@@ -104,6 +111,7 @@ Checklist:
 ---
 
 ### 8) Corrigir respostas semânticas dos controllers de diários
+**Branch:** `fix/p2-08-official-journals-response-semantics`  
 **Problema:** quando não há conteúdo, controllers usam erro de “USER_NOT_FOUND”, semântica incorreta.  
 **Onde:**
 - `src/interfaces/http/controllers/official-journals/*`  
@@ -117,6 +125,7 @@ Checklist:
 ---
 
 ### 9) Revisar custo de consultas anuais no fluxo diário
+**Branch:** `perf/p2-09-municipality-daily-query-min-window`  
 **Problema:** no fluxo municipal, buscar dados do ano pode ser custo alto para o e-mail diário que precisa do dia.  
 **Onde:** `src/usecases/prepare-send-email/fetch-municipality-for-user.ts`  
 **Ajuste:**
@@ -132,6 +141,7 @@ Checklist:
 ## P3 (observabilidade e DX)
 
 ### 10) Padronizar logs e métricas do job
+**Branch:** `chore/p3-10-structured-logs-job-metrics`  
 **Problema:** logs com `console.*` dispersos, pouca visibilidade de quantos usuários falharam, quantos enviaram, quantos vazios.  
 **Ajuste:**
 - Logger estruturado (ex: pino) ou padronizar logs atuais.
