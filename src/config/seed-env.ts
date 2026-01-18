@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import '@config/load-env';
 import { z } from 'zod';
 
 function normalizeOptionalString(value?: string): string | undefined {

@@ -3,7 +3,7 @@ import { hasPassedLocalTime } from '@utils/date/date-time';
 import { makeSendDailyEmailUseCase } from '@interfaces/http/factories/jobs/send-daily-email-factory';
 
 const timeZone = 'America/Campo_Grande';
-const TASK_NAME = 'my-task';
+const TASK_NAME = 'Official_Journals';
 
 const sendDailyEmailUseCase = makeSendDailyEmailUseCase();
 
@@ -37,6 +37,7 @@ export function scheduleDailyTask(): void {
   });
 
   if (hasPassedLocalTime(timeZone, 8, 0)) {
-    void runTaskSafely('startup (após 08:00 MS)');
+    console.log('[Cron] Startup após 8h - verificando envios pendentes');
+    void runTaskSafely('compensação startup');
   }
 }

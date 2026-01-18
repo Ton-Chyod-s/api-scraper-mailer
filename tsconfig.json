@@ -23,6 +23,6 @@
 
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "prisma.config.ts", "prisma/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "prisma.config.js", "prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

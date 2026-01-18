@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import './load-env';
 import { z } from 'zod';
 import ms from 'ms';
 import type { StringValue } from 'ms';

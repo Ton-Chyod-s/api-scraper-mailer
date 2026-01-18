@@ -48,7 +48,6 @@ async function ensureAdminUser() {
     data: { name, role: 'ADMIN' },
   });
 
-  console.log(`[seed] Admin já existia (nome atualizado): ${email}`);
 }
 
 async function main() {

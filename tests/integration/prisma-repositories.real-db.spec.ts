@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import 'dotenv/config';
+import '@config/load-env';
 
 const RUN =
   process.env.RUN_INTEGRATION_TESTS === '1' ||

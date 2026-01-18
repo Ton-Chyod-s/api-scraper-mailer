@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import './instrument';
 import { createApp } from './app';
 import { env } from '@config/env';
@@ -17,9 +16,8 @@ const server = app.listen(port, () => {
     console.log(`OpenAPI: ${baseUrl}/api/openapi.yaml`);
   }
 
-  if (env.NODE_ENV !== 'test' && env.NODE_ENV !== 'development') {
-    scheduleDailyTask();
-  }
+  scheduleDailyTask();
+
 });
 
 let isShuttingDown = false;
